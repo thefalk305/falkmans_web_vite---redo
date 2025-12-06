@@ -1,76 +1,59 @@
 <!-- prettier-ignore-file -->
 
 <script setup>
-  import { computed, ref, inject } from "vue";
+import { ref, inject, computed, watchEffect } from "vue";
+import axios from "axios";
+import NavBar from "../components/NavBar.vue";
+import ShowModal from "../components/ShowModal.vue";
+import bldRels from "../assets/js/buildRelatives.js";
+import GoBack from "../components/GoBack.vue";
 
-  import axios from "axios";
-  import NavBar from "../components/NavBar.vue";
-  import ShowModal from "../components/ShowModal.vue";
-  import bldRels from "../assets/js/buildRelatives.js";
-  import GoBack from "../components/GoBack.vue";
+const props = defineProps({
+  show: { type: Boolean, default: true },
+  id: { type: Number, default: 4 },
+  fromDaBoys: { type: Boolean, default: true },
+  modalTop: { type: Number, default: 100 },
+});
 
-
-  const props = defineProps({
-    show: Boolean,
-    id: Number,
-    fromDaBoys: Boolean,
-    modalTop: {
-      type: Number,
-      default: 400,
-    }
-  });
-
-  // const id = Number(props.id); // Convert id prop to Number
-
-  const resolveImageUrl = (filename) =>
+const resolveImageUrl = (filename) =>
   new URL(`../assets/img/${filename}`, import.meta.url).href;
 
-
-  // var record = {};
-  // var id = ref(3);
-  var pics = [];
-  var tblArray = [];
-  var infoTable = [];
-  infoTable = inject("infoTable");
+const infoTable = inject("infoTable");
 
 const record = computed(() => (infoTable && infoTable[props.id - 1]) || {});
-  var tblKeys = Object.keys(record.value);
-  var tblValues = record.valueOf();
-  tblArray = bldRels(tblKeys, infoTable, record.value);
+
+const pics = ref([]);
+const tblArray = ref([]);
+const bio = ref("");
 
 const familySrchLink = computed(() =>
   record.value && record.value.famSrchLink
     ? `https://www.familysearch.org/en/tree/person/details/${record.value.famSrchLink}`
-    : `https://www.familysearch.org/tree/person/details/LL4N-B4F`
+    : `https://www.familysearch.org/tree/pedigree/landscape/LL4N-B4F`
 );
-  
-const bio = ref(''); // Declare at component level
 
-  pics.push(record.value.pic2);
-  pics.push(record.value.pic3);
-  pics.push(record.value.pic4);
-  pics.push(record.value.pic5);
-  pics.push(record.value.pic6);
-  // console.log(pics, record.value.name);
-  // var fname = "./bios/" + record.value.bio;
-  var fname = record.value.bio;
-  // readText("./bios/" +  record.value.bio);
+watchEffect(() => {
+  const rec = record.value || {};
+  pics.value = [rec.pic2, rec.pic3, rec.pic4, rec.pic5, rec.pic6].filter(Boolean);
+  const tblKeys = rec ? Object.keys(rec) : [];
+  tblArray.value = bldRels(tblKeys, infoTable, rec);
 
-
+  const fname = rec.bio;
   if (fname) {
-    readText("/bios/" + fname);
+    readText("./bios/" + fname);
   } else {
-    bio.value = "The bio for " + record.value.name + " should be updated soon.";
+    bio.value = rec.name ? `The bio for ${rec.name} should be updated soon.` : "";
   }
+});
 
 function readText(fname) {
   axios
-    .get(fname, { responseType: 'text' })
+    .get(fname, { responseType: "text" })
     .then((response) => {
-      bio.value = response.data; // Use `.value` for refs
+      bio.value = response.data;
     })
     .catch((error) => {
-      console.error('Error loading bio:', error);
+      console.error("Error loading bio:", error);
     });
 }
 
@@ -78,7 +61,7 @@ function readText(fname) {
 
 <template>
   <Transition name="modal">
-    <div  class="modal-mask" :style="{ top: fromDaBoys ? '400px' : modalTop + 'px' }">      
+    <div v-if="show" class="modal-mask" :style="{ top: fromDaBoys ? '400px' : modalTop + 'px' }">      
 
       <section class="modal-container infopic">
         <!-- <section class="infocontainer modal-container infopic"> -->
@@ -143,7 +126,7 @@ function readText(fname) {
         <div id="iline" style="height: 350px; top: 135px"></div>
         <div id="iupcurve" style="top: 456px; width: 40px"></div>
         <div id="familysearch" style="right: 150px; bottom: 5px">
-          <a class="green" title="Family Search" :href="familySrchLink" target="_blank">Family Search</a>
+          <a target="_blank" class="green" title="Family Search" :href="familySrchLink">Family Search</a>
         </div>
         <button class="modal-default-button" @click="$emit('close')">Close</button>
       </section>

@@ -20,7 +20,7 @@ lightbox.option({
 window.$ = $;
 window.jQuery = $;
 
-console.log(infoTableData, "infotable from .json");
+// console.log(infoTableData, "infotable from .json");
 
 var usejson = true
 // var infoTableData = []

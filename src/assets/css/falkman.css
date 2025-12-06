@@ -18,7 +18,7 @@ body img {
 	background-color: #ffffff;
 	/* position: static; */
 	top: 00px;
-	margin: 10px;
+	margin: auto;
 	width: 100%;
 	height: fit-content;
 	z-index: 1;
@@ -108,6 +108,9 @@ a:active {
 	padding: 5px;
 	text-align: left;
 	vertical-align: top;
+	/* display: flex; */
+	flex-direction: column;
+	align-items: center;
 }
 
 /*===========content area list items==============*/
@@ -220,7 +223,7 @@ h1, h2, h3, h4 {
 	background-color: inherit; 
 }
 h1 {
-	font-size: 2em; 
+	font-size: 1.5em; 
 	background: #EBDF9F; /*lt green */
 }
 h3 {

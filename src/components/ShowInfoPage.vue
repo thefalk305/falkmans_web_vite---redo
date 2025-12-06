@@ -32,9 +32,9 @@ const resolveImageUrl = (filename) =>
     </p>
   </div>
 
-  <Teleport to="body" :disabled="false"  id="showInfoPage2" >
+  <Teleport to="body" :disabled="false"  id="showInfoPage2" v-if="showInfoPage">
     <!-- use the modal component, pass in the prop -->
-    <InfoPage 
+    <InfoPage
       :show="showInfoPage"
       @close="showInfoPage = false"
       :id="recordData.id"

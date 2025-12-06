@@ -42,7 +42,7 @@
         v-show="magEnabled"
       />
     </div>
-    <p>Mouse over the image — Adolfina Chytra on line 6</p>
+    <p>Mouse over the image — See 'Adolfina Chytra' on line 6</p>
 
     <div class="img-magnifier-container" >
       <img class="magImage" 
@@ -52,8 +52,7 @@
     </div>
 
     <p style="color: blue">
-      Feel free to change the strength of the magnifier glass when initiating the
-      magnify function.
+      Feel free to change the strength of the magnifier glass when initiating the magnify function.
     </p>
     </div>
   <!-- Inserts the common footer -->

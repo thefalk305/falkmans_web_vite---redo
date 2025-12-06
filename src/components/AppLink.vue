@@ -15,8 +15,7 @@
 
 <template>
   <a v-if="isExternal" :href="to" rel="noopener" class="external-link" target="_blank"
-    ><slot
-  /></a>
+    ><slot /></a>
   <router-link v-else :="$props" class="internal-links"><slot /> </router-link>
 </template>
 

@@ -2,7 +2,7 @@
 <script setup>
 import { ref } from 'vue'
   const ulList = ref([
-    { route: "Goteborg", text: "Göteborg, Sweden" },
+    { route: "Göteborg", text: "Göteborg, Sweden" },
     { route: "Hull", text: "Kingston upon Hull, England" },
     { route: "Hamburg", text: "Hamburg, Germany" },
     { route: "Liverpool", text: "Liverpool, England" },

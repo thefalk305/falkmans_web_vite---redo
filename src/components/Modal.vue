@@ -1,6 +1,6 @@
 <!-- prettier-ignore-file -->
 <script setup>
-  import { reactive, ref } from "vue";
+  import { reactive, ref, watchEffect } from "vue";
   import NavBar from "./NavBar.vue";
   import axios from "axios";
   const resolveImageUrl = (filename) =>
@@ -11,50 +11,63 @@
     show: Boolean,
     recordData: Object,
     modalTop: Number,
-    fromDaBoys: Boolean
+    fromDaBoys: Boolean,
+    isFormMode: Boolean,
   });
 
-  var bio = "";
+  const bio = ref("");
+
   function readText(fname) {
     axios
       .get(fname)
       .then(function (response) {
-        bio = response.data;
+        bio.value = response.data;
       })
       .catch(function (error) {
         console.log(error);
+        bio.value = "Bio not found.";
       });
   }
-  var fname = props.recordData.bio;
-  if (fname) {
-    readText("./bios/" + fname);
-  } else {
-    bio = "The bio for " + props.recordData.name + " should be updated soon.";
-  }
+
+  watchEffect(() => {
+    if (props.recordData) {
+      var fname = props.recordData.bio;
+      if (fname) {
+        readText("/bios/" + fname);
+      } else if (props.recordData.name) {
+        bio.value = "The bio for " + props.recordData.name + " should be updated soon.";
+      }
+    } else {
+      bio.value = "";
+    }
+  });
 </script>
 
 <template>
   <Transition name="modal">
     <div v-if="show" class="modal-mask" :style="{ top: fromDaBoys ? '450px' : modalTop + 'px' }">      
       <div class="modal-container">
-        <NavBar :recordData="recordData" />
-        <div class="modal-body">
-          <img :src="resolveImageUrl(recordData.pic)" :alt="recordData.pic" alt="photo" />
-
-          <!-- <img :src="'./img/' + recordData.pic" alt="photo" /> -->
-        </div>
-        <div class="modal-header">
-          <slot name="header">{{ recordData.name }}</slot>
-        </div>
-        <div class="modal-footer">
-          <slot name="body"
-            ><p class="p1 infotxt">{{ bio }}</p></slot
-          >
-          <slot name="footer">
-            default footer
-            <button class="modal-default-button" @click="$emit('close')">OK</button>
-          </slot>
-        </div>
+        <template v-if="isFormMode">
+          <slot name="form"></slot>
+        </template>
+        <template v-else>
+          <NavBar :recordData="recordData" />
+          <div class="modal-body" v-if="recordData">
+            <img :src="resolveImageUrl(recordData.pic)" :alt="recordData.pic" alt="photo" />
+          </div>
+          <div class="modal-header" v-if="recordData">
+            <slot name="header">{{ recordData.name }}</slot>
+          </div>
+          <div class="modal-footer">
+            <slot name="body"
+              ><p class="p1 infotxt">{{ bio }}</p></slot
+            >
+            <slot name="footer">
+              default footer
+              <button class="modal-default-button" @click="$emit('close')">OK</button>
+            </slot>
+          </div>
+        </template>
       </div>
     </div>
   </Transition>

@@ -18,7 +18,7 @@
 </script>
 
 <template>
-  <div id="imagecontainer" class="imagecontainer">
+  <div  class="imagecontainer">
     <div id="ImaceCont2" >
       <ShowInfoPage 
       :recordData="recordData" 

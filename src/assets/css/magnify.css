@@ -48,3 +48,35 @@
   background-color: #EBDF9F;
 	display: block;
 }
+
+#heading {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heading-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: #EBDF9F;
+}
+
+.heading-checkbox {
+  position: absolute;
+  right: 72px;
+  height: 24px;
+  width: 120px;
+  display: flex;
+  align-items: center;
+}
+
+.img-checkbox {
+  position: absolute;
+  right: 278px;
+  height: 24px;
+  width: 120px;
+  display: flex;
+  align-items: center;
+}

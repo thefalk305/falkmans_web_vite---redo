@@ -12,7 +12,7 @@
 
   });
 
-  const showInfoPage = ref(false);
+  const showFamilyPage = ref(false);
 
   $(document).ready(function () {
     var images = [];
@@ -22,7 +22,7 @@
 </script>
 
 <template>
-  <div @click="showInfoPage = true">
+  <div @click="showFamilyPage = true">
     <div
       class="desc imagecontainer"
       :class="id === 0 ? 'rightslide' : id === 1 ? 'leftslide' : 'upslide'"
@@ -39,14 +39,14 @@
     </div>
   </div>
 
-  <Teleport to="body" :disabled="false">
+  <Teleport to="body" :disabled="false" v-if="showFamilyPage">
     <!-- use the modal component, pass in the prop -->
-    <FamilyPage 
-    :show="showInfoPage" 
-    @close="showInfoPage = false" 
-    :id="recordData.id"       
-    :fromDaBoys="fromDaBoys" 
-    :modalTop="modalTop"   
+    <FamilyPage
+    :show="showFamilyPage"
+    @close="showFamilyPage = false"
+    :id="recordData.id"
+    :fromDaBoys="fromDaBoys"
+    :modalTop="modalTop"
 />
   </Teleport>
 </template>

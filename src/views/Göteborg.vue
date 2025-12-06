@@ -11,7 +11,7 @@
 </script>
 
 <template>
-  <div id="goteborg">
+  <div id="Göteborg">
     <MiniNav />
     <h1 align="center">Göteborg, Sweden</h1>
 

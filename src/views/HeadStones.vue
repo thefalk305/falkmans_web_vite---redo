@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
-import BackToTop from "@/components/BackToTop.vue";
-import MiniNav from "@/components/MiniNav.vue";
+// import BackToTop from "@/components/BackToTop.vue";
+// import MiniNav from "@/components/MiniNav.vue";
 import Stone from "@/components/Stone.vue";
 
 const images = ref([]); // ✅ reactive array for game flow
@@ -49,7 +49,6 @@ function removeImage(stone) {
 
 <template>
   <div id="headstones">
-    <MiniNav />
     <h1 align="center">Head Stones & Grave Markers</h1>
     <p align="center">(Can you identify them?)</p>
     <p class="headstoneGame">

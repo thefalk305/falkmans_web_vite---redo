@@ -168,7 +168,7 @@ img {
 .modal-mask {
   position: absolute;
   z-index: 9998;
-  top: 440px;
+  top: 370px;
   left: 100px;
   width: 750px;
   height: 700px;

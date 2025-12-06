@@ -16,6 +16,7 @@ const infoTable = inject('infoTable');
     modalTop: Number,
   });
 
+
   let record = {}
      record = infoTable[props.id - 1];
   // var record = {};
@@ -29,8 +30,8 @@ const infoTable = inject('infoTable');
   // record = infoTable[props.id - 1];
 
   var fname = record.bio;
-  readText("./bios/" + fname);
-  const familySrchLink = `https://www.familysearch.org/tree/pedigree/landscape/LL4N-B4F`;
+  readText("/bios/" + fname);
+  const familySrchLink = `https://www.familysearch.org/tree/pedigree/landscape/${record.famSrchLink}`;
   const familypageURL = `http://localhost/new_falkmansweb/infopages/familypage.php?id=${record.id}`;
 
   pics.push("Al Sr Naval Voyages009.jpg");
@@ -56,7 +57,7 @@ const infoTable = inject('infoTable');
 
 <template>
   <Transition name="modal">
-    <div v-if="show" class="modal-mask" :style="{ top: fromDaBoys ? '400px' : modalTop + 'px' }">      
+    <div class="modal-mask" :style="{ top: 400 + 'px' }">      
       <section class="modal-container infopic">
         <!-- <section class="infocontainer modal-container infopic"> -->
         <!-- <p>familypage</p> -->
@@ -156,7 +157,7 @@ const infoTable = inject('infoTable');
         <div id="iline" style="height: 350px; top: 135px"></div>
         <div id="iupcurve" style="top: 431px; width: 40px"></div>
         <div id="familysearch" style="right: 150px; bottom: 5px">
-          <a class="green" title="Family Search" :href="familySrchLink">Family Search</a>
+          <a target="_blank" class="green" title="Family Search" :href="familySrchLink">Family Search</a>
         </div>
         <button class="modal-default-button" @click="$emit('close')">Close</button>
       </section>
