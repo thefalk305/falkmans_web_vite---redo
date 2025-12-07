@@ -9,7 +9,7 @@ const port = 3001;
 app.use(cors());
 app.use(express.json());
 
-const infoTablePath = path.resolve('./public/data/infotable.json');
+const infoTablePath = path.resolve('./src/assets/infotable.json');
 const branchDataPath = path.resolve('./public/data/branchData.json');
 
 app.get('/api/infotable', async (req, res) => {

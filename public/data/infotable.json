@@ -6006,26 +6006,6 @@
     "famSrchLink": ""
   },
   {
-    "id": 155,
-    "name": "test father group 21",
-    "born_died": "",
-    "father": "",
-    "mother": "",
-    "famSrchLink": "",
-    "pic": "face2.png",
-    "bio": ""
-  },
-  {
-    "id": 156,
-    "name": "group 21 mother",
-    "born_died": "",
-    "father": "",
-    "mother": "",
-    "famSrchLink": "",
-    "pic": "face2.png",
-    "bio": ""
-  },
-  {
     "id": 157,
     "name": "group 20 father",
     "born_died": "",
@@ -6064,5 +6044,25 @@
     "famSrchLink": "L4MT-QMZ",
     "pic": "face2.png",
     "bio": "Söne Hansson.txt"
+  },
+  {
+    "id": 161,
+    "name": "Jeremiah Allen",
+    "born_died": "about 1805",
+    "father": "",
+    "mother": "",
+    "famSrchLink": "P7CL-5P1",
+    "pic": "face2.png",
+    "bio": "Jeremiah Allen.txt"
+  },
+  {
+    "id": 162,
+    "name": "Ellen Farrell",
+    "born_died": "about 1810",
+    "father": "",
+    "mother": "",
+    "famSrchLink": "P7CG-NH5",
+    "pic": "face1.png",
+    "bio": "Ellen Farrell.txt"
   }
 ]

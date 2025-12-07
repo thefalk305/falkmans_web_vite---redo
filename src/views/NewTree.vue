@@ -3,7 +3,7 @@
 import { provide } from "vue";
 import NewBranch from "../components/NewBranch.vue";
 import branchData from "../../public/data/branchData.json";
-import infoTable from "../../public/data/infotable.json";
+import infoTable from '../assets/infotable.json';
 import { useDraggableModal } from "@/composables/useDraggableModal";
 import { useGroupVisibility } from "@/composables/useGroupVisibility";
 
