@@ -1,0 +1,1 @@
+import{c as n,g as l,w as s,f as a,o as c,h as r,t as p}from"./index-Dd5EE7I4.js";const m={__name:"Places",props:{route:String,text:String},setup(e){const t=e;return console.log(t.places),console.log(t.text),console.log("hello"),(i,u)=>{const o=a("AppLink");return c(),n("li",null,[l(o,{to:e.route},{default:s(()=>[r(p(e.text),1)]),_:1},8,["to"])])}}};export{m as default};
