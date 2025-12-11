@@ -228,7 +228,7 @@ export function useDynamicGroups(infoTable) {
         if (allParentIds.size > 0) {
           const parentArray = Array.from(allParentIds);
 
-          // Create left parent group (2*g)
+          // Create left navigation parent group (2*g) - contains actual parents of members in group g
           if (g * 2 < maxGroups) {
             const leftParents = parentArray.filter((_, idx) => idx % 2 === 0);
             if (leftParents.length > 0) {
@@ -241,7 +241,7 @@ export function useDynamicGroups(infoTable) {
             }
           }
 
-          // Create right parent group (2*g + 1)
+          // Create right navigation parent group (2*g + 1) - contains actual parents of members in group g
           if (g * 2 + 1 < maxGroups) {
             const rightParents = parentArray.filter((_, idx) => idx % 2 === 1);
             if (rightParents.length > 0) {
@@ -305,13 +305,13 @@ export function useDynamicGroups(infoTable) {
 
         let memberToProcess = null;
         if (isLeftChild && parentMembers[0] !== undefined) {
-          // Left child (2*treeParentId) gets parents of first member in parent group
+          // Left navigation parent (2*treeParentId) gets parents of first member in parent group
           memberToProcess = parentMembers[0];
         } else if (isRightChild && parentMembers[1] !== undefined) {
-          // Right child (2*treeParentId+1) gets parents of second member in parent group
+          // Right navigation parent (2*treeParentId+1) gets parents of second member in parent group
           memberToProcess = parentMembers[1];
         } else if (isLeftChild && parentMembers.length > 0) {
-          // If only one member in parent group, left child gets that member's parents
+          // If only one member in parent group, left navigation parent gets that member's parents
           memberToProcess = parentMembers[0];
         }
 
@@ -349,17 +349,17 @@ export function useDynamicGroups(infoTable) {
       if (groups[i]) {
         // In the navigation system, a group's "parents" are its children in the binary tree structure
         // This is backwards from normal terminology but that's the existing system
-        const child1Id = i * 2;    // Left child in binary tree (next level)
-        const child2Id = i * 2 + 1; // Right child in binary tree (next level)
+        const navigationParent1Id = i * 2;    // First "parent" group in navigation (contains actual parents of group i members)
+        const navigationParent2Id = i * 2 + 1; // Second "parent" group in navigation (contains actual parents of group i members)
 
-        const potentialChildren = [child1Id, child2Id];
+        const potentialNavigationParents = [navigationParent1Id, navigationParent2Id];
 
-        // Only include children that actually exist in our groups array
-        const actualChildren = potentialChildren.filter(childId =>
-          groups[childId] !== undefined
+        // Only include navigation parents that actually exist in our groups array
+        const actualNavigationParents = potentialNavigationParents.filter(parentId =>
+          groups[parentId] !== undefined
         );
 
-        groups[i].parents = actualChildren;
+        groups[i].parents = actualNavigationParents;
       }
     }
 
