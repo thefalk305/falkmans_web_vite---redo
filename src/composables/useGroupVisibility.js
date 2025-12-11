@@ -1,45 +1,41 @@
 import { ref, computed } from 'vue';
 
-export function useGroupVisibility(groupData, baseGroupId = 1) {
+export function useGroupVisibility(groupData, baseGroupId = 1, infoTable = []) {
   const visibleGroups = ref(new Set([baseGroupId]));
-  const levelMap = buildLevels( baseGroupId);
 
-  // Build a level map using BFS
-  // function buildLevels(groups, startId) {
-  //   const map = {};
-  //   const q = [{ id: startId, level: 0 }];
-  //   map[startId] = 0;
-  //   const maxId = Math.max(...groups.map(g => g.id));
+  // Build level map based on the actual group data provided
+  const levelMap = buildLevels(groupData, baseGroupId);
 
-  //   while (q.length) {
-  //     const { id, level } = q.shift();
-  //     const parents = [id * 2, id * 2 + 1];
-  //     parents.forEach(p => {
-  //       if (p <= maxId && (map[p] === undefined || map[p] > level + 1)) {
-  //         map[p] = level + 1;
-  //         q.push({ id: p, level: level + 1 });
-  //       }
-  //     });
-  //   }
-  //   return map;
-  // }
-// function buildLevels(groups, startId) {
-//   const map = {};
-//   groups.forEach(g => {
-//     map[g.id] = Math.floor(Math.log2(g.id)) - Math.floor(Math.log2(startId)) + 0;
-//   });
-//   return map;
-// }
+  function buildLevels(groups, startId = 1) {
+    const map = {};
+    const groupMap = new Map();
 
-function buildLevels(startId = 1) {
-  const map = {};
-  const maxId = 511;
-  const baseLevel = Math.floor(Math.log2(startId));
-  for (let id = startId; id <= maxId; id++) {
-    map[id] = Math.floor(Math.log2(id)) - baseLevel;
+    // Create a map of group id to group object for quick lookup
+    groups.forEach(g => {
+      groupMap.set(g.id, g);
+    });
+
+    // Use BFS to determine levels
+    const queue = [{ id: startId, level: 0 }];
+    map[startId] = 0;
+
+    while (queue.length > 0) {
+      const { id, level } = queue.shift();
+      const group = groupMap.get(id);
+
+      // If the group has parent references, add them to the next level
+      if (group && group.parents) {
+        group.parents.forEach(parentId => {
+          if (!map[parentId]) {
+            map[parentId] = level + 1;
+            queue.push({ id: parentId, level: level + 1 });
+          }
+        });
+      }
+    }
+
+    return map;
   }
-  return map;
-}
 
   function showGroup(groupId) {
     visibleGroups.value.add(groupId);
@@ -49,11 +45,15 @@ function buildLevels(startId = 1) {
     if (!visibleGroups.value.has(groupId)) return;
     visibleGroups.value.delete(groupId);
 
-    const parents = [groupId * 2, groupId * 2 + 1];
+    // Get actual parents from the group data
+    const group = groupData.find(g => g.id === groupId);
+    const parents = group ? group.parents || [] : [];
+
     parents.forEach(parentId => {
+      // Check if any other visible groups have this parent as their child
       const hasVisibleChildren = groupData.some(
         g =>
-          [g.id * 2, g.id * 2 + 1].includes(parentId) &&
+          g.parents && g.parents.includes(parentId) &&
           g.id !== groupId &&
           visibleGroups.value.has(g.id)
       );
@@ -63,8 +63,11 @@ function buildLevels(startId = 1) {
 
   function showGroupAndParents(groupId) {
     showGroup(groupId);
-    const parents = [groupId * 2, groupId * 2 + 1];
-    const parentLevel = levelMap[parents[0]] ?? Infinity;
+
+    // Get actual parents from the group data
+    const group = groupData.find(g => g.id === groupId);
+    const parents = group ? group.parents || [] : [];
+    const parentLevel = parents.length > 0 ? levelMap[parents[0]] ?? Infinity : Infinity;
 
     // Hide other groups at the same level
     groupData.forEach(g => {
@@ -86,6 +89,71 @@ function buildLevels(startId = 1) {
     parents.forEach(pid => showGroup(pid));
   }
 
+  function showGroupAndSpecificParents(groupId, memberId) {
+    showGroup(groupId);
+
+    // Find the parents of the specific member from infoTable to understand if they exist
+    const memberInfo = infoTable.find(person => person.id === memberId);
+    if (!memberInfo) {
+      // If member not found, fall back to default behavior
+      const group = groupData.find(g => g.id === groupId);
+      const parents = group ? group.parents || [] : [];
+      const parentLevel = parents.length > 0 ? levelMap[parents[0]] ?? Infinity : Infinity;
+
+      // Hide other groups at the same level
+      groupData.forEach(g => {
+        const lvl = levelMap[g.id];
+        if (lvl === parentLevel && !parents.includes(g.id) && g.id !== groupId) {
+          hideGroup(g.id);
+        }
+      });
+
+      // Hide deeper levels
+      groupData.forEach(g => {
+        const lvl = levelMap[g.id];
+        if (lvl > parentLevel && g.id !== groupId) {
+          hideGroup(g.id);
+        }
+      });
+
+      // Show direct parents
+      parents.forEach(pid => showGroup(pid));
+      return;
+    }
+
+    // In the binary tree structure, the parent groups for group N are groups 2N and 2N+1
+    const leftParentGroup = groupId * 2;   // Left "parent" group (contains parents of member at position 0)
+    const rightParentGroup = groupId * 2 + 1;  // Right "parent" group (contains parents of member at position 1)
+
+    // Determine parent level for hiding other groups
+    const leftParentLevel = levelMap[leftParentGroup] ?? Infinity;
+    const rightParentLevel = levelMap[rightParentGroup] ?? Infinity;
+    const parentLevel = Math.min(leftParentLevel, rightParentLevel);
+
+    // Hide other groups at the same level
+    groupData.forEach(g => {
+      const lvl = levelMap[g.id];
+      if (lvl === parentLevel &&
+          g.id !== leftParentGroup &&
+          g.id !== rightParentGroup &&
+          g.id !== groupId) {
+        hideGroup(g.id);
+      }
+    });
+
+    // Hide deeper levels
+    groupData.forEach(g => {
+      const lvl = levelMap[g.id];
+      if (lvl > parentLevel && g.id !== groupId) {
+        hideGroup(g.id);
+      }
+    });
+
+    // Always show both parent groups in binary tree navigation
+    showGroup(leftParentGroup);
+    showGroup(rightParentGroup);
+  }
+
   function isVisible(groupId) {
     return visibleGroups.value.has(groupId);
   }
@@ -95,6 +163,7 @@ function buildLevels(startId = 1) {
     showGroup,
     hideGroup,
     showGroupAndParents,
+    showGroupAndSpecificParents,
     isVisible,
     levelMap,
   };

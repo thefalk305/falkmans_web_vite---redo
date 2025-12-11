@@ -1,11 +1,11 @@
 <!-- prettier-ignore-file -->
 <script setup>
-import { provide } from "vue";
+import { provide, ref, computed } from "vue";
 import NewBranch from "../components/NewBranch.vue";
-import branchData from "../../public/data/branchData.json";
 import infoTable from '../assets/infotable.json';
 import { useDraggableModal } from "@/composables/useDraggableModal";
 import { useGroupVisibility } from "@/composables/useGroupVisibility";
+import { useDynamicGroups } from "@/composables/useDynamicGroups";
 
 useDraggableModal();
 
@@ -15,11 +15,17 @@ const openFormHandler = ( memberId, groupId, memberIndex) => {
   window.open(`/add-person?id=${memberId}&groupId=${groupId}&memberIndex=${memberIndex}`, '_blank');
 };
 
-// Create and provide group visibility state
-const groupVisibility = useGroupVisibility(branchData);
+// Generate dynamic groups
+const { buildCompleteTree } = useDynamicGroups(infoTable);
+const dynamicGroups = ref(buildCompleteTree([2, 13], 10));
+
+// Create and provide group visibility state with dynamic groups
+const groupVisibility = useGroupVisibility(dynamicGroups.value, 1, infoTable);
 provide("groupVisibility", groupVisibility);
-provide("branchData", branchData);
 provide("infoTable", infoTable);
+
+// Make the data available to the template as well
+const branchData = computed(() => dynamicGroups.value);
 
 </script>
 

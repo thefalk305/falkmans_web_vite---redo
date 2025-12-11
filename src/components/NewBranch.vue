@@ -35,9 +35,9 @@ const branchData = memberIds
   })
   .filter(Boolean);
 
-function handleImageClick(groupId) {
-  // Show the clicked group and all its parents
-  groupVisibility.showGroupAndParents(groupId);
+function handleImageClick(groupId, clickedMemberId) {
+  // Show the clicked group and parents specific to this person
+  groupVisibility.showGroupAndSpecificParents(groupId, clickedMemberId);
 }
 
 function openForm(memberId, memberIndex) {
@@ -49,24 +49,24 @@ function openForm(memberId, memberIndex) {
   <!-- // topmgroup = Da'Boys -->
   <div v-if="groupId === 0" class="topmgroup">
     <div
-      v-for="(item, index) in branchData"
+      v-for="(person, index) in branchData"
       :width="100"
       :style="{ top: '50px', left: index * 200 + 'px' }"
       class="imagecontainer"
-      :key="item.id"
+      :key="person.id"
     >
-      <img :src="resolveImageUrl(item.pic)" :alt="item.pic" />
-      <AppLink :to="{ name: 'InfoPage', params: { id: item.id } }">
+      <img :src="resolveImageUrl(person.pic)" :alt="person.pic" />
+      <AppLink :to="{ name: 'InfoPage', params: { id: person.id } }">
         <div
           class="imagecontainer desc upslide"
           style="color: rgba(105, 248, 105, 0.6)"
         >
-          {{ item.name }}
+          {{ person.name }}
           <br /><br />
-          {{ item.born_died }}
+          {{ person.born_died }}
           <p>
             Origins:<br />
-            {{ item.birthplace }}
+            {{ person.birthplace }}
           </p>
         </div>
       </AppLink>
@@ -77,7 +77,7 @@ function openForm(memberId, memberIndex) {
   <div
     v-else
     class="stline"
-    :class="`group${groupId}`" 
+    :class="`group${groupId}`"
     :style="{
       top: `${top}px`,
       left: `${left}px`,
@@ -90,38 +90,38 @@ function openForm(memberId, memberIndex) {
     <div class="mgroup">
       <p>mgroup{{ groupId }}</p>
       <div
-        v-for="(item, index) in branchData"
+        v-for="(person, index) in branchData"
         :style="{
           left: index ? '310px' : '-64px',
         }"
         class="imagecontainer desc"
-        :key="item.id"
+        :key="person.id"
       >
-        <!-- <AppLink :to="{ name: 'InfoPage', params: { id: item.id } }"> -->
+        <!-- <AppLink :to="{ name: 'InfoPage', params: { id: person.id } }"> -->
         <div class="memberGroup">
-          <p>member = {{ item.id }}</p>
+          <p>member = {{ person.id }}</p>
         </div>
-        <div v-if="item.id === 9998 || item.id === 9999">
+        <div v-if="person.id === 9998 || person.id === 9999">
           <!-- <div v-if="false"> -->
           <img
-            @click="openForm(item.id, index)"
-            :src="resolveImageUrl(item.pic)"
+            @click="openForm(person.id, index)"
+            :src="resolveImageUrl(person.pic)"
             :alt="index ? 'wife' : 'husband'"
           />
         </div>
         <div v-else>
           <img
-            @click="handleImageClick(groupId)"
-            :src="resolveImageUrl(item.pic)"
+            @click="handleImageClick(groupId, person.id)"
+            :src="resolveImageUrl(person.pic)"
             :alt="index ? 'wife' : 'husband'"
           />
         </div>
         <!-- display name -->
         <p style="font-size: 16px; position: relative; left: -30px">
-          {{ item.name }}
+          {{ person.name }}
         </p>
         <!-- </AppLink> -->
-        <AppLink :to="{ name: 'InfoPage', params: { id: item.id } }">
+        <AppLink :to="{ name: 'InfoPage', params: { id: person.id } }">
           <div
             class="imagecontainer desc"
             :class="[
@@ -130,12 +130,12 @@ function openForm(memberId, memberIndex) {
             ]"
             style="color: rgba(105, 248, 105, 0.6)"
           >
-            {{ item.name }}
+            {{ person.name }}
             <br /><br />
-            {{ item.born_died }}
+            {{ person.born_died }}
             <p>
               Origins:<br />
-              {{ item.birthplace }}
+              {{ person.birthplace }}
             </p>
           </div>
         </AppLink>
