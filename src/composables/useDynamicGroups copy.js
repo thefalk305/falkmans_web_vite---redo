@@ -1,15 +1,14 @@
-import { computed } from 'vue';
-
-// Generic function to find a person by any property in the infoTable
-const findPersonByProperty = (infoTable, property, value) => {
-  return infoTable.find(person => person[property] === value);
-};
+import { ref, computed } from 'vue';
 
 // Function to find a person by name in the infoTable
-const findPersonByName = (infoTable, name) => findPersonByProperty(infoTable, 'name', name);
+const findPersonByName = (infoTable, name) => {
+  return infoTable.find(person => person.name === name);
+};
 
 // Function to find a person by ID in the infoTable
-const findPersonById = (infoTable, id) => findPersonByProperty(infoTable, 'id', id);
+const findPersonById = (infoTable, id) => {
+  return infoTable.find(person => person.id === id);
+};
 
 // Function to calculate the full group data dynamically from infoTable
 export function useDynamicGroups(infoTable) {
@@ -26,77 +25,77 @@ export function useDynamicGroups(infoTable) {
     return map;
   });
 
-  // Helper function to process parent with specified logic
-  const processParent = (person, parentField, placeholderId, placeholderName, missingAsPlaceholder = false) => {
-    const parentName = person[parentField];
-    const parentExists = parentName && parentName.trim() !== "";
-
-    if (!parentExists && !missingAsPlaceholder) {
-      // Don't return anything for missing parent if not treating as placeholder
-      return null;
-    } else if (parentExists) {
-      const parent = findPersonByName(infoTable, parentName);
-      if (parent) {
-        return {
-          id: parent.id,
-          type: 'existent',
-          person: parent
-        };
-      } else {
-        console.warn(`${parentField.charAt(0).toUpperCase() + parentField.slice(1)} "${parentName}" not found in infoTable`);
-        // Return placeholder for parent not found in the data
-        return {
-          id: placeholderId,
-          type: 'placeholder'
-        };
-      }
-    } else {
-      // parent doesn't exist, but missingAsPlaceholder is true
-      return {
-        id: placeholderId,
-        type: 'placeholder'
-      };
-    }
-  };
-
-  // Function to get parents of a person by ID (without placeholders)
+  // Function to get parents of a person by name
   const getParentsById = (personId) => {
     const person = findPersonById(infoTable, personId);
     if (!person) return [];
 
     const parents = [];
 
-    const fatherResult = processParent(person, 'father', 9998, 'Add Father');
-    if (fatherResult && fatherResult.type === 'existent') {
-      parents.push(fatherResult.id);
+    // Check if father field exists and is not empty
+    if (person.father && person.father.trim() !== "") {
+      const father = findPersonByName(infoTable, person.father);
+      if (father) {
+        parents.push(father.id);
+      } else {
+        // Father exists in name but not found in table - might be an issue with data
+        console.warn(`Father "${person.father}" not found in infoTable for person ID ${personId}`);
+      }
+    } else {
+      // Father is missing - we'll add a placeholder later when building the display
     }
 
-    const motherResult = processParent(person, 'mother', 9999, 'Add Mother');
-    if (motherResult && motherResult.type === 'existent') {
-      parents.push(motherResult.id);
+    // Check if mother field exists and is not empty
+    if (person.mother && person.mother.trim() !== "") {
+      const mother = findPersonByName(infoTable, person.mother);
+      if (mother) {
+        parents.push(mother.id);
+      } else {
+        // Mother exists in name but not found in table - might be an issue with data
+        console.warn(`Mother "${person.mother}" not found in infoTable for person ID ${personId}`);
+      }
+    } else {
+      // Mother is missing - we'll add a placeholder later when building the display
     }
 
     return parents;
   };
 
-  // Function to get parents with placeholders for missing parents
+  // Function to check if a person has missing parents and returns placeholders
   const getParentsWithPlaceholders = (personId) => {
     const person = findPersonById(infoTable, personId);
     if (!person) return [];
 
     const parents = [];
+    const placeholders = [];
 
-    const fatherResult = processParent(person, 'father', 9998, 'Add Father', true);
-    if (fatherResult) {
-      parents.push(fatherResult.id);
+    // Check if father field exists and is not empty
+    if (person.father && person.father.trim() !== "") {
+      const father = findPersonByName(infoTable, person.father);
+      if (father) {
+        parents.push(father.id);
+      } else {
+        console.warn(`Father "${person.father}" not found in infoTable for person ID ${personId}`);
+      }
+    } else {
+      // Add father placeholder
+      placeholders.push(9998);
     }
 
-    const motherResult = processParent(person, 'mother', 9999, 'Add Mother', true);
-    if (motherResult) {
-      parents.push(motherResult.id);
+    // Check if mother field exists and is not empty
+    if (person.mother && person.mother.trim() !== "") {
+      const mother = findPersonByName(infoTable, person.mother);
+      if (mother) {
+        parents.push(mother.id);
+      } else {
+        console.warn(`Mother "${person.mother}" not found in infoTable for person ID ${personId}`);
+      }
+    } else {
+      // Add mother placeholder
+      placeholders.push(9999);
     }
 
-    return parents;
+    return [...parents, ...placeholders];
   };
 
   // Function to get parent objects with placeholders for missing parents
@@ -106,12 +105,14 @@ export function useDynamicGroups(infoTable) {
 
     const parentObjects = [];
 
-    const fatherResult = processParent(person, 'father', 9998, 'Add Father', true);
-    if (fatherResult) {
-      if (fatherResult.type === 'existent' && fatherResult.person) {
-        parentObjects.push(fatherResult.person);
+    // Check if father field exists and is not empty
+    if (person.father && person.father.trim() !== "") {
+      const father = findPersonByName(infoTable, person.father);
+      if (father) {
+        parentObjects.push(father);
       } else {
-        // Always add the placeholder if it's missing (either field is empty or person not found)
+        console.warn(`Father "${person.father}" not found in infoTable for person ID ${personId}`);
+        // Add father placeholder since we expected to find the father but didn't
         parentObjects.push({
           id: 9998,
           pic: 'Add Father.svg',
@@ -120,14 +121,25 @@ export function useDynamicGroups(infoTable) {
           birthplace: ''
         });
       }
+    } else {
+      // Add father placeholder object when field is empty
+      parentObjects.push({
+        id: 9998,
+        pic: 'Add Father.svg',
+        name: 'Add Father',
+        born_died: '',
+        birthplace: ''
+      });
     }
 
-    const motherResult = processParent(person, 'mother', 9999, 'Add Mother', true);
-    if (motherResult) {
-      if (motherResult.type === 'existent' && motherResult.person) {
-        parentObjects.push(motherResult.person);
+    // Check if mother field exists and is not empty
+    if (person.mother && person.mother.trim() !== "") {
+      const mother = findPersonByName(infoTable, person.mother);
+      if (mother) {
+        parentObjects.push(mother);
       } else {
-        // Always add the placeholder if it's missing (either field is empty or person not found)
+        console.warn(`Mother "${person.mother}" not found in infoTable for person ID ${personId}`);
+        // Add mother placeholder since we expected to find the mother but didn't
         parentObjects.push({
           id: 9999,
           pic: 'Add Mother.svg',
@@ -136,12 +148,21 @@ export function useDynamicGroups(infoTable) {
           birthplace: ''
         });
       }
+    } else {
+      // Add mother placeholder object when field is empty
+      parentObjects.push({
+        id: 9999,
+        pic: 'Add Mother.svg',
+        name: 'Add Mother',
+        born_died: '',
+        birthplace: ''
+      });
     }
 
     return parentObjects;
   };
 
-  // Function to get children of a person by ID
+  // Function to get children of a person by name
   const getChildrenById = (personId) => {
     const children = [];
     infoTable.forEach(person => {
@@ -155,6 +176,79 @@ export function useDynamicGroups(infoTable) {
       }
     });
     return children;
+  };
+
+  // Recursive function to build the group structure starting from a base group
+  const buildGroupStructure = (baseMembers = [2, 13], maxGroups = 100) => {
+    const groups = [];
+    
+    // Group 0 (always visible) - contains members [4, 5, 6, 7, 8]
+    groups.push({
+      id: 0,
+      members: [4, 5, 6, 7, 8],
+      parents: [2, 3], // placeholder parents
+      top: 100,
+      left: 0
+    });
+    
+    // Group 1 (root) - contains the base members
+    groups.push({
+      id: 1,
+      members: [...baseMembers],
+      parents: [],
+      top: 0,
+      left: 0
+    });
+
+    // Build subsequent groups based on parents of previous group members
+    for (let groupId = 1; groupId < maxGroups; groupId++) {
+      if (!groups[groupId]) break; // Skip if group doesn't exist
+      
+      const currentGroup = groups[groupId];
+      const parentIds = new Set();
+      
+      // Collect all parents of current group members
+      currentGroup.members.forEach(memberId => {
+        const parents = getParentsById(memberId);
+        parents.forEach(parentId => parentIds.add(parentId));
+      });
+      
+      if (parentIds.size > 0) {
+        // Create next level groups (left and right parent groups)
+        const leftGroupId = groupId * 2;
+        const rightGroupId = groupId * 2 + 1;
+        
+        // Calculate positions based on level
+        const level = Math.floor(Math.log2(groupId + 1)); // Level of current group
+        const nextLevel = Math.floor(Math.log2(leftGroupId + 1)); // Level of parent groups
+        const top = nextLevel * 200; // 200px per level
+        
+        // Calculate left position based on group position in the level
+        const levelStart = Math.pow(2, nextLevel) - 1;
+        const positionInLevel = leftGroupId - levelStart;
+        const leftLeft = (positionInLevel - Math.pow(2, nextLevel - 1)) * 300; // -300 per position from center
+        
+        // Add left parent group
+        groups[leftGroupId] = {
+          id: leftGroupId,
+          members: Array.from(parentIds).filter((_, idx) => idx % 2 === 0), // Alternate assignment
+          parents: [], // Will be calculated in next iteration
+          top: top,
+          left: leftLeft
+        };
+        
+        // Add right parent group
+        groups[rightGroupId] = {
+          id: rightGroupId,
+          members: Array.from(parentIds).filter((_, idx) => idx % 2 === 1), // Alternate assignment
+          parents: [], // Will be calculated in next iteration
+          top: top,
+          left: leftLeft + 300 // 300px to the right
+        };
+      }
+    }
+    
+    return groups.filter(Boolean); // Remove undefined entries
   };
 
   // Function to calculate group positions based on level and position
@@ -192,10 +286,10 @@ export function useDynamicGroups(infoTable) {
     return { top, left };
   };
 
-  // Generate the full tree structure (keeping this function to maintain compatibility)
+  // Generate the full tree structure
   const generateGroups = (baseMembers = [2, 13], maxGroups = 100) => {
     const groups = [];
-
+    
     // Group 0 (special group with fixed members)
     groups[0] = {
       id: 0,
@@ -203,7 +297,7 @@ export function useDynamicGroups(infoTable) {
       parents: [0, 1], // placeholder parents
       ...calculateGroupPosition(0)
     };
-
+    
     // Group 1 (root group)
     groups[1] = {
       id: 1,
@@ -217,17 +311,17 @@ export function useDynamicGroups(infoTable) {
       // Process each group at this level
       for (let g = groupId; g < Math.min(groupId * 2, maxGroups); g++) {
         if (!groups[g]) continue;
-
+        
         // Collect parents of all members in this group
         const allParentIds = new Set();
         groups[g].members.forEach(memberId => {
           const parents = getParentsById(memberId);
           parents.forEach(parentId => allParentIds.add(parentId));
         });
-
+        
         if (allParentIds.size > 0) {
           const parentArray = Array.from(allParentIds);
-
+          
           // Create left parent group (2*g)
           if (g * 2 < maxGroups) {
             const leftParents = parentArray.filter((_, idx) => idx % 2 === 0);
@@ -240,7 +334,7 @@ export function useDynamicGroups(infoTable) {
               };
             }
           }
-
+          
           // Create right parent group (2*g + 1)
           if (g * 2 + 1 < maxGroups) {
             const rightParents = parentArray.filter((_, idx) => idx % 2 === 1);
@@ -256,11 +350,11 @@ export function useDynamicGroups(infoTable) {
         }
       }
     }
-
+    
     return groups.filter(Boolean);
   };
 
-  // More accurate method that builds the tree properly with placeholders
+  // More accurate method that builds the tree properly
   const buildCompleteTree = (baseMembers = [2, 13], maxDepth = 8) => {
     const groups = [];
 
@@ -320,21 +414,14 @@ export function useDynamicGroups(infoTable) {
           const memberParents = getParentObjectsWithPlaceholders(memberToProcess);
           const memberParentIds = memberParents.map(p => p.id);
 
-          // Create the group even if it only has placeholders (important for navigation)
-          groups[groupId] = {
-            id: groupId,
-            members: memberParentIds,
-            parents: [], // Will be set according to navigation structure later
-            ...calculateGroupPosition(groupId)
-          };
-        } else {
-          // Still create the group even if no member to process, to maintain tree structure
-          groups[groupId] = {
-            id: groupId,
-            members: [],
-            parents: [],
-            ...calculateGroupPosition(groupId)
-          };
+          if (memberParentIds.length > 0) {
+            groups[groupId] = {
+              id: groupId,
+              members: memberParentIds,
+              parents: [], // Will be set according to navigation structure later
+              ...calculateGroupPosition(groupId)
+            };
+          }
         }
       }
     }
