@@ -25,7 +25,7 @@ const infoTable = inject('infoTable');
   var pics = [];
   var tblArray = [];
   // var infoTable = [];
-  // infoTable = inject("infoTable");
+  // const { infoTable } = useInfoTableData();
 
   // record = infoTable[props.id - 1];
 

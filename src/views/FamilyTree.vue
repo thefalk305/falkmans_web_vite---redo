@@ -1,14 +1,14 @@
 <script setup>
-  import { reactive, ref, watchEffect, inject } from "vue";
+  import { reactive, ref, watchEffect, inject, computed } from "vue";
+  import { useInfoTableData } from "@/composables/useInfoTableData";
   import BackToTop from "../components/BackToTop.vue";
   import Animation from "../components/Animation.vue";
   import Tree from "../components/Tree.vue";
   import ShowFamilyPage from "../components/ShowFamilyPage.vue";
 // import { useMouse } from '@/assets/js/mouseTracker.js'
 
-  var infoTable = [];
-  infoTable = inject("infoTable");
- const recordData = infoTable[3];
+  const { infoTable } = useInfoTableData();
+  const recordData = computed(() => infoTable.value && infoTable.value[3] ? infoTable.value[3] : null);
 </script>
 
 <template>

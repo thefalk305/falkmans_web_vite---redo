@@ -1,7 +1,7 @@
 <!-- prettier-ignore-file -->
 <!-- prettier-ignore-file -->
 <script setup>
-  import { reactive, ref } from "vue";
+  import { reactive, ref, computed } from "vue";
   import ShowModal from "./ShowModal.vue";
   import ShowInfoPage from "./ShowInfoPage.vue";
 
@@ -13,12 +13,23 @@
     infoTable: Array,
     fromDaBoys: Boolean
   });
+
   var showRelatives = ref(false);
 
-  var tblArray = ref([]);
-  var tblKeys = Object.keys(props.recordData);
+  // Use computed to automatically update when props change
+  const tblKeys = computed(() => {
+    if (props.recordData) {
+      return Object.keys(props.recordData);
+    }
+    return [];
+  });
 
-  tblArray = bldRels(tblKeys, props.infoTable, props.recordData);
+  const tblArray = computed(() => {
+    if (props.infoTable && Array.isArray(props.infoTable) && props.infoTable.length > 0 && props.recordData) {
+      return bldRels(tblKeys.value, props.infoTable, props.recordData);
+    }
+    return [];
+  });
 </script>
 
 <template>
@@ -32,12 +43,12 @@
         {{ showRelatives ? "Hide Relatives" : "Show Relatives" }}
       </button>
       <div id="showRelatives" v-if="showRelatives">
-        <div v-for="record in tblArray" :key="record.id">
+        <div v-for="record in tblArray" :key="record ? record.id : undefined">
           <!-- test whether heading or relative -->
-          <div v-if="record.id == 0">
+          <div v-if="record && record.id == 0">
             <h2>{{ record.name }}</h2>
           </div>
-          <div v-else>
+          <div v-else-if="record">
             <h2 style="border: none"><ShowModal :recordData="record" /></h2>
           </div>
         </div>

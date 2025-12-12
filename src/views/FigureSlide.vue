@@ -1,12 +1,10 @@
 <script setup>
-  import { ref, watch, inject } from "vue";
+  import { ref, watch, inject, computed } from "vue";
+  import { useInfoTableData } from "@/composables/useInfoTableData";
   import ShowModal from "@/components/ShowModal.vue";
 
   const resolveImageUrl = (filename) =>
   new URL(`../assets/img/${filename}`, import.meta.url).href;
-
-  var recordData = [];
-  var infoTable = [];
 
   const photos = [
     "Frank Alexander Jr",
@@ -16,20 +14,33 @@
     "Frank J Alexander",
   ];
 
-
-
-  infoTable = inject("infoTable");
-  for (var i = 0; i < photos.length; i++) {
-    for (var j = 0; j < infoTable.length; j++) {
-      if (photos[i] === infoTable[j].name) {
-        recordData.push(infoTable[j]);
-        break;
+  const recordData = ref([]);
+  const { infoTable, loading } = useInfoTableData();
+  // Process photos when infoTable is loaded
+  const processPhotos = () => {
+    if (infoTable.value) {
+      recordData.value = []; // Clear previous data
+      for (var i = 0; i < photos.length; i++) {
+        for (var j = 0; j < infoTable.value.length; j++) {
+          if (photos[i] === infoTable.value[j].name) {
+            recordData.value.push(infoTable.value[j]);
+            break;
+          }
+        }
       }
     }
-  }
+  };
+
+  // Watch for changes to infoTable and process photos when it's loaded
+  watch(() => infoTable.value, (newInfoTable) => {
+    if (newInfoTable && newInfoTable.length > 0) {
+      processPhotos();
+    }
+  }, { immediate: true }); // Run immediately in case data is already loaded
+
 console.log(resolveImageUrl(photos[0] + '.jpg'));
 
-  const photo = recordData[0]; // Assuming you want to display the first photo's data
+  const photo = computed(() => recordData.value[0] || null); // Use computed to handle reactivity
 
 </script>
 

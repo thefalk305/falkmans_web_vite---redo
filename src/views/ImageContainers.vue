@@ -13,7 +13,7 @@
 
   var brothersData = [];
   var infoTable = [];
-  infoTable = inject("infoTable");
+  const { infoTable } = useInfoTableData();
   for (var i = 0; i < 5; i++) {
     brothersData[i] = infoTable[i + 3];
   }

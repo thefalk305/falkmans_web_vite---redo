@@ -1,5 +1,6 @@
 <script setup>
   import { ref, watch, inject } from "vue";
+  import { useInfoTableData } from "@/composables/useInfoTableData";
   import MiniNav from "@/components/MiniNav.vue";
   import ShowModal from "@/components/ShowModal.vue";
 
@@ -50,8 +51,7 @@
 
 
   var recordData = [];
-  var infoTable = [];
-  infoTable = inject("infoTable");
+  const { infoTable } = useInfoTableData();
   // for (var i = 0; i < photos.length; i++) {
   //   for (var j = 0; j < infoTable.length; j++) {
   //     if (photos[i] === infoTable[j].name) {

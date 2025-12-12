@@ -2,13 +2,15 @@
   //import axios
   // import axios from "axios";
   // import { onBeforeRouteLeave } from "vue-router";
-  import { ref, inject } from "vue";
+  import { ref, inject, computed } from "vue";
+  import { useInfoTableData } from "@/composables/useInfoTableData";
   import GoBack from "../components/GoBack.vue";
   import BackToTop from "../components/BackToTop.vue";
 
-  var infoTable = [];
   var items = [];
   var keys = [];
+
+  const { infoTable } = useInfoTableData();
   // export default {
   //   components: {
   //     BackToTop,
@@ -57,11 +59,16 @@
   //   },
   // };
 
-  infoTable = inject("infoTable");
-  items = infoTable;
-  keys = Object.keys(items[0]); // get first record to extract field names
-  keys.shift(); // remove 'id' field
-  keys.push("Actions"); // add 'Actions' row heading
+  items = computed(() => infoTable.value);
+  keys = computed(() => {
+    if (items.value && items.value.length > 0) {
+      const keysArray = Object.keys(items.value[0]); // get first record to extract field names
+      keysArray.shift(); // remove 'id' field
+      keysArray.push("Actions"); // add 'Actions' row heading
+      return keysArray;
+    }
+    return [];
+  });
 </script>
 <template>
   <div id="infotable">

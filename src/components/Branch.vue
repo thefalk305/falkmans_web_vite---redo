@@ -1,5 +1,6 @@
 <script setup>
-  import { reactive, ref, watchEffect, inject } from "vue";
+  import { reactive, ref, watchEffect } from "vue";
+  import { useInfoTableData } from "@/composables/useInfoTableData";
   import ImageCont from "./ImageCont.vue";
   import treeData from "../assets/js/treeData.js";
 
@@ -10,8 +11,7 @@
     modalTop: Number,
   });
 
-  var infoTable = [];
-  infoTable = inject("infoTable");
+  const { infoTable } = useInfoTableData();
 
 
   var coupleData = [];
@@ -28,13 +28,22 @@
   var class2 = "";
   var class3 = "";
 
-  branchIds = props.branchData[1];
+  // These are now handled in the watchEffect due to async nature of infoTable
+  // branchIds = props.branchData[1];
+  // branchGroup = props.branchData[0];
   branchGroup = props.branchData[0];
 
-  branchIds.forEach((item, index) => {
-    // console.log(item);
-    coupleData[index] = infoTable[item - 1];
-    // coupleData[index] = props.infoTable[item - 1];
+  watchEffect(() => {
+    if (infoTable.value && props.branchData) {
+      branchIds = props.branchData[1];
+      branchIds.forEach((item, index) => {
+        // console.log(item);
+        if (infoTable.value && infoTable.value[item - 1]) {
+          coupleData[index] = infoTable.value[item - 1];
+        }
+        // coupleData[index] = props.infoTable[item - 1];
+      });
+    }
   });
 
   // coupleData.value[0] = props.infoTable[branchIds.value[0] - 1];

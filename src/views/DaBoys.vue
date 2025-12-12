@@ -12,11 +12,17 @@
   var showRelatives = true;
   if (props.hideRelatives) showRelatives = false;
 
-  var brothersData = [];
-  var infoTable = [];
-  infoTable = inject("infoTable");
-  for (var i = 0; i < 5; i++) {
-    brothersData[i] = infoTable[i + 3];
+  const brothersData = ref([]);
+  // Get infoTable from global injection
+  const infoTable = inject('infoTable', []);
+
+  // Initialize brothersData when component loads
+  if (infoTable && infoTable.length > 0) {
+    for (var i = 0; i < 5; i++) {
+      if (infoTable[i + 3]) {
+        brothersData.value.push(infoTable[i + 3]);
+      }
+    }
   }
 
   // async function getProducts() {
@@ -58,10 +64,10 @@
   <div class="image-containers">
     <div id="brothersData" v-for="item in brothersData" :key="item.id">
       <ImageContainer :recordData="item" :fromDaBoys="true" />
-      <Relatives v-if="showRelatives" 
-        :recordData="item" 
+      <Relatives v-if="showRelatives"
+        :recordData="item"
         :infoTable="infoTable"
-        :fromDaBoys="true" 
+        :fromDaBoys="true"
       />
     </div>
   </div>

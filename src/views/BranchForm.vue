@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import axios from 'axios';
+import { getFirestore, addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import db from '@/fb';
 
 const route = useRoute();
 
@@ -22,19 +23,65 @@ onMounted(() => {
   formData.value.id = Number(route.query.id);
   formData.value.groupId = Number(route.query.groupId);
   formData.value.memberIndex = Number(route.query.memberIndex);
+
+  // Set default picture based on the ID
+  // ID 9998 is for adding father, ID 9999 is for adding mother
+  if (formData.value.id === 9998) {
+    // Add father - default to face2.png
+    formData.value.pic = 'face2.png';
+  } else if (formData.value.id === 9999) {
+    // Add mother - default to face1.png
+    formData.value.pic = 'face1.png';
+  }
+
   console.log('BranchForm mounted. Test message.'); // Added test log
 });
 
 async function submitForm() {
   try {
-    const response = await axios.post('http://localhost:3001/api/infotable', formData.value);
-    console.log('Server logs:', response.data.logs);
+    // Check if this is a placeholder ID (9998 or 9999) that needs to be replaced with a new ID
+    // or if we have a regular ID that should be updated
+    let targetId = formData.value.id;
+    let isUpdateOperation = targetId && targetId < 9998; // IDs less than 9998 are real person IDs
+
+    // If we have a placeholder ID (9998 or 9999) or no ID, we need to generate a new ID
+    if (!targetId || targetId >= 9998) {
+      // For new records, find the highest existing ID (less than 9998) and increment it
+      // This maintains consistency with the existing ID system
+      const { getDocs, query, orderBy, where } = await import('firebase/firestore');
+      const peopleRef = collection(db, 'people');
+      // Query only for documents with ID < 9998 (real person IDs, not placeholders)
+      const q = query(peopleRef, where('id', '<', 9998), orderBy('id', 'desc'));
+      const snapshot = await getDocs(q);
+
+      targetId = 1; // Default to 1 if no documents exist
+      if (!snapshot.empty) {
+        const highestIdDoc = snapshot.docs[0];
+        const highestId = highestIdDoc.data().id;
+        targetId = highestId + 1;
+      }
+
+      isUpdateOperation = false; // This will be a new record with the generated ID
+    }
+
+    if (isUpdateOperation) {
+      // Update existing document
+      await setDoc(doc(db, 'people', targetId.toString()), {
+        ...formData.value,
+        id: targetId  // Ensure ID is included
+      });
+    } else {
+      // Add new document with the calculated targetId
+      await setDoc(doc(db, 'people', targetId.toString()), {
+        ...formData.value,
+        id: targetId  // Add the calculated ID to the document
+      });
+    }
+
+    console.log('Data saved successfully to Firestore with ID:', targetId);
     window.close();
   } catch (error) {
-    console.error("Error submitting form:", error);
-    if (error.response) {
-      console.error('Server response:', error.response.data);
-    }
+    console.error("Error submitting form to Firestore:", error);
   }
 }
 

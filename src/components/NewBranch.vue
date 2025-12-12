@@ -1,5 +1,4 @@
 <script setup>
-import { inject } from "vue";
 import AppLink from "@/components/AppLink.vue";
 
 const resolveImageUrl = (filename) =>
@@ -7,12 +6,11 @@ const resolveImageUrl = (filename) =>
 
 const props = defineProps({
   group: Object,
+  infoTable: Array,
+  groupVisibility: Object,
 });
 
 const emit = defineEmits(['open-form']);
-
-const infoTable = inject("infoTable");
-const groupVisibility = inject("groupVisibility");
 
 const memberIds = props.group.members;
 const top = props.group.top;
@@ -21,7 +19,7 @@ const groupId = props.group.id;
 
 const branchData = memberIds
   .map((id) => {
-    const foundInfotableEntry = infoTable.find((entry) => entry.id === id);
+    const foundInfotableEntry = props.infoTable.find((entry) => entry.id === id);
     if (foundInfotableEntry) {
       return foundInfotableEntry;
     }
@@ -37,7 +35,7 @@ const branchData = memberIds
 
 function handleImageClick(groupId, clickedMemberId) {
   // Show the clicked group and parents specific to this person
-  groupVisibility.showGroupAndSpecificParents(groupId, clickedMemberId);
+  props.groupVisibility.showGroupAndSpecificParents(groupId, clickedMemberId);
 }
 
 function openForm(memberId, memberIndex) {
@@ -81,7 +79,7 @@ function openForm(memberId, memberIndex) {
     :style="{
       top: `${top}px`,
       left: `${left}px`,
-      visibility: groupVisibility.isVisible(groupId) ? 'visible' : 'hidden',
+      visibility: props.groupVisibility?.isVisible(groupId) ? 'visible' : 'hidden',
     }"
   >
     <div v-if="groupId != 1">

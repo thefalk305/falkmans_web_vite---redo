@@ -2,6 +2,7 @@
 
 <script setup>
   import { computed, ref, inject } from "vue";
+  import { useInfoTableData } from "@/composables/useInfoTableData";
 
   import axios from "axios";
   import NavBar from "../components/NavBar.vue";
@@ -30,13 +31,12 @@
   // var id = ref(3);
   var pics = [];
   var tblArray = [];
-  var infoTable = [];
-  infoTable = inject("infoTable");
+  const { infoTable } = useInfoTableData();
 
-const record = computed(() => (infoTable && infoTable[props.id - 1]) || {});
+const record = computed(() => (infoTable.value && infoTable.value[props.id - 1]) || {});
   var tblKeys = Object.keys(record.value);
   var tblValues = record.valueOf();
-  tblArray = bldRels(tblKeys, infoTable, record.value);
+  tblArray = bldRels(tblKeys, infoTable.value, record.value);
 
 const familySrchLink = computed(() =>
   record.value && record.value.famSrchLink

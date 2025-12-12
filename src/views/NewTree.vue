@@ -1,13 +1,18 @@
 <!-- prettier-ignore-file -->
 <script setup>
-import { provide, ref, computed } from "vue";
+import { ref, computed, inject, provide } from "vue";
 import NewBranch from "../components/NewBranch.vue";
-import infoTable from '../assets/infotable.json';
 import { useDraggableModal } from "@/composables/useDraggableModal";
 import { useGroupVisibility } from "@/composables/useGroupVisibility";
 import { useDynamicGroups } from "@/composables/useDynamicGroups";
 
 useDraggableModal();
+
+// Get the infoTable from global provide
+const infoTable = inject("infoTable", []);
+const dynamicGroups = ref([]);
+const groupVisibilityRef = ref(null);
+const loading = ref(false); // No need to load since it's already loaded globally
 
 const openFormHandler = ( memberId, groupId, memberIndex) => {
   // console.log('Received payload:', payload);
@@ -15,18 +20,18 @@ const openFormHandler = ( memberId, groupId, memberIndex) => {
   window.open(`/add-person?id=${memberId}&groupId=${groupId}&memberIndex=${memberIndex}`, '_blank');
 };
 
-// Generate dynamic groups
-const { buildCompleteTree } = useDynamicGroups(infoTable);
-const dynamicGroups = ref(buildCompleteTree([2, 13], 10));
+// Generate dynamic groups and create group visibility now that we have the data
+if (infoTable && infoTable.length > 0) {
+  const { buildCompleteTree } = useDynamicGroups(infoTable);
+  dynamicGroups.value = buildCompleteTree([2, 13], 10);
+  groupVisibilityRef.value = useGroupVisibility(dynamicGroups.value, 1, infoTable);
+}
 
-// Create and provide group visibility state with dynamic groups
-const groupVisibility = useGroupVisibility(dynamicGroups.value, 1, infoTable);
-provide("groupVisibility", groupVisibility);
-provide("infoTable", infoTable);
+// Provide the groupVisibility that other components need
+provide("groupVisibility", groupVisibilityRef.value);
 
 // Make the data available to the template as well
 const branchData = computed(() => dynamicGroups.value);
-
 </script>
 
 <template>
@@ -40,17 +45,47 @@ const branchData = computed(() => dynamicGroups.value);
     />
 
     <div id="draggable-elem">
-      <div id="treepot">
+      <div v-if="loading" class="loading">
+        Loading family tree data...
+      </div>
+
+      <div v-else-if="infoTable.length > 0 && groupVisibilityRef" id="treepot">
         <NewBranch
           v-for="(group, index) in branchData"
           :key="index"
           :group="group"
           @open-form="openFormHandler"
+          :info-table="infoTable"
+          :group-visibility="groupVisibilityRef"
         />
+      </div>
+
+      <div v-else class="error">
+        Error loading family tree data.
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.5rem;
+  color: #ff0000;
+}
+</style>
 
 <style scoped>
 figure.boxzero {

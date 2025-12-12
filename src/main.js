@@ -4,14 +4,18 @@ import AppLink from "./components/AppLink.vue";
 import App from "./App.vue";
 import router from "./router";
 import axios from "axios";
-import infoTableData from '@/assets/infotable.json';  
 import './assets/css/familytree.css';
 import './assets/css/falkman.css';
 import $ from 'jquery';
 
-
 import 'lightbox2/dist/css/lightbox.css';
 import lightbox from 'lightbox2';
+
+// Import the migration utilities to show sync buttons
+import '@/migrate';
+
+// Import Firebase data loading
+import { fetchInfoTableFromFirebase } from '@/utils/migrateToFirebase';
 
 lightbox.option({
   resizeDuration: 200,
@@ -20,52 +24,43 @@ lightbox.option({
 window.$ = $;
 window.jQuery = $;
 
-// console.log(infoTableData, "infotable from .json");
-
-var usejson = true
-// var infoTableData = []
-
-function createAp() {
-  createApp(App)
-    .provide("infoTable", infoTableData)
-    .component("AppLink", AppLink)
-    .use(router)
-    .mount("#app");
-  }
-
-async function getProducts() {
+async function initializeApp() {
   try {
-    var response = await axios.get("http://localhost:5001/products");
-  } catch (err) {
-    console.log(err);
+    // Load data from Firebase first
+    let infoTableData = [];
+    try {
+      infoTableData = await fetchInfoTableFromFirebase();
+      console.log(`Loaded ${infoTableData.length} records from Firebase`);
+    } catch (firebaseError) {
+      console.warn('Firebase load failed, falling back to local JSON:', firebaseError.message);
+      // Fallback to local data if Firebase fails
+      const localInfoTableData = (await import('@/assets/infotable.json')).default;
+      infoTableData = localInfoTableData;
+      console.log(`Loaded ${infoTableData.length} records from local JSON`);
+    }
+
+    // Create the app instance
+    const app = createApp(App);
+
+    // Provide the data globally to all components
+    app.provide("infoTable", infoTableData);
+
+    // Register components and plugins
+    app
+      .component("AppLink", AppLink)
+      .use(router)
+      .mount("#app");
+  } catch (error) {
+    console.error('Error initializing app:', error);
+
+    // Fallback to basic app without data
+    createApp(App)
+      .component("AppLink", AppLink)
+      .use(router)
+      .mount("#app");
   }
-  infoTableData = response.data;
-
-createAp()
-  // .provide('infoTable', infoTableData)
-  // .provide('usejson', usejson)
-  // .component('AppLink', AppLink)
-  // .component('GoBack', GoBack)
-  // .use(router)
-  // .mount('#app')
 }
 
-if (usejson) {
-  createAp()
-  // .provide('infoTable', infoTableData)
-  // .provide('usejson', usejson)
-  // .component('AppLink', AppLink)
-  // .use(router)
-  // .mount('#app')
-} else {
-  getProducts();
-console.log(infoTableData, "infotable from database");
-}
-
-
-
-
-// import infoTableData from "./assets/infotable.json";
-
-// console.log(infoTableData, "infotable from json");
+// Initialize the app
+initializeApp();
 

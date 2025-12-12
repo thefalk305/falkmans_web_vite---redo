@@ -1,5 +1,6 @@
 <script setup>
   import { ref, watch, inject } from "vue";
+  import { useInfoTableData } from "@/composables/useInfoTableData";
   import BackToTop from "@/components/BackToTop.vue";
   import MiniNav from "@/components/MiniNav.vue";
   import ShowModal from "@/components/ShowModal.vue";
@@ -38,8 +39,7 @@
   ]);
 
   var photos = [];
-  var infoTable = [];
-  infoTable = inject("infoTable");
+  const { infoTable } = useInfoTableData();
 
   // filter out any records that have identical photos
   infoTable.forEach((record) => {
