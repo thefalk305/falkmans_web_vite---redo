@@ -12,7 +12,6 @@
   if (props.hideRelatives) showRelatives = false;
 
   var brothersData = [];
-  var infoTable = [];
   const { infoTable } = useInfoTableData();
   for (var i = 0; i < 5; i++) {
     brothersData[i] = infoTable[i + 3];
