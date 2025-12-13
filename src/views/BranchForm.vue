@@ -1,10 +1,12 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, onMounted, onBeforeMount } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { getFirestore, addDoc, collection, doc, setDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import db from '@/fb';
 
 const route = useRoute();
+const router = useRouter();
 
 const formData = ref({
   id: null,
@@ -19,22 +21,46 @@ const formData = ref({
   bio: '',
 });
 
+const isAuthenticated = ref(false);
+const authCheckComplete = ref(false);
+const errorMessage = ref('');
+
+onBeforeMount(() => {
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isAuthenticated.value = true;
+      // User is signed in, allow access to form
+    } else {
+      // User is signed out, redirect to login
+      errorMessage.value = 'You must be logged in to add or edit people.';
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        router.push('/login');
+      }, 3000);
+    }
+    authCheckComplete.value = true;
+  });
+});
+
 onMounted(() => {
-  formData.value.id = Number(route.query.id);
-  formData.value.groupId = Number(route.query.groupId);
-  formData.value.memberIndex = Number(route.query.memberIndex);
+  if (isAuthenticated.value) {
+    formData.value.id = Number(route.query.id);
+    formData.value.groupId = Number(route.query.groupId);
+    formData.value.memberIndex = Number(route.query.memberIndex);
 
-  // Set default picture based on the ID
-  // ID 9998 is for adding father, ID 9999 is for adding mother
-  if (formData.value.id === 9998) {
-    // Add father - default to face2.png
-    formData.value.pic = 'face2.png';
-  } else if (formData.value.id === 9999) {
-    // Add mother - default to face1.png
-    formData.value.pic = 'face1.png';
+    // Set default picture based on the ID
+    // ID 9998 is for adding father, ID 9999 is for adding mother
+    if (formData.value.id === 9998) {
+      // Add father - default to face2.png
+      formData.value.pic = 'face2.png';
+    } else if (formData.value.id === 9999) {
+      // Add mother - default to face1.png
+      formData.value.pic = 'face1.png';
+    }
+
+    console.log('BranchForm mounted. Test message.'); // Added test log
   }
-
-  console.log('BranchForm mounted. Test message.'); // Added test log
 });
 
 async function submitForm() {
@@ -92,55 +118,64 @@ function cancel() {
 
 <template>
   <div>
-    <h3>Add New Person</h3>
-    <form @submit.prevent="submitForm">
-      <div class="field">
-        <label class="label">Name</label>
-        <div class="control">
-          <input class="input" type="text" v-model="formData.name" />
+    <div v-if="!authCheckComplete">
+      <p>Checking authentication status...</p>
+    </div>
+    <div v-else-if="!isAuthenticated">
+      <p class="error-message">{{ errorMessage }}</p>
+      <p>Redirecting to login...</p>
+    </div>
+    <div v-else>
+      <h3>Add New Person</h3>
+      <form @submit.prevent="submitForm">
+        <div class="field">
+          <label class="label">Name</label>
+          <div class="control">
+            <input class="input" type="text" v-model="formData.name" />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label class="label">Born/Died</label>
-        <div class="control">
-          <input class="input" type="text" v-model="formData.born_died" />
+        <div class="field">
+          <label class="label">Born/Died</label>
+          <div class="control">
+            <input class="input" type="text" v-model="formData.born_died" />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label class="label">Father</label>
-        <div class="control">
-          <input class="input" type="text" v-model="formData.father" />
+        <div class="field">
+          <label class="label">Father</label>
+          <div class="control">
+            <input class="input" type="text" v-model="formData.father" />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label class="label">Mother</label>
-        <div class="control">
-          <input class="input" type="text" v-model="formData.mother" />
+        <div class="field">
+          <label class="label">Mother</label>
+          <div class="control">
+            <input class="input" type="text" v-model="formData.mother" />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label class="label">FamilySearch Link</label>
-        <div class="control">
-          <input class="input" type="text" v-model="formData.famSrchLink" />
+        <div class="field">
+          <label class="label">FamilySearch Link</label>
+          <div class="control">
+            <input class="input" type="text" v-model="formData.famSrchLink" />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label class="label">Picture</label>
-        <div class="control">
-          <input class="input" type="text" v-model="formData.pic" />
+        <div class="field">
+          <label class="label">Picture</label>
+          <div class="control">
+            <input class="input" type="text" v-model="formData.pic" />
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label class="label">Bio</label>
-        <div class="control">
-          <textarea class="textarea" v-model="formData.bio"></textarea>
+        <div class="field">
+          <label class="label">Bio</label>
+          <div class="control">
+            <textarea class="textarea" v-model="formData.bio"></textarea>
+          </div>
         </div>
-      </div>
-      <div class="control">
-        <button class="button is-primary" type="submit">Submit</button>
-        <button class="button is-light" @click="cancel">Cancel</button>
-      </div>
-    </form>
+        <div class="control">
+          <button class="button is-primary" type="submit">Submit</button>
+          <button class="button is-light" @click="cancel">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -150,5 +185,10 @@ function cancel() {
 }
 .button {
   margin-right: 0.5rem;
+}
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
 </style>

@@ -17,6 +17,22 @@ import '@/migrate';
 // Import Firebase data loading
 import { fetchInfoTableFromFirebase } from '@/utils/migrateToFirebase';
 
+
+// Vuetify
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+const vuetify = createVuetify({
+  components,
+  directives,
+})
+
+
+
+
+
 lightbox.option({
   resizeDuration: 200,
   wrapAround: true
@@ -48,6 +64,7 @@ async function initializeApp() {
     // Register components and plugins
     app
       .component("AppLink", AppLink)
+      .use(vuetify)
       .use(router)
       .mount("#app");
   } catch (error) {
@@ -56,6 +73,7 @@ async function initializeApp() {
     // Fallback to basic app without data
     createApp(App)
       .component("AppLink", AppLink)
+      .use(vuetify)
       .use(router)
       .mount("#app");
   }

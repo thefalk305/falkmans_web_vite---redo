@@ -1,5 +1,7 @@
 <script setup>
 import AppLink from "@/components/AppLink.vue";
+import { ref, onMounted } from 'vue';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const resolveImageUrl = (filename) =>
   new URL(`../assets/img/${filename}`, import.meta.url).href;
@@ -11,6 +13,21 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['open-form']);
+
+// Authentication state
+const isAuthenticated = ref(false);
+
+// Check authentication state on component mount
+onMounted(() => {
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isAuthenticated.value = true;
+    } else {
+      isAuthenticated.value = false;
+    }
+  });
+});
 
 const memberIds = props.group.members;
 const top = props.group.top;
@@ -32,6 +49,21 @@ const branchData = memberIds
     return null;
   })
   .filter(Boolean);
+
+// Function to check if the group should be displayed
+// If not authenticated and the group only contains placeholders (9998, 9999), hide it
+const shouldDisplayGroup = () => {
+  if (isAuthenticated.value) {
+    return true; // Always show if authenticated
+  }
+
+  // If not authenticated, check if the group has any non-placeholder members
+  const hasRealMembers = branchData.some(person =>
+    person.id !== 9998 && person.id !== 9999
+  );
+
+  return hasRealMembers; // Only show if there are real members (not just placeholders)
+};
 
 function handleImageClick(groupId, clickedMemberId) {
   // Show the clicked group and parents specific to this person
@@ -74,6 +106,7 @@ function openForm(memberId, memberIndex) {
   <!-- not topgroup -->
   <div
     v-else
+    v-if="shouldDisplayGroup()"
     class="stline"
     :class="`group${groupId}`"
     :style="{
@@ -140,6 +173,7 @@ function openForm(memberId, memberIndex) {
       </div>
     </div>
   </div>
+  <!-- Show nothing if the group shouldn't be displayed -->
 </template>
 
 <style scoped>

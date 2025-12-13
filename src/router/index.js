@@ -36,6 +36,12 @@ staticRoutes.push({
   component: () => import('@/views/InfoTableView.vue'),
 });
 
+staticRoutes.push({
+  path: '/logout',
+  name: 'Logout',
+  component: () => import('@/views/Logout.vue'),
+});
+
 // 2. Dynamically generate routes from the /views folder
 const viewModules = import.meta.glob('@/views/*.vue');
 

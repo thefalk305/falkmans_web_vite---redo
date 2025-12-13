@@ -2,9 +2,14 @@
 <script setup>
 import { ref, computed, inject, provide } from "vue";
 import NewBranch from "../components/NewBranch.vue";
+import BackToTop from "../components/BackToTop.vue";
+import Animation from "../components/Animation.vue";
+import LoginForm from "./LoginForm.vue";
+import Register from "./Register.vue";
 import { useDraggableModal } from "@/composables/useDraggableModal";
 import { useGroupVisibility } from "@/composables/useGroupVisibility";
 import { useDynamicGroups } from "@/composables/useDynamicGroups";
+import { getAuth } from 'firebase/auth';
 
 useDraggableModal();
 
@@ -14,17 +19,32 @@ const dynamicGroups = ref([]);
 const groupVisibilityRef = ref(null);
 const loading = ref(false); // No need to load since it's already loaded globally
 
-const openFormHandler = ( memberId, groupId, memberIndex) => {
-  // console.log('Received payload:', payload);
-  // const { memberId, groupId, memberIndex } = payload;
-  window.open(`/add-person?id=${memberId}&groupId=${groupId}&memberIndex=${memberIndex}`, '_blank');
+const openFormHandler = async (memberId, groupId, memberIndex) => {
+  // Check if user is authenticated before opening the form
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (user) {
+    // User is authenticated, proceed with opening the form
+    window.open(
+      `/add-person?id=${memberId}&groupId=${groupId}&memberIndex=${memberIndex}`,
+      "_blank"
+    );
+  } else {
+    // User is not authenticated, alert them
+    alert('You must be logged in to add or edit family members.');
+  }
 };
 
 // Generate dynamic groups and create group visibility now that we have the data
 if (infoTable && infoTable.length > 0) {
   const { buildCompleteTree } = useDynamicGroups(infoTable);
   dynamicGroups.value = buildCompleteTree([2, 13], 10);
-  groupVisibilityRef.value = useGroupVisibility(dynamicGroups.value, 1, infoTable);
+  groupVisibilityRef.value = useGroupVisibility(
+    dynamicGroups.value,
+    1,
+    infoTable
+  );
 }
 
 // Provide the groupVisibility that other components need
@@ -35,36 +55,110 @@ const branchData = computed(() => dynamicGroups.value);
 </script>
 
 <template>
-  <div id="treewindow">
-    <img
-      class="background"
-      src="../assets/graphics/treewindow.png"
-      alt=""
-      height="2000"
-      style="left: 0px"
-    />
+  <Register>
+    <template v-slot:header> Sign Up </template>
 
-    <div id="draggable-elem">
-      <div v-if="loading" class="loading">
-        Loading family tree data...
+  </Register>
+  <LoginForm>
+    <template v-slot:header> Sign In </template>
+    <template v-slot:logout-header> Sign Out </template>
+  </LoginForm>
+  <div id="family-tree">
+    <header>
+      <!--page title, tagline and main graphic-->
+
+      <br /><!--spacer-->
+
+      <div id="hgroup">
+        <!--main title group-->
+        <h1>From Branch to Branch</h1>
+        <h2>Genealogical Website for<br />the "Falkman Family"</h2>
       </div>
+      <!--end main title group-->
 
-      <div v-else-if="infoTable.length > 0 && groupVisibilityRef" id="treepot">
-        <NewBranch
-          v-for="(group, index) in branchData"
-          :key="index"
-          :group="group"
-          @open-form="openFormHandler"
-          :info-table="infoTable"
-          :group-visibility="groupVisibilityRef"
-        />
-      </div>
+      <!--DO NOT REMOVE!-->
+      <div class="clear"></div>
 
-      <div v-else class="error">
-        Error loading family tree data.
+      <br /><!--spacer-->
+
+      <div id="headerimage"></div>
+      <!--main page graphic or logo-->
+
+      <div
+        class="sectionline"
+        style="float: right; margin: 0px 15px 0px 0px; width: 50%"
+      ></div>
+      <!--section divider-->
+    </header>
+    <!--end page header-->
+
+    <section
+      class="intro"
+      style="left: 0px; top: 20px; right: 00px; width: auto"
+    >
+      <!--intro section-->
+      <img
+        src="../assets/graphics/animation2.gif"
+        alt="familygif"
+        style="position: absolute; top: 00px; left: 100px; z-index: -1"
+      />
+
+      <article class="introarticle">
+        <h3>This is the Website of the Falkman Family History</h3>
+        <p class="dropcap">
+          I started this adventure back in 1978. There were no online services
+          at the time. All of the research was done by hand. I spent months and
+          months searching through records and micro-fiche files for scraps of
+          information. It took my wife and myself almost two (2) years just to
+          find my great-grandfather's ship manifest. But that was just the
+          start. Then came my great-grandmother's records, and after that,
+          aunts, uncles and cousins. I hope you enjoy looking at the records and
+          pictures as much as I did while putting this site together.
+          <br />
+          <br />
+          This website was first published in 2010. The canvas didn't change
+          much for many years but, now with the help of my family, I am updating
+          the website, adding new templates and a lot of new information that
+          has been discovered over the years. I want to thank all my family for
+          the information and support they have given.
+        </p>
+        <p style="width: 550px; text-align: right">Tinker Al</p>
+      </article>
+      <Animation />
+      <div class="clear"></div>
+      <div class="sectionline"></div>
+    </section>
+    <div id="treewindow">
+      <img
+        class="background"
+        src="../assets/graphics/treewindow.png"
+        alt=""
+        height="2000"
+        style="left: 0px"
+      />
+
+      <div id="draggable-elem">
+        <div v-if="loading" class="loading">Loading family tree data...</div>
+
+        <div
+          v-else-if="infoTable.length > 0 && groupVisibilityRef"
+          id="treepot"
+        >
+          <NewBranch
+            v-for="(group, index) in branchData"
+            :key="index"
+            :group="group"
+            @open-form="openFormHandler"
+            :info-table="infoTable"
+            :group-visibility="groupVisibilityRef"
+          />
+        </div>
+
+        <div v-else class="error">Error loading family tree data.</div>
       </div>
     </div>
   </div>
+  <BackToTop />
 </template>
 
 <style scoped>
