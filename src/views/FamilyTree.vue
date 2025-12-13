@@ -100,7 +100,7 @@
 </template>
 
 <style scoped>
-  @import "@/assets/css/familytree.css";
+  /* @import "@/assets/css/familytree.css"; */
 
   #family-tree-header {
     left: 230px;

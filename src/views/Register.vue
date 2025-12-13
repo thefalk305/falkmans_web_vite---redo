@@ -6,7 +6,16 @@ import { useRouter } from "vue-router"; // import router
 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
-const snackbar = ref(false);
+const snackbar = ref(false)
+
+function showSnackbar() {
+  snackbar.value = true
+
+  setTimeout(() => {
+    snackbar.value = false
+  }, 2000) // 2 seconds
+}
+
 var text = `Record successfully deleted`;
 const timeout = 2000;
 const dialog = ref(false);

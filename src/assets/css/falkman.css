@@ -411,6 +411,7 @@ h4 {
 ------------------------------------------------------------------------------*/
 .imagecontainer {/*entry photo container*/
 	position: absolute;
+  box-sizing: content-box;
 
 	height: 100px;
 	width: 100px;

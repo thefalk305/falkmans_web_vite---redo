@@ -6,7 +6,15 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const snackbar = ref(true);
+const snackbar = ref(false)
+
+function showSnackbar() {
+  snackbar.value = true
+
+  setTimeout(() => {
+    snackbar.value = false
+  }, 2000) // 2 seconds
+}
 var text = ref("");
 const userid = ref("");
 

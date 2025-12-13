@@ -1,7 +1,7 @@
 <script setup>
 import AppLink from "@/components/AppLink.vue";
-import { ref, onMounted } from 'vue';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { ref, onMounted } from "vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const resolveImageUrl = (filename) =>
   new URL(`../assets/img/${filename}`, import.meta.url).href;
@@ -12,7 +12,7 @@ const props = defineProps({
   groupVisibility: Object,
 });
 
-const emit = defineEmits(['open-form']);
+const emit = defineEmits(["open-form"]);
 
 // Authentication state
 const isAuthenticated = ref(false);
@@ -36,15 +36,17 @@ const groupId = props.group.id;
 
 const branchData = memberIds
   .map((id) => {
-    const foundInfotableEntry = props.infoTable.find((entry) => entry.id === id);
+    const foundInfotableEntry = props.infoTable.find(
+      (entry) => entry.id === id
+    );
     if (foundInfotableEntry) {
       return foundInfotableEntry;
     }
     if (id === 9998) {
-      return { id: id, pic: 'Add Father.svg' };
+      return { id: id, pic: "Add Father.svg" };
     }
     if (id === 9999) {
-      return { id: id, pic: 'Add Mother.svg'};
+      return { id: id, pic: "Add Mother.svg" };
     }
     return null;
   })
@@ -58,8 +60,8 @@ const shouldDisplayGroup = () => {
   }
 
   // If not authenticated, check if the group has any non-placeholder members
-  const hasRealMembers = branchData.some(person =>
-    person.id !== 9998 && person.id !== 9999
+  const hasRealMembers = branchData.some(
+    (person) => person.id !== 9998 && person.id !== 9999
   );
 
   return hasRealMembers; // Only show if there are real members (not just placeholders)
@@ -71,7 +73,7 @@ function handleImageClick(groupId, clickedMemberId) {
 }
 
 function openForm(memberId, memberIndex) {
-  emit('open-form', memberId, groupId, memberIndex);
+  emit("open-form", memberId, groupId, memberIndex);
 }
 </script>
 
@@ -80,12 +82,19 @@ function openForm(memberId, memberIndex) {
   <div v-if="groupId === 0" class="topmgroup">
     <div
       v-for="(person, index) in branchData"
-      :width="100"
-      :style="{ top: '50px', left: index * 200 + 'px' }"
+      :style="{
+        top: '50px',
+        left: index * 200 + 'px',
+        width: '100px',
+        height: '100px',
+      }"
       class="imagecontainer"
       :key="person.id"
     >
       <img :src="resolveImageUrl(person.pic)" :alt="person.pic" />
+      <p style="font-size: 16px; position: relative; left: -30px; top: 10px">
+        {{ person.name }}
+      </p>
       <AppLink :to="{ name: 'InfoPage', params: { id: person.id } }">
         <div
           class="imagecontainer desc upslide"
@@ -112,7 +121,9 @@ function openForm(memberId, memberIndex) {
     :style="{
       top: `${top}px`,
       left: `${left}px`,
-      visibility: props.groupVisibility?.isVisible(groupId) ? 'visible' : 'hidden',
+      visibility: props.groupVisibility?.isVisible(groupId)
+        ? 'visible'
+        : 'hidden',
     }"
   >
     <div v-if="groupId != 1">
@@ -148,7 +159,7 @@ function openForm(memberId, memberIndex) {
           />
         </div>
         <!-- display name -->
-        <p style="font-size: 16px; position: relative; left: -30px">
+        <p style="font-size: 16px; position: relative; left: -30px; top: 10px">
           {{ person.name }}
         </p>
         <!-- </AppLink> -->
@@ -231,7 +242,7 @@ function openForm(memberId, memberIndex) {
   width: 920px;
   height: 170px;
 }
-#image-container {
+/* #imagecontainer {
   width: 214px;
   height: 400px;
   display: flex;
@@ -240,7 +251,8 @@ function openForm(memberId, memberIndex) {
   align-items: center;
   box-sizing: content-box;
   border-bottom: none;
-}
+} */
+
 .mgroup {
   /* position: absolute; */
   top: 65px;

@@ -2,14 +2,13 @@
 <script setup>
 import { ref, computed, inject, provide } from "vue";
 import NewBranch from "../components/NewBranch.vue";
-import BackToTop from "../components/BackToTop.vue";
 import Animation from "../components/Animation.vue";
 import LoginForm from "./LoginForm.vue";
 import Register from "./Register.vue";
 import { useDraggableModal } from "@/composables/useDraggableModal";
 import { useGroupVisibility } from "@/composables/useGroupVisibility";
 import { useDynamicGroups } from "@/composables/useDynamicGroups";
-import { getAuth } from 'firebase/auth';
+import { getAuth } from "firebase/auth";
 
 useDraggableModal();
 
@@ -32,7 +31,7 @@ const openFormHandler = async (memberId, groupId, memberIndex) => {
     );
   } else {
     // User is not authenticated, alert them
-    alert('You must be logged in to add or edit family members.');
+    alert("You must be logged in to add or edit family members.");
   }
 };
 
@@ -57,7 +56,6 @@ const branchData = computed(() => dynamicGroups.value);
 <template>
   <Register>
     <template v-slot:header> Sign Up </template>
-
   </Register>
   <LoginForm>
     <template v-slot:header> Sign In </template>
@@ -65,38 +63,28 @@ const branchData = computed(() => dynamicGroups.value);
   </LoginForm>
   <div id="family-tree">
     <header>
-      <!--page title, tagline and main graphic-->
-
-      <br /><!--spacer-->
+      <br />
 
       <div id="hgroup">
-        <!--main title group-->
         <h1>From Branch to Branch</h1>
         <h2>Genealogical Website for<br />the "Falkman Family"</h2>
       </div>
-      <!--end main title group-->
-
-      <!--DO NOT REMOVE!-->
       <div class="clear"></div>
 
-      <br /><!--spacer-->
+      <br />
 
       <div id="headerimage"></div>
-      <!--main page graphic or logo-->
 
       <div
         class="sectionline"
         style="float: right; margin: 0px 15px 0px 0px; width: 50%"
       ></div>
-      <!--section divider-->
     </header>
-    <!--end page header-->
 
     <section
       class="intro"
       style="left: 0px; top: 20px; right: 00px; width: auto"
     >
-      <!--intro section-->
       <img
         src="../assets/graphics/animation2.gif"
         alt="familygif"
@@ -128,6 +116,7 @@ const branchData = computed(() => dynamicGroups.value);
       <div class="clear"></div>
       <div class="sectionline"></div>
     </section>
+
     <div id="treewindow">
       <img
         class="background"
@@ -158,7 +147,6 @@ const branchData = computed(() => dynamicGroups.value);
       </div>
     </div>
   </div>
-  <BackToTop />
 </template>
 
 <style scoped>
