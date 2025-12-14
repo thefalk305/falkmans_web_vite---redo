@@ -95,7 +95,7 @@ function openForm(memberId, memberIndex) {
       <p style="font-size: 16px; position: relative; left: -30px; top: 10px">
         {{ person.name }}
       </p>
-      <AppLink :to="{ name: 'InfoPage', params: { id: person.id } }">
+      <AppLink :to="{ name: 'InfoPage', params: { id: person.id } }" target="_blank">
         <div
           class="imagecontainer desc upslide"
           style="color: rgba(105, 248, 105, 0.6)"
@@ -163,15 +163,13 @@ function openForm(memberId, memberIndex) {
           {{ person.name }}
         </p>
         <!-- </AppLink> -->
-        <AppLink :to="{ name: 'InfoPage', params: { id: person.id } }">
+        <AppLink v-if="person.id < 9998" :to="{ name: 'InfoPage', params: { id: person.id } }" target="_blank">
           <div
             class="imagecontainer desc"
             :class="[
               'imagecontainer',
-              index === 0 ? 'rightslide' : 'leftslide',
-            ]"
-            style="color: rgba(105, 248, 105, 0.6)"
-          >
+              index === 0 ? 'rightslide' : 'leftslide',]"
+            style="color: rgba(105, 248, 105, 0.6)">
             {{ person.name }}
             <br /><br />
             {{ person.born_died }}

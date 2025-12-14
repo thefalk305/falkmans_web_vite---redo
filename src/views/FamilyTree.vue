@@ -15,30 +15,22 @@
   <!-- <div v-if="familyTree.length > 2"> -->
   <div id="family-tree">
     <header>
-      <!--page title, tagline and main graphic-->
-
-      <br /><!--spacer-->
+      <br />
 
       <div id="hgroup">
-        <!--main title group-->
         <h1>From Branch to Branch</h1>
         <h2>Genealogical Website for<br />the "Falkman Family"</h2>
       </div>
-      <!--end main title group-->
-
-      <!--DO NOT REMOVE!-->
       <div class="clear"></div>
 
-      <br /><!--spacer-->
+      <br />
 
       <div id="headerimage"></div>
-      <!--main page graphic or logo-->
 
       <div
         class="sectionline"
         style="float: right; margin: 0px 15px 0px 0px; width: 50%"
       ></div>
-      <!--section divider-->
     </header>
     <!--end page header-->
 
@@ -70,25 +62,6 @@
         <p style="width: 550px; text-align: right">Tinker Al</p>
       </article>
       <Animation />
-      <!-- <aside class="panel">
-        <h4 style="top: 0px">Page Links Here</h4>
-        <div class="panelleft">
-          <p class="p2" style="line-height: 200%" v-for="n in 5" :key="n">
-
-            <ShowFamilyPage 
-            :recordData="recordData" 
-            :id="n" 
-            :fromDaBoys="fromDaBoys"
-            :modalTop="modalTop" />
-
-
-            <AppLink :to="{ path: '/FamilyPage', query: { id: n } }">
-            FamilyPage {{ n }}
-          </AppLink>          
-        </p>
-        </div>
-      </aside> -->
-
       <div class="clear"></div>
       <div class="sectionline"></div>
     </section>
@@ -96,32 +69,15 @@
       <Tree />
     </div>
   </div>
-  <BackToTop />
 </template>
 
 <style scoped>
   /* @import "@/assets/css/familytree.css"; */
 
-  #family-tree-header {
-    left: 230px;
-    width: 100%;
-  }
-  .go-back {
-    left: 50px;
-    width: 100px;
-  }
+header{
+  margin-bottom: 0;
+}
 
-  h4 {
-    background-color: transparent;
-  }
-
-  aside.panel {
-    top: 90px;
-    right: 10px;
-    height: 180px;
-    width: 165px;
-    text-align: center;
-  }
   h2 {
     font-size: 1.525em;
     float: right;
@@ -131,17 +87,6 @@
     width: 750px;
     left: 230px;
     float: none;
-  }
-  .p2 {
-    margin: 0px;
-  }
-  .panelleft {
-    left: 30px;
-    position: absolute;
-    top: 60px;
-  }
-  .panelright {
-    right: 0px;
   }
 
   #family-tree {

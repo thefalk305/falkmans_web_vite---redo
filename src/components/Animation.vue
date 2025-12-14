@@ -48,7 +48,7 @@ onMounted(() => {
         {{ currentImage.name }}
       </h5>
     </div>
-    <button @click="togglePause" class="toggle-button">
+    <button @click="togglePause" class="toggle-button" :style="{ backgroundColor: paused ? '#00cc00' : '#0066cc' }">
       {{ paused ? 'Play ▶' : 'Pause ⏸' }}
     </button>
   </div>
@@ -62,7 +62,6 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   width: fit-content;
-  margin: 64px 0 0 0;
   position: relative;
   transform: translate(40px, 40px); /* shifts right and down */
 }
@@ -105,7 +104,7 @@ h5 {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 40px; /* space between caption and button */
+  margin-top: 10px; /* space between caption and button */
   /* position: relative;
   top: 0;
   left: 0; */

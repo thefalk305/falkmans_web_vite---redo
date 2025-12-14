@@ -7,14 +7,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const snackbar = ref(false)
+const timeout = 2000;
 
-function showSnackbar() {
-  snackbar.value = true
-
-  setTimeout(() => {
-    snackbar.value = false
-  }, 2000) // 2 seconds
-}
 var text = ref("");
 const userid = ref("");
 
@@ -124,9 +118,12 @@ async function openDialog() {
 
     <!-- Show Login button if not authenticated -->
     <div v-else>
+      <div style="display: flex; align-items: center;">
       <v-btn @click="openDialog" color="green" class="success">
         <slot name="header"></slot>
       </v-btn>
+      <p style="margin-left: 8px"> SIGN IN to Add Parent</p>
+      </div>
       <v-dialog v-model="dialog" max-width="600px">
         <v-card>
           <v-card-title>
@@ -165,7 +162,7 @@ async function openDialog() {
   </div>
 
   <div class="text-center">
-    <v-snackbar v-model="snackbar" multi-line
+    <v-snackbar :timeout="timeout" v-model="snackbar" multi-line  color="success"
       >{{ text }}
       <template v-slot:actions>
         <v-btn color="red" variant="text" @click="snackbar = false"> Close </v-btn>

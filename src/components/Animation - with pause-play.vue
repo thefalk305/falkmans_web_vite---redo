@@ -47,7 +47,7 @@ onMounted(() => {
         {{ currentImage.name }}
       </h5>
     </div>
-    <button @click="togglePause" class="toggle-button">
+    <button @click="togglePause" class="toggle-button"  :style="{ backgroundColor: paused ? '#00cc00' : '#0066cc' }">>
       {{ paused ? 'Play ▶' : 'Pause ⏸' }}
     </button>
   </div>

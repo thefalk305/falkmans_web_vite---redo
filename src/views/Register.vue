@@ -8,14 +8,6 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const snackbar = ref(false)
 
-function showSnackbar() {
-  snackbar.value = true
-
-  setTimeout(() => {
-    snackbar.value = false
-  }, 2000) // 2 seconds
-}
-
 var text = `Record successfully deleted`;
 const timeout = 2000;
 const dialog = ref(false);
@@ -40,6 +32,7 @@ const register = () => {
       (text = `Unable to register account`),
         (snackbar.value = true),
         alert(error.message);
+        dialog.value = false;
     });
 };
 
@@ -87,7 +80,7 @@ async function openDialog() {
   </v-dialog>
 
   <div class="text-center">
-    <v-snackbar :timeout="timeout" v-model="snackbar" multi-line
+    <v-snackbar :timeout="timeout" v-model="snackbar" multi-line  color="success"
       >{{ text }}
       <template v-slot:actions>
         <v-btn color="red" variant="text" @click="snackbar = false"> Close </v-btn>

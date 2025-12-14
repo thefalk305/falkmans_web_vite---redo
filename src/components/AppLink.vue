@@ -7,7 +7,12 @@
     },
     computed: {
       isExternal() {
+      console.log(this.to);
         return typeof this.to === "string" && this.to.startsWith("http");
+      },
+      isInfoPage() {
+      console.log(this.to);
+        return typeof this.to === "string" && this.to.startsWith("InfoPage");
       },
     },
   };
@@ -16,7 +21,9 @@
 <template>
   <a v-if="isExternal" :href="to" rel="noopener" class="external-link" target="_blank"
     ><slot /></a>
-  <router-link v-else :="$props" class="internal-links"><slot /> </router-link>
+  <router-link v-else-if="isInfoPage" :href="to" rel="noopener" class="external-link" target="_blank"
+    ><slot /></router-link>
+  <router-link v-else :="$props" class="internal-links" ><slot /> </router-link>
 </template>
 
 <style scoped>

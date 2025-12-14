@@ -2,6 +2,7 @@
 // This script provides tools for migrating and synchronizing data between local JSON and Firebase
 
 import { migrateInfoTableToFirebase, syncFirebaseToLocal, getFirebaseRecordCount } from './utils/migrateToFirebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 async function runMigration() {
   console.log('Starting migration to Firebase...');
@@ -23,8 +24,14 @@ async function runSyncBack() {
   console.log('Please run: node exportFirebase.js from the project root');
 }
 
+// Store references to the buttons so we can remove them later
+let syncButtons = [];
+
 // Create buttons to run operations manually if needed
 function createSyncButtons() {
+  // Clear any existing buttons first
+  removeSyncButtons();
+
   // Migration button (JSON to Firebase)
   const migrationBtn = document.createElement('button');
   migrationBtn.textContent = 'Sync JSON to Firebase';
@@ -98,9 +105,36 @@ function createSyncButtons() {
   document.body.appendChild(migrationBtn);
   document.body.appendChild(infoBtn);
   document.body.appendChild(syncBackBtn);
+
+  // Store references to the buttons
+  syncButtons = [migrationBtn, infoBtn, syncBackBtn];
 }
 
-// Add the sync buttons to the page
-createSyncButtons();
+// Remove the sync buttons from the DOM
+function removeSyncButtons() {
+  syncButtons.forEach(btn => {
+    if (btn && btn.parentNode) {
+      btn.parentNode.removeChild(btn);
+    }
+  });
+  syncButtons = []; // Clear the array
+}
+
+// Check authentication and show/hide buttons based on user status
+function checkAuthAndShowButtons() {
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user && user.uid === 'XLYtu5ATNeUqIMHOJizUwhKS6e43') {
+      // User is authenticated and has the correct UID - show the buttons
+      createSyncButtons();
+    } else {
+      // User is not authenticated or doesn't have the correct UID - remove the buttons
+      removeSyncButtons();
+    }
+  });
+}
+
+// Add the sync buttons to the page (only if user is authenticated with correct UID)
+checkAuthAndShowButtons();
 
 export { runMigration, runSyncBack };
