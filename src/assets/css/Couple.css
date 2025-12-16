@@ -1,0 +1,222 @@
+.person1AltParents_p15lu4to[portrait-mode] {
+    left: 8px;
+}
+
+.person2AltParents_p1nbx364[portrait-mode] {
+    left: auto;
+    right: 8px;
+}
+
+.altParentsButtonCss {
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background: var(--gray00);
+    border-radius: 8px 0 0 8px;
+    border: none;
+    box-shadow: 2px 1px 3px 0px rgba(0,0,0,0.2), 1px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12);
+    color: inherit !important;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 138px;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    left: -16px;
+    outline: none;
+    position: absolute;
+    width: 16px;
+}
+
+.altParentsButtonCss:focus,.altParentsButtonCss:hover {
+    background: var(--gray03);
+}
+
+.altParentsButtonCss[portrait-mode] {
+    top: -24px;
+    height: 24px;
+    width: 162px;
+    border-radius: 8px 8px 0 0;
+}
+
+.altParentsButtonCss[dark-mode] {
+    background: var(--gray05);
+}
+
+.altParentsButtonCss[dark-mode]:focus,.altParentsButtonCss[dark-mode]:hover {
+    background: var(--gray10);
+}
+
+.altParentsButtonCss[no-marriages] {
+    height: 120.06px;
+}
+
+.coupleNodeCss {
+    position: absolute;
+    -webkit-transition: 0.3s ease;
+    transition: 0.3s ease;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-flow: row;
+    -ms-flex-flow: row;
+    flex-flow: row;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: absolute;
+    margin: 0;
+}
+
+.coupleNodeCss[hide] {
+    display: none;
+}
+
+.coupleCss {
+    height: 138px;
+    width: 333px;
+    background: var(--gray00);
+    display: block;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    overflow: hidden;
+    box-shadow: 2px 1px 3px 0px rgba(0,0,0,0.2), 1px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12);
+    border-radius: 8px 8px 0 8px;
+}
+
+.coupleCss[all-radius] {
+    border-radius: 8px;
+}
+
+.coupleCss[no-marriages] {
+    height: 120.06px;
+    border-radius: 8px;
+}
+
+.coupleCss[dark-mode] {
+    background: var(--gray05);
+}
+
+.coupleCss[dark-mode] {
+    background: var(--gray05);
+}
+
+.coupleCss[descendant] {
+    border-radius: 8px;
+}
+
+.coupleCss[portrait-mode] {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 260px;
+    width: 348px;
+    -webkit-flex-flow: row;
+    -ms-flex-flow: row;
+    flex-flow: row;
+    border-radius: 8px;
+}
+
+.coupleCss[single] {
+    height: 69px;
+    width: 333px;
+}
+
+.coupleCss[no-portraits]:not([portrait-mode]) {
+    width: 289.71px;
+}
+
+.coupleCss[single][portrait-mode] {
+    height: 260px;
+    width: 174px;
+    margin-top: 0;
+}
+
+.coupleCss[golden-hint] {
+    border-radius: 0 0 8px 8px;
+}
+
+.expandButton_e18v9lhy {
+    display: grid;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.expandButton_e18v9lhy[portrait-mode] {
+    top: -50px;
+    position: absolute;
+    width: 100%;
+}
+
+.expandButton_e18v9lhy[portrait-mode][descendant] {
+    top: auto;
+    bottom: -50px;
+}
+
+.expandButton_e18v9lhy[portrait-mode]:not([descendant])[has-alt-parents] {
+    top: -76px;
+}
+
+.expandButton_e18v9lhy:not([portrait-mode])[descendant] {
+    left: -40px;
+}
+
+.expandButton_e18v9lhy:not([portrait-mode],[descendant]) {
+    margin-left: 20px;
+}
+
+.expandButton_e18v9lhy[descendant] {
+    position: absolute;
+}
+
+.expandButton_e18v9lhy button {
+    background: var(--gray02);
+    box-shadow: 2px 1px 3px 0px rgba(0,0,0,0.2), 1px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12);
+}
+
+.expandButton_e18v9lhy button:hover,.expandButton_e18v9lhy button:focus {
+    background: var(--gray03) !important;
+}
+
+.expandButton_e18v9lhy button svg {
+    color: var(--blue60) !important;
+}
+
+.expandButton_e18v9lhy[dark-mode] button {
+    background: var(--gray05);
+}
+
+.expandButton_e18v9lhy[dark-mode] button:hover,.expandButton_e18v9lhy[dark-mode] button:focus {
+    background: var(--gray10) !important;
+}
+
+.expandButton_e18v9lhy[dark-mode] button svg {
+    color: var(--gray100) !important;
+}
+
+.potentialTagCss {
+    text-align: center;
+    background: var(--green03);
+    position: absolute;
+    width: 100%;
+    height: 26px;
+    top: -26px;
+    z-index: -1;
+    border-radius: 8px 8px 0 0;
+    box-shadow: 2px 1px 3px 0px rgba(0,0,0,0.2), 1px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12);
+}
+
+.potentialTagCss span {
+    background: var(--green03);
+}

@@ -1,0 +1,55 @@
+.bleedCss {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.bleedCss[all]:first-child,.bleedCss[top]:first-child {
+    margin-top: calc(var(--bleedable-top) * -1);
+}
+
+.bleedCss[all],.bleedCss[sides],.bleedCss[end] {
+    margin-inline-end:calc(var(--bleedable-end) * -1);}
+
+@supports not (margin-inline-end: calc(var(--bleedable-end) * -1)) {
+    .bleedCss[all],.bleedCss[sides],.bleedCss[end] {
+        margin-right:calc(var(--bleedable-end) * -1);
+    }
+}
+
+.bleedCss[all],.bleedCss[sides],.bleedCss[start] {
+    margin-inline-start:calc(var(--bleedable-start) * -1);}
+
+@supports not (margin-inline-start: calc(var(--bleedable-start) * -1)) {
+    .bleedCss[all],.bleedCss[sides],.bleedCss[start] {
+        margin-left:calc(var(--bleedable-start) * -1);
+    }
+}
+
+.bleedCss[start] {
+    --cell-width: calc(var(--parent-cell-width) - var(--bleedable-start));
+}
+
+.bleedCss[end] {
+    --cell-width: calc(var(--parent-cell-width) - var(--bleedable-end));
+}
+
+.bleedCss[all],.bleedCss[sides],.bleedCss[start][end] {
+    --cell-width: var(--parent-cell-width);
+}
+
+.bleedCss[all]:last-child,.bleedCss[bottom]:last-child {
+    margin-bottom: calc(var(--bleedable-bottom) * -1);
+}
+
+.bleedCss:only-child {
+    height: 100%;
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+}

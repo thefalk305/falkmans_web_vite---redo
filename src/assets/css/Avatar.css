@@ -1,0 +1,58 @@
+.personWrapperCss {
+    max-width: 100%;
+    position: relative;
+}
+.avatarCss {
+    position: relative;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+}
+
+.avatarCircleCss {
+    position: relative;
+    border-radius: 500px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--gray03a);
+}
+
+.monogramCss {
+    text-align: center;
+    text-transform: uppercase;
+    font-family: var(--font-families-headings);
+    font-size: calc(var(--avatar-size) * 0.5);
+    line-height: 2.2;
+}
+
+.imageCss {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.presenceCss {
+    --presence-pos: calc((var(--avatar-size) * 0.17) - (var(--presence-size) + var(--presence-border-size) * 2) / 2);
+    height: var(--presence-size);
+    width: var(--presence-size);
+    background: var(--gray20);
+    position: absolute;
+    border-radius: 500px;
+    border: var(--presence-border-size) solid var(--gray00);
+    bottom: var(--presence-pos);
+    inset-inline-end: var(--presence-pos);
+}
+
+@supports not (inset-inline-end: var(--presence-pos)) {
+    .presenceCss {
+        right:var(--presence-pos);
+    }
+}
+
+[data-presence='online'].presenceCss {
+    background: var(--green30);
+}

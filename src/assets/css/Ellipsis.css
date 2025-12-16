@@ -1,0 +1,18 @@
+.ellipsisCss {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+
+[multiline].ellipsisCss {
+    display: -webkit-box !important;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+}
+
+a.ellipsisCss::after {
+    content: '';
+    display: block;
+}

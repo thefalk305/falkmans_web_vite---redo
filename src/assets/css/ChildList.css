@@ -1,0 +1,61 @@
+Css {
+    position: absolute;
+    height: 30px;
+    bottom: -30px;
+    border: inherit;
+    border-top: 1px solid var(--gray20);
+    left: 8px;
+    width: 325px;
+    background: var(--gray00);
+    border-radius: 0 0 8px 8px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: inherit !important;
+    box-shadow: 2px 1px 3px 0px rgba(0,0,0,0.2), 1px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12);
+}
+
+.buttonWrapCss[no-portraits] {
+    width: calc(289.71px - 8px);
+}
+
+.buttonWrapCss[dark-mode] {
+    background: var(--gray05);
+}
+
+.buttonWrapCss[dark-mode]:hover {
+    background: var(--gray10);
+}
+
+.buttonWrapCss[is-open] {
+    border-radius: 0;
+}
+
+.buttonWrapCss:focus,.buttonWrapCss:hover {
+    background: var(--gray03);
+}
+
+.childListCss {
+    position: absolute;
+    left: 8px;
+    z-index: 3;
+    top: 30px;
+    width: 325px;
+    background: var(--gray00);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 2px 3px 3px 0px rgba(0,0,0,0.2), 1px 1px 1px 0px rgba(0,0,0,0.14), 0px 2px 1px -1px rgba(0,0,0,0.12);
+}
+
+.buttonPaddingCss {
+    margin-left: auto;
+    padding: 4px 9px;
+}

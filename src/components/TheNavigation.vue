@@ -73,6 +73,8 @@
     <AppLink to="/InfoTable">InfoTable</AppLink> | 
     <AppLink to="/AboutView">About</AppLink> |
     <AppLink to="/FigureSlide">FigureSlide</AppLink>
+    <AppLink to="../../search.html">Search</AppLink>
+    
     <div id="clock">
     <div class="date">{{ clocktext }}</div>
     </div>

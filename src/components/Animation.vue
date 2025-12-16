@@ -57,6 +57,7 @@ onMounted(() => {
 <style scoped>
 
 .cross-fade-wrapper {
+  top: -20px;
   left: 100px;
   display: flex;
   flex-direction: column;
