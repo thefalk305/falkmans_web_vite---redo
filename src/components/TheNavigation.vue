@@ -70,7 +70,7 @@
     <AppLink to="/NewTree">NewTree</AppLink> | 
     <AppLink to="/DaBoys">DaBoys</AppLink> |
     <AppLink to="/PhotoPages">PhotoPages</AppLink> |
-    <AppLink to="/InfoTable">InfoTable</AppLink> | 
+    <AppLink to="/Couples">Couples</AppLink> | 
     <AppLink to="/AboutView">About</AppLink> |
     <AppLink to="/FigureSlide">FigureSlide</AppLink>
     <AppLink to="../../search.html">Search</AppLink>
