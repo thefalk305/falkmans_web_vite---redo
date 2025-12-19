@@ -27,6 +27,11 @@
 /* @import "./assets/css/familytree.css"; */
   @import "./assets/css/main.css";
   @import "./assets/css/falkman.css";
+
+  #vue-app {
+   background: #dddfdf;
+   
+  }
   .main-view {
     margin: 0%;
     margin: auto;

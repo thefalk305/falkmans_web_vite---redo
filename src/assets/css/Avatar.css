@@ -1,3 +1,9 @@
+:root {
+  --avatar-size: 40px;
+  --presence-size: 16px;
+  --presence-border-size: 2px;
+}
+
 .personWrapperCss {
     max-width: 100%;
     position: relative;
