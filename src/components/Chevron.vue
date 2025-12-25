@@ -42,16 +42,16 @@ svg {
   transform: rotate(-180deg); /* ▲ up */
 }
 
-.chevron.expandButtom {
+.chevron.expandButton {
   width: 34px;
   height: 34px;
-  transform: rotate(-90deg); /* ► right */
+  transform: rotate(90deg); /* ► left */ 
 }
 
-.chevron.expandButtom.expanded {
+.chevron.expandButton.expanded {
   width: 34px;
   height: 34px;
-  transform: rotate(90deg); /* ► left */
+ transform: rotate(-90deg); /* ► right */
 }
 
 </style>

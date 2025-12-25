@@ -70,11 +70,9 @@
     <AppLink to="/NewTree">NewTree</AppLink> | 
     <AppLink to="/DaBoys">DaBoys</AppLink> |
     <AppLink to="/PhotoPages">PhotoPages</AppLink> |
-    <AppLink to="/Couples">Couples</AppLink> | 
-    <AppLink to="/AboutView">About</AppLink> |
-    <AppLink to="/FigureSlide">FigureSlide</AppLink>
-    <AppLink to="../../search.html">Search</AppLink>
-    
+    <!-- <AppLink to="/Couples">Couples</AppLink> |  -->
+    <AppLink to="/FamilySearch">FamilySearch</AppLink> |
+    <!-- <AppLink to="/FigureSlide">FigureSlide</AppLink> -->
     <div id="clock">
     <div class="date">{{ clocktext }}</div>
     </div>

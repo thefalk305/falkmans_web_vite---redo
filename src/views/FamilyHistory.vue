@@ -19,7 +19,7 @@ const ulList = ref([
 const llList = ref([
   { route: "Hudiksvall", text: "Hudiksvall, Sweden" },
   { route: "Arbra", text: "Arbrå, Sweden" },
-  { route: "DuBois", text: "DuBois, PA. USA" },
+  // { route: "DuBois", text: "DuBois, PA. USA" },
   { route: "Chicago", text: "Chicago, IL. USA" },
   { route: "Albany", text: "Albany, N.Y. USA" },
   { route: "Ogdensburg", text: "Ogdensburg, N.J. USA" },

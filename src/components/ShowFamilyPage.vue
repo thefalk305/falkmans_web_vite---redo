@@ -2,8 +2,9 @@
 <script setup>
   import Modal from "./Modal.vue";
   import { ref } from "vue";
-  import FamilyPage from "../views/FamilyPage.vue";
-  import InfoPage from "../views/InfoPage.vue";
+  import { useRouter } from "vue-router";
+  
+  const router = useRouter();
   const props = defineProps({
     recordData: Object,
     id: Number,
@@ -12,7 +13,9 @@
 
   });
 
-  const showFamilyPage = ref(false);
+  const navigateToFamilyPage = () => {
+    router.push({ name: 'FamilyPage', params: { id: props.recordData.id } });
+  };
 
   $(document).ready(function () {
     var images = [];
@@ -22,7 +25,7 @@
 </script>
 
 <template>
-  <div @click="showFamilyPage = true">
+  <div @click="navigateToFamilyPage()">
     <div
       class="desc imagecontainer"
       :class="id === 0 ? 'rightslide' : id === 1 ? 'leftslide' : 'upslide'"
@@ -38,17 +41,6 @@
       <!-- </a> -->
     </div>
   </div>
-
-  <Teleport to="body" :disabled="false" v-if="showFamilyPage">
-    <!-- use the modal component, pass in the prop -->
-    <FamilyPage
-    :show="showFamilyPage"
-    @close="showFamilyPage = false"
-    :id="recordData.id"
-    :fromDaBoys="fromDaBoys"
-    :modalTop="modalTop"
-/>
-  </Teleport>
 </template>
 
 <style scoped>

@@ -2,24 +2,17 @@
 import AppLink from "@/components/AppLink.vue";
 import { ref, onMounted, computed, inject, provide } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useGroupVisibility } from "@/composables/useGroupVisibility";
 import Chevron from "@/components/Chevron.vue";
 import Person from "@/components/Person.vue";
-
-// const props = defineProps({
-//   group: Object,
-//   infoTable: Array,
-//   groupVisibility: Object,
-// });
-
-// simulated first group
-const group = {
-  id: 1,
-  members: [2, 13],
-  parents: [2, 3],
-  top: 0,
-  left: 0,
-};
+import { useHorizontalGroups } from "@/composables/useHorizontalGroups";
+import { useHorizontalGroupVisibility } from "@/composables/useHorizontalGroupVisibility";
+const groupVisibilityRef = ref(null);
+const props = defineProps({
+  group: Object,
+  groupVisibility: Object,
+});
+const dynamicGroups = ref([]);
+// Get the infoTable from global provide
 const infoTable = inject("infoTable", []);
 
 const emit = defineEmits(["open-form"]);
@@ -28,59 +21,6 @@ const emit = defineEmits(["open-form"]);
 const isAuthenticated = ref(false);
 
 // Check authentication state on component mount
-
-const isOpen = ref(false);
-const isExpanded = ref(false);
-const memberIds = group.members;
-const top = group.top;
-const left = group.left;
-const groupId = group.id;
-
-const branchData = memberIds
-  .map((id) => {
-    const foundInfotableEntry = infoTable.find((entry) => entry.id === id);
-    if (foundInfotableEntry) {
-      const range = foundInfotableEntry.born_died;
-      const match = range?.match(/\b\d{4}\b/g);
-      const years = match ? `${match[0]} – ${match[1]}` : null;
-      const children = Array.from(
-        { length: 6 },
-        (_, i) => foundInfotableEntry[`child${i + 1}`]
-      ).filter(Boolean);
-      return {
-        ...foundInfotableEntry,
-        years,
-        children, // ✅ add extracted years here
-      };
-    }
-
-    if (id === 9998) {
-      return { id, pic: "Add Father.svg" };
-    }
-
-    if (id === 9999) {
-      return { id, pic: "Add Mother.svg" };
-    }
-
-    return null;
-  })
-  .filter(Boolean);
-
-function showInfoPage(childName) {
-  console.log("Name: ", childName);
-
-  const child = infoTable.find((entry) => entry.name === childName);
-  if (child) {
-    window.open(`/InfoPage/${child.id}`, "_blank");
-  } else {
-    alert("Child information not found.");
-  }
-}
-
-const couple = {
-  name: "Al Falkman",
-};
-
 onMounted(() => {
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
@@ -92,41 +32,176 @@ onMounted(() => {
   });
 });
 
-console.log("couple", couple);
+const isOpen = ref(false);
+const isExpanded = ref(false);
+const memberIds = props.group.members;
+const top = props.group.top;
+const left = props.group.left;
+const groupId = props.group.id;
+// if(groupId === 1) {
+//   top = 325
+// }
+
+const branchData = memberIds
+  .map((id) => {
+    const foundInfotableEntry = infoTable.find((entry) => entry.id === id);
+    if (foundInfotableEntry) {
+      // only get years from born_died field
+      const range = foundInfotableEntry.born_died;
+      const match = range?.match(/\b\d{4}\b/g);
+      const years = match ? `${match[0]} – ${match[1]}` : null;
+      const children = Array.from(
+        // build array of children
+        { length: 6 },
+        (_, i) => foundInfotableEntry[`child${i + 1}`]
+      ).filter(Boolean);
+      return {
+        ...foundInfotableEntry,
+        years, // add born_died years and
+        children, // children to branchData
+      };
+    }
+    if (id === 9998) {
+      return { id, pic: "Add Father.svg" };
+    }
+    if (id === 9999) {
+      return { id, pic: "Add Mother.svg" };
+    }
+    return null;
+  })
+  .filter(Boolean);
+
+// Function to check if the group should be displayed
+// If not authenticated and the group only contains placeholders (9998, 9999), hide it
+const shouldDisplayGroup = () => {
+  if (isAuthenticated.value) {
+    return true; // Always show if authenticated
+  }
+  // If not authenticated, check if the group has any non-placeholder members
+  const hasRealMembers = branchData.some(
+    (person) => person.id !== 9998 && person.id !== 9999
+  );
+  return hasRealMembers; // Only show if there are real members (not just placeholders)};
+};
+
+function handleImageClick(groupId, clickedMemberId) {
+  // Toggle the expanded state
+  isExpanded.value = !isExpanded.value;
+
+  if (isExpanded.value) {
+    // Show the clicked group and its parents
+    props.groupVisibility.showGroupAndSpecificParents(groupId, clickedMemberId);
+  } else {
+    // Hide the parent groups when collapsing
+    const leftParentGroup = groupId * 2;
+    const rightParentGroup = groupId * 2 + 1;
+
+    props.groupVisibility.hideGroup(leftParentGroup);
+    props.groupVisibility.hideGroup(rightParentGroup);
+  }
+}
+
+// The groupVisibility is passed from the parent component, so we don't need to recreate it here
+// const levelMapRef = ref(null);
+if (infoTable && infoTable.length > 0) {
+  // Use the groupVisibility from props instead of creating new one
+  groupVisibilityRef.value = props.groupVisibility;
+  // levelMapRef.value = props.groupVisibility.levelMap; // store it separately
+}
+// const level = ref(0)
+//  level.value = levelMapRef.value[groupId + 1];
+
+const level = computed(() => props.groupVisibility.levelMap[groupId] ?? 0);
+
+// if(groupId === 1) {
+console.log("groupId", groupId);
+// }
+
+function openForm(memberId, memberIndex) {
+  emit("open-form", memberId, groupId, memberIndex);
+}
 </script>
 
 <template>
-  <div class="wideCouples">
-    <div class="couplesInfo" style="position: relative">
+  <div class="wideCouples" v-if="groupId < 12">
+    <!-- // topmgroup = Da'Boys -->
+    <div v-if="groupId === 0" class="topmgroup">
       <div
-        class="coupleNodeCss"
+        style="position: relative; "
+              :style="{
+
+        left: `${0}px`,
+
+        }"
+        class="coupleNodeCss couplesInfo"
         v-for="(person, index) in branchData"
         :key="person.id"
-        :class="index ? 'female' : 'male'"
       >
-        <Person :person="person" :infoTable="infoTable" />
-      </div>
-      <p class="marriage">
-        Marriage: 18 November 1943 Camp Kilmer, Middlesex, New Jersey, United
-        States
-      </p>
-      <button class="children" @click="isOpen = !isOpen">
-        Children
-        <Chevron :class="isOpen ? '' : 'open'" />
-      </button>
-      <div
-        v-show="isOpen"
-        class="showChildren children"
-        v-for="person in branchData[0].children"
-        :key="person"
-      >
-        <Person :person="person" :infoTable="infoTable" />
+        <Person :person="person" />
       </div>
     </div>
-    <button class="expandButtom"  @click="isExpanded = !isExpanded">
-      <Chevron  class="expandButtom" :class="isExpanded ? '' : 'expanded'" 
-      style="width: 20px; height: 20px; top: 0; left: 0;"/>
-    </button>
+    <!-- not topgroup -->
+    <!-- set x - y position -->
+    <div
+      v-else
+      v-if="shouldDisplayGroup()"
+      class="groups"
+      :class="`group${groupId}`"
+      :style="{
+        top: `${top}px`,
+        left: `${left}px`,
+        visibility: props.groupVisibility?.isVisible(groupId)
+          ? 'visible'
+          : 'hidden',
+        }"
+      >
+      <div
+        v-if="groupId > 1" :class="[groupId % 2 ? 'bottomTwig' : 'topTwig']">
+      </div>
+      <div class="couplesInfo">
+        <p>mgroup{{ groupId }}</p>
+        <div
+          v-for="(person, index) in branchData"
+          :style="{
+            top: -108 + index * 54 + 'px',
+          }"          
+          class="coupleNodeCss"
+          :class="index % 2 ? 'female' : 'male'"
+          :key="person.id"
+        >
+          <Person :person="person" />
+          <p class="marriage" v-if="index">
+            Marriage: {{ branchData[0].marriage.date }},
+            {{ branchData[0].marriage.place }}
+          </p>
+        </div>
+        <button class="children" @click="isOpen = !isOpen">
+          Children
+          <Chevron :class="isOpen ? '' : 'open'" />
+        </button>
+        <div
+          v-show="isOpen"
+          class="showChildren children"
+          v-for="person in branchData[0].children"
+          :key="person"
+        >
+          <Person :person="person" />
+        </div>
+        <!-- </div> -->
+        <button
+          class="expandButton"
+          @click="handleImageClick(groupId, branchData[0].id)"
+          style="top: -87; left: 305"
+        >
+          <Chevron
+            class="expandButton"
+            :class="isExpanded ? 'expanded' : ''"
+            style="width: 20px; height: 20px; left: 9px; top: 7px"
+          />
+        </button>
+      </div>
+    <!-- </div> -->
+    </div>
   </div>
 </template>
 
@@ -137,17 +212,126 @@ console.log("couple", couple);
   --presence-border-size: 2px;
 }
 
-.expandButtom {
+.topTwig {
+  position: absolute;
+  top: -55px;
+  left: -200px;
+  height: 97px;
+  width: 300px;
+  border-radius: 10px 0px 0px 0px;
+  border-left: thin #006600 solid;
+  border-top: thin #006600 solid;
+z-index: -1;
+}
+.bottomTwig {
+  position: absolute;
+  top: -150px;
+  left: -200px;
+  height: 97px;
+  width: 200px;
+  border-radius: 0px 0px 0px 10px;
+  border-bottom: thin #006600 solid;
+  border-left: thin #006600 solid;
+  z-index: -1;
+}
+
+.groups {
+  position: absolute;
+}
+
+.groups.group1 {
+  position: absolute;
+
+  left: 350px;
+}
+
+.groups.group2 {
+  position: absolute;
+  top: -25px;
+  left: -0px;
+  width: 325px;
+  height: 160px;
+}
+
+.groups.group3 {
+  position: absolute;
+  top: -25px;
+  left: -0px;
+  width: 325px;
+  height: 160px;
+}
+
+.groups.group4 {
+  position: absolute;
+  top: -25px;
+  left: -0px;
+  width: 325px;
+  height: 160px;
+}
+
+.groups.group5 {
+  position: absolute;
+  top: -25px;
+  left: -0px;
+  width: 325px;
+  height: 160px;
+}
+
+.groups.group6 {
+  position: absolute;
+  top: -25px;
+  left: -0px;
+  width: 325px;
+  height: 160px;
+}
+
+.groups.group7 {
+  position: absolute;
+  top: -25px;
+  left: -0px;
+  width: 325px;
+  height: 160px;
+}
+
+.groups.group8 {
+  position: absolute;
+  top: -25px;
+  left: -0px;
+  width: 325px;
+  height: 160px;
+}
+
+.groups.group9 {
+  position: absolute;
+  top: -25px;
+  left: -0px;
+  width: 325px;
+  height: 160px;
+}
+
+.groups.group10 {
+  position: absolute;
+}
+
+.topmgroup {
+  position: relative;
+  top: 75px;
+  left: -350px;
+  width: 325px;
+  height: 270px;
+}
+.expandButton {
   width: 40px;
   height: 34px;
   border-radius: 50%;
   background-color: bisque;
-  position: relative;
-  left: 10px;
-  top: 38px;
+  position: absolute;
+  left: 305px;
+  top: -70px;
 }
 
 .wideCouples {
+  position: relative;
   display: flex;
   top: 20px;
   left: 100px;
@@ -156,7 +340,7 @@ console.log("couple", couple);
 
 .couplesInfo {
   width: 300px;
-  background-color: white;
+  background-color: beige;
   border-radius: 6px;
 }
 
@@ -174,6 +358,7 @@ a:hover {
 }
 
 .children {
+  position: relative;
   display: flex;
   width: 296px;
   text-align: left;
@@ -192,7 +377,7 @@ h3 {
 .marriage {
   font-size: x-small;
   position: absolute;
-  top: 30px;
+  top: -20px;
   width: 300px;
   height: 30px;
   /* background-color: #c6c6f0; */
@@ -205,11 +390,13 @@ button {
 }
 
 .coupleNodeCss {
+  position: absolute;
   width: 300px;
   height: 54px;
   display: flex;
   flex-direction: row;
   /* border: 1px solid red; */
+  background-color: bisque;
 }
 .female {
   align-items: flex-end;

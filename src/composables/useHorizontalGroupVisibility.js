@@ -1,7 +1,6 @@
-
 import { ref, computed } from 'vue';
 
-export function useGroupVisibility(groupData, baseGroupId = 1, infoTable = []) {
+export function useHorizontalGroupVisibility(groupData, baseGroupId = 1, infoTable = []) {
   const visibleGroups = ref(new Set([baseGroupId]));
 
   // Build level map based on the actual group data provided

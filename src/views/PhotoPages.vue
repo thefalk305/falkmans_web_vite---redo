@@ -3,6 +3,7 @@
   import { useInfoTableData } from "@/composables/useInfoTableData";
   import MiniNav from "@/components/MiniNav.vue";
   import ShowModal from "@/components/ShowModal.vue";
+const infoTable = inject("infoTable", []);
 
   const ulList = ref([
     { route: "PhotoPages", text: "Family Photos 1" },
@@ -51,7 +52,7 @@
 
 
   var recordData = [];
-  const { infoTable } = useInfoTableData();
+  // const { infoTable } = useInfoTableData();
   // for (var i = 0; i < photos.length; i++) {
   //   for (var j = 0; j < infoTable.length; j++) {
   //     if (photos[i] === infoTable[j].name) {

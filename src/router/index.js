@@ -1,63 +1,37 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-// 1. Manually define special routes
-const staticRoutes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import('@/views/FamilyHistory.vue')
-  }
-];
-
-// Explicit route for InfoPage that accepts an optional :id and passes it as a prop
-staticRoutes.push({
-  path: '/InfoPage/:id?',
-  name: 'InfoPage',
-  component: () => import('@/views/InfoPage.vue'),
-  props: route => ({ id: Number(route.params.id) })
-});
-
-staticRoutes.push({
-  path: '/FamilyPage/:id?',
-  name: 'FamilyPage',
-  component: () => import('@/views/FamilyPage.vue'),
-  props: route => ({ id: Number(route.params.id) })
-});
-
-staticRoutes.push({
-  path: '/add-person',
-  name: 'AddPerson',
-  component: () => import('@/views/BranchForm.vue'),
-});
-
-staticRoutes.push({
-  path: '/info-table-view',
-  name: 'InfoTableView',
-  component: () => import('@/views/InfoTableView.vue'),
-});
-
-staticRoutes.push({
-  path: '/logout',
-  name: 'Logout',
-  component: () => import('@/views/Logout.vue'),
-});
-
-// 2. Dynamically generate routes from the /views folder
+// Dynamically import all views from the views folder
 const viewModules = import.meta.glob('@/views/*.vue');
 
-const dynamicRoutes = Object.entries(viewModules).map(([path, loader]) => {
-  const name = path.split('/').pop().replace('.vue', '');
-  return {
-    path: '/' + name,
-    name: '/' + name,
+// Map filenames to custom route configurations
+const customRoutes = {
+  'FamilyHistory.vue': { path: '/', name: 'Home' },
+  'InfoPage.vue': { path: '/InfoPage/:id?', name: 'InfoPage' },
+  'FamilyPage.vue': { path: '/FamilyPage/:id?', name: 'FamilyPage' },
+  'BranchForm.vue': { path: '/add-person', name: 'AddPerson' },
+  'InfoTableView.vue': { path: '/info-table-view', name: 'InfoTableView' },
+  'Logout.vue': { path: '/logout', name: 'Logout' }
+};
+
+// Build routes array
+const routes = Object.entries(viewModules).map(([filePath, loader]) => {
+  const filename = filePath.split('/').pop();
+  const custom = customRoutes[filename];
+  
+  const route = {
+    path: custom?.path || '/' + filename.replace('.vue', ''),
+    name: custom?.name || filename.replace('.vue', ''),
     component: loader
   };
+  
+  // Add props for routes with ID parameters
+  if (filename === 'InfoPage.vue' || filename === 'FamilyPage.vue') {
+    route.props = r => ({ id: Number(r.params.id) });
+  }
+  
+  return route;
 });
 
-// 3. Combine them
-const routes = [...staticRoutes, ...dynamicRoutes];
-
-// 4. Create the router
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes

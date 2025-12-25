@@ -9,7 +9,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 const snackbar = ref(false)
 
 var text = `Record successfully deleted`;
-const timeout = 2000;
+const timeout = 1500;
 const dialog = ref(false);
 var loading = ref(false);
 

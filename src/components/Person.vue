@@ -1,19 +1,34 @@
 <script setup>
 import AppLink from "@/components/AppLink.vue";
-import { ref, onMounted } from "vue";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { ref, inject } from "vue";
 
 const resolveImageUrl = (filename) =>
   new URL(`../assets/img/${filename}`, import.meta.url).href;
 const snackbar = ref(false);
+const timeout = 1500;
 
 const props = defineProps({
   person: {
     type: [String, Object],
   },
-  infoTable: Array,
   isOpen: Boolean,
 });
+
+// Get the infoTable from global provide
+const infoTable = inject("infoTable", []);
+
+
+// person could either be a string or an object.
+// It will be an object when rendering a full person from infoTable
+// It will be a string (child's name =) if it's a child.
+const personName = typeof props.person === "string" ? props.person : props.person?.name;
+
+const memberInfo = infoTable.find((entry) => entry.name === personName);
+
+const isPerson = typeof props.person === "string" ? true : false;
+
+const isFound = memberInfo ? true : false;
+// console.log("props.person", props.person);
 
 function familySearch(link) {
   navigator.clipboard
@@ -25,30 +40,22 @@ function familySearch(link) {
       console.error("Could not copy text: ", err);
     });
 }
-
-
-
-const personName = typeof props.person === "string" ? props.person : props.person?.name;
-
-const isPerson = typeof props.person === "string" ? true : false;
-
-const memberInfo = props.infoTable.find((entry) => entry.name === personName);
-
-console.log("memberInfo", memberInfo, "isPerson", isPerson);
 </script>
 
-<template>
-  <div class="avatarCircleCss  " 
+<template >
+  <div  v-if="memberInfo"
+  class="avatarCircleCss  " 
   :class="isPerson ? 'child' : ''">
     <img
       class="imageCss"
-      :src="resolveImageUrl(memberInfo.pic)"
-      :alt="memberInfo.pic"
+      :src="resolveImageUrl(memberInfo?.pic)"
+      :alt="'face2.png'"
     />
   </div>
-  <div class="coupleInfo">
+  <div class="coupleInfo" v-if="memberInfo">
+    
     <AppLink
-      v-if="memberInfo.id < 9998"
+      v-if="memberInfo?.id < 9998"
       :to="{ name: 'InfoPage', params: { id: memberInfo.id } }"
       target="_blank"
     >
@@ -62,7 +69,6 @@ console.log("memberInfo", memberInfo, "isPerson", isPerson);
       >
         {{ memberInfo.famSrchLink }}
       </button>
-    </div>
   </div>
 
     <!-- snackbar -->
@@ -76,7 +82,7 @@ console.log("memberInfo", memberInfo, "isPerson", isPerson);
       </template>
     </v-snackbar>
   </div>
-
+</div>
 </template>
 
 <style scoped>
@@ -84,6 +90,15 @@ console.log("memberInfo", memberInfo, "isPerson", isPerson);
   --avatar-size: 40px;
   --presence-size: 16px;
   --presence-border-size: 2px;
+}
+.groups {
+  position: relative;
+}
+
+.groups.group1 {
+  position: relative;
+
+  left: 350px;
 }
 
 a:hover {

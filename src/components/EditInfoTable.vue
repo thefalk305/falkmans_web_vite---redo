@@ -1,7 +1,6 @@
 <script>
   import axios from "axios";
   import { reactive, ref, inject } from "vue";
-  import InfoTable from "../views/InfoTable.vue";
   import databaseIo from "@/assets/js/databaseIo.js";
 
   // const { getProductById, updateProduct } = databaseIo;

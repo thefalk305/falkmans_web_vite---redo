@@ -1,18 +1,21 @@
 <!-- prettier-ignore-file -->
 <script setup>
 import { ref, computed, inject, provide, defineAsyncComponent } from "vue";
-import NewBranch from "../components/NewBranch.vue";
-import Animation from "../components/Animation.vue";
 // Use dynamic imports to avoid duplicate module loading
+const Couples = defineAsyncComponent(() => import('./Couples.vue'));
 const LoginForm = defineAsyncComponent(() => import('./LoginForm.vue'));
 const Register = defineAsyncComponent(() => import('./Register.vue'));
+import Animation from "../components/Animation.vue";
 import { useDraggableModal } from "@/composables/useDraggableModal";
-import { useGroupVisibility } from "@/composables/useGroupVisibility";
-import { useDynamicGroups } from "@/composables/useDynamicGroups";
-import { getAuth } from "firebase/auth";
+import { useHorizontalGroupVisibility } from '@/composables/useHorizontalGroupVisibility';
 
+// const { levelMap } = useGroupVisibility(groupData, 1, infoTable);
+import { useHorizontalGroups } from "@/composables/useHorizontalGroups";
+import { getAuth } from "firebase/auth";
 useDraggableModal();
 
+
+// console.log('levelMap',levelMap);
 // Get the infoTable from global provide
 const infoTable = inject("infoTable", []);
 const dynamicGroups = ref([]);
@@ -37,21 +40,24 @@ const openFormHandler = async (memberId, groupId, memberIndex) => {
 };
 
 // Generate dynamic groups and create group visibility now that we have the data
+// const levelMapRef = ref(null);
+const levelMapRef = ref();
 if (infoTable && infoTable.length > 0) {
-  const { buildCompleteTree } = useDynamicGroups(infoTable);
+  const { buildCompleteTree } = useHorizontalGroups(infoTable);
   dynamicGroups.value = buildCompleteTree([2, 13], 10);
-  groupVisibilityRef.value = useGroupVisibility(
-    dynamicGroups.value,
-    1,
-    infoTable
-  );
-}
 
+  const gv = useHorizontalGroupVisibility(dynamicGroups.value, 1, infoTable);
+
+  groupVisibilityRef.value = gv;
+  levelMapRef.value = gv.levelMap;   // store it separately
+}
+// console.log("levelMapRef", levelMapRef.value);
 // Provide the groupVisibility that other components need
-provide("groupVisibility", groupVisibilityRef.value);
+// provide("groupVisibility", groupVisibilityRef.value);
 
 // Make the data available to the template as well
 const branchData = computed(() => dynamicGroups.value);
+console.log("branchData", branchData.value);  
 </script>
 
 <template>
@@ -63,7 +69,7 @@ const branchData = computed(() => dynamicGroups.value);
     <template v-slot:logout-header> Sign Out </template>
   </LoginForm>
   <div id="family-tree">
-    <header>
+    <!-- <header>
       <br />
 
       <div id="hgroup">
@@ -81,8 +87,8 @@ const branchData = computed(() => dynamicGroups.value);
         style="float: right; margin: 0px 15px 0px 0px; width: 50%"
       ></div>
     </header>
-
-    <section
+ -->
+    <!-- <section
       class="intro"
       style="left: 0px; top: 10px; right: 00px; width: auto"
     >
@@ -120,7 +126,7 @@ const branchData = computed(() => dynamicGroups.value);
       <Animation />
       <div class="clear"></div>
       <div class="sectionline"></div>
-    </section>
+    </section> -->
 
     <div id="treewindow">
       <img
@@ -137,12 +143,11 @@ const branchData = computed(() => dynamicGroups.value);
           v-else-if="infoTable.length > 0 && groupVisibilityRef"
           id="treepot"
         >
-          <NewBranch
+          <Couples
             v-for="(group, index) in branchData"
             :key="index"
             :group="group"
             @open-form="openFormHandler"
-            :info-table="infoTable"
             :group-visibility="groupVisibilityRef"
           />
         </div>
@@ -179,6 +184,33 @@ const branchData = computed(() => dynamicGroups.value);
 </style>
 
 <style scoped>
+#treepot {/*the treepot positions the tree in the center of the window. All mgroup inline positioning is based on the treepot position*/
+	position:absolute;
+	margin:0px auto;
+	top:420px;
+	padding:10px;
+	height:200px;
+	width:200px;
+	z-index:100;
+  left: 2000px; /* Adjusted for horizontal layout */
+}
+
+/* #draggable-elem {
+  position: absolute;
+  background-color: #ffffff;
+  font-size: 1.6em;
+	left:-3400px;
+	height:3700px;
+	width:8000px;
+  top: 1000px;
+  transform: translate(-50%, -25%);
+  display: grid;
+  place-items: center;
+  font-family: "Poppins", sans-serif;
+  border-radius: 0.3em;
+  cursor: move;
+	z-index:0;
+} */
 
 .tree-wrapper {
   /* left: -1200px; */
@@ -194,11 +226,12 @@ const branchData = computed(() => dynamicGroups.value);
 #draggable-elem {
   position: relative;
   top: 930px;
-  left: 600px;
+  left: 2000px;
   width: 8000px;
   height: 3700px;
   white-space: nowrap;
   background-color: white;
+  overflow: auto; 
 }
 
 #treewindow {

@@ -72,6 +72,8 @@ function handleImageClick(groupId, clickedMemberId) {
   props.groupVisibility.showGroupAndSpecificParents(groupId, clickedMemberId);
 }
 
+console.log("groupId", groupId);
+
 function openForm(memberId, memberIndex) {
   emit("open-form", memberId, groupId, memberIndex);
 }
@@ -129,9 +131,10 @@ function openForm(memberId, memberIndex) {
         : 'hidden',
     }"
   >
-    <div v-if="groupId != 1">
-      <div :class="[groupId % 2 ? 'rightTwig' : 'leftTwig']"></div>
-    </div>
+    <div
+      v-if="groupId != 1"
+      :class="[groupId % 2 ? 'rightTwig' : 'leftTwig']"
+    ></div>
     <div class="mgroup">
       <p>mgroup{{ groupId }}</p>
       <div
@@ -142,10 +145,7 @@ function openForm(memberId, memberIndex) {
         class="imagecontainer desc"
         :key="person.id"
       >
-        <!-- <AppLink :to="{ name: 'InfoPage', params: { id: person.id } }"> -->
-        <div class="memberGroup">
-          <p>member = {{ person.id }}</p>
-        </div>
+        <p class="memberGroup">member = {{ person.id }}</p>
         <div v-if="person.id === 9998 || person.id === 9999">
           <!-- <div v-if="false"> -->
           <img

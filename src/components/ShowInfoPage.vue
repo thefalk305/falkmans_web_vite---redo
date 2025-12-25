@@ -3,9 +3,11 @@
 <script setup>
   import Modal from "./Modal.vue";
   import { ref } from "vue";
-  import InfoPage from "../views/InfoPage.vue";
-const resolveImageUrl = (filename) =>
-  new URL(`../assets/img/${filename}`, import.meta.url).href;
+  import { useRouter } from "vue-router";
+  
+  const router = useRouter();
+  const resolveImageUrl = (filename) =>
+    new URL(`../assets/img/${filename}`, import.meta.url).href;
 
 
   const props = defineProps({
@@ -14,7 +16,9 @@ const resolveImageUrl = (filename) =>
     modalTop: Number
   });
 
-  const showInfoPage = ref(false);
+  const navigateToInfoPage = () => {
+    router.push({ name: 'InfoPage', params: { id: props.recordData.id } });
+  };
 
   $(document).ready(function () {
     var images = [];
@@ -24,25 +28,13 @@ const resolveImageUrl = (filename) =>
 </script>
 
 <template>
-  <div id="showInfoPage"  @click="showInfoPage = true">
+  <div id="showInfoPage" @click="navigateToInfoPage()">
     <!-- <img :src="'/src/assets/img/' + recordData.pic" alt="photo" /> -->
     <img :src="resolveImageUrl(recordData.pic)" alt="photo" />
     <p v-if="!fromDaBoys" style="font-size: 16px; position: relative; left: -30px">
       {{ recordData.name }}
     </p>
   </div>
-
-  <Teleport to="body" :disabled="false"  id="showInfoPage2" v-if="showInfoPage">
-    <!-- use the modal component, pass in the prop -->
-    <InfoPage
-      :show="showInfoPage"
-      @close="showInfoPage = false"
-      :id="recordData.id"
-      :fromDaBoys="fromDaBoys"
-      :modalTop="modalTop"
-    >
-    </InfoPage>
-  </Teleport>
 </template>
 
 <style scoped>
