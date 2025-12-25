@@ -59,9 +59,6 @@ async function initializeApp() {
       // infoTableData = localInfoTableData;
       // console.log(`Loaded ${infoTableData.length} records from local JSON`);
 
-
-
-
     // Create the app instance
     const app = createApp(App);
 
