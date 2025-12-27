@@ -30,6 +30,12 @@ const isPerson = typeof props.person === "string" ? true : false;
 const isFound = memberInfo ? true : false;
 // console.log("props.person", props.person);
 
+console.log("personName", personName, "memberInfo", memberInfo )
+if (memberInfo?.born_died) {
+  const match = memberInfo.born_died.match(/\b\d{4}\b/g);
+  memberInfo.years = match ? `${match[0]} – ${match[1]}` : "";
+}
+
 function familySearch(link) {
   navigator.clipboard
     .writeText(link)
@@ -40,6 +46,7 @@ function familySearch(link) {
       console.error("Could not copy text: ", err);
     });
 }
+
 </script>
 
 <template >
@@ -63,6 +70,8 @@ function familySearch(link) {
     </AppLink>
     <div class="personInfo" style="font-size: smaller">
       <p style="font-size: smaller">{{ memberInfo.years }}</p>
+      <!-- <p style="font-size: smaller">{{ memberInfo.id }}</p> -->
+      <p>---</p>
       <button
         @click="familySearch(memberInfo.famSrchLink)"
         style="font-size: smaller"

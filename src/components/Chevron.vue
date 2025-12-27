@@ -51,7 +51,7 @@ svg {
 .chevron.expandButton.expanded {
   width: 34px;
   height: 34px;
- transform: rotate(-90deg); /* ► right */
+ transform: rotate(270deg); /* ► right */
 }
 
 </style>

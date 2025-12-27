@@ -230,7 +230,7 @@ console.log("branchData", branchData.value);
   width: 8000px;
   height: 3700px;
   white-space: nowrap;
-  background-color: white;
+  background-color: lightgrey;
   overflow: auto; 
 }
 

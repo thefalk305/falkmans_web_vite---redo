@@ -516,7 +516,7 @@
     "pic4": null,
     "born": 1918,
     "last_name": "Alexander",
-    "mother": "Adolfina_x000D_",
+    "mother": "Adolfina_",
     "pic3": null,
     "famSrchLink": "LDR8-7YF",
     "father": "Frank T Alexander",
@@ -601,7 +601,7 @@
     "born": 1915,
     "famSrchLink": "GJY8-JMT",
     "password": null,
-    "mother": "Adolfina_x000D_",
+    "mother": "Adolfina_",
     "sib6": null,
     "familypage": null,
     "pic5": "Helen Alexander (c 1942).jpg",
@@ -3589,7 +3589,7 @@
     "pic3": "Herman Falkman's High School.jpg",
     "sib4": null,
     "child6": null,
-    "born_died": "7 October 1697 - 31 March 1779_x000D__x000D__x000D__x000D_",
+    "born_died": "7 October 1697 - 31 March 1779____",
     "marriage": {
       "date": "",
       "place": "",
@@ -4164,7 +4164,7 @@
     "name": "Pehr Olofsson",
     "died": null,
     "pic4": "Ester Falkman.jpg",
-    "born_died": "1670_x000D__x000D__x000D__x000D_ - ???",
+    "born_died": "1670____ - ???",
     "marriage": {
       "spouse": "",
       "place": "",
@@ -4275,7 +4275,7 @@
     "suff": null,
     "buried": null,
     "child5": "Lillian Falkman",
-    "born_died": "1675_x000D__x000D__x000D__x000D_ - ???",
+    "born_died": "1675____ - ???",
     "spouse": "Nils P Falkman",
     "first_name": "Cherstin",
     "pic6": "Theodore Falkman2.jpg",
@@ -4331,7 +4331,7 @@
       "spouse": ""
     },
     "pic4": "Ester Falkman.jpg",
-    "born_died": "1670_x000D__x000D_  - ???",
+    "born_died": "1670__  - ???",
     "familypage": null,
     "pic6": "Theodore Falkman2.jpg",
     "child2": "Ester Falkman",
@@ -4758,7 +4758,7 @@
     "famSrchLink": "L4MT-QMZ",
     "spouse": "Christina Esbjornsdotter",
     "child6": null,
-    "born_died": "1665 - 20 July 1731_x000D__x000D_",
+    "born_died": "1665 - 20 July 1731__",
     "child3": "Robert Falkman",
     "child5": "Lillian Falkman",
     "name": "Söne Hansson",
@@ -4809,7 +4809,7 @@
     "spouse": "Karin Noren",
     "pic4": "Ester Falkman.jpg",
     "sib5": "Johanna Kristina Johansdotter",
-    "born_died": "1680 - January 1751_x000D__x000D_",
+    "born_died": "1680 - January 1751__",
     "sib2": "Ola Johansson",
     "username": null,
     "pic": "Chirstina Esbiornsdotter burial 1751.png",
@@ -4865,7 +4865,7 @@
     "familypage": null,
     "pic2": "Karen Noren.jpg",
     "bio": null,
-    "born_died": "1630_x000D__x000D_ - ???",
+    "born_died": "1630__ - ???",
     "sib1": "Per Johansson",
     "child5": "Lillian Falkman",
     "born": 1630,
@@ -4892,7 +4892,7 @@
     "pic3": "Herman Falkman's High School.jpg",
     "child1": "Söne Hansson",
     "pic": "face1.png",
-    "born_died": "1635_x000D__x000D_ - ???",
+    "born_died": "1635__ - ???",
     "sib6": null,
     "child6": null,
     "last_name": "Hans",
@@ -5352,7 +5352,7 @@
     "child3": null,
     "pic5": "Mother Falkman & the boys.jpg",
     "spouse": "Mary Ann Cochran",
-    "father": "Richard J Falkman_x000D_",
+    "father": "Richard J Falkman_",
     "marriage": {
       "place": "",
       "spouse": "",
@@ -6001,6 +6001,45 @@
     "father": "",
     "born_died": "",
     "name": "Mrs. Hans",
-    "bio": "Mrs Hans.txt"
+    "bio": "Mrs Hans.txt",
+    "marriage": {
+      "date": "",
+      "spouse": "",
+      "place": ""
+    }
+  },
+  {
+    "id": 9998,
+    "mother": "",
+    "pic": "face1.png",
+    "famSrchLink": "MKBH-FXQ",
+    "memberIndex": 1,
+    "groupId": 163,
+    "father": "",
+    "born_died": "",
+    "name": "Mrs. Hans",
+    "bio": "Mrs Hans.txt",
+    "marriage": {
+      "date": "",
+      "spouse": "",
+      "place": ""
+    }
+  },
+  {
+    "id": 9999,
+    "mother": "",
+    "pic": "face1.png",
+    "famSrchLink": "MKBH-FXQ",
+    "memberIndex": 1,
+    "groupId": 163,
+    "father": "",
+    "born_died": "",
+    "name": "Mrs. Hans",
+    "bio": "Mrs Hans.txt",
+    "marriage": {
+      "date": "",
+      "spouse": "",
+      "place": ""
+    }
   }
 ]

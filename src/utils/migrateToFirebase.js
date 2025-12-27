@@ -17,6 +17,7 @@ export async function migrateInfoTableToFirebase() {
     const currentData = new Map();
 
     currentSnapshot.forEach(doc => {
+      console.log(doc.id);
       currentData.set(doc.id, doc.data());
     });
 

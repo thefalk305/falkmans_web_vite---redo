@@ -1,6 +1,6 @@
 <script setup>
 import AppLink from "@/components/AppLink.vue";
-import { ref, onMounted, computed, inject, provide } from "vue";
+import { ref, onMounted, computed, inject, provide, watch } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Chevron from "@/components/Chevron.vue";
 import Person from "@/components/Person.vue";
@@ -62,10 +62,10 @@ const branchData = memberIds
       };
     }
     if (id === 9998) {
-      return { id, pic: "Add Father.svg" };
+      return { id, pic: "Add Father.svg", name: "Add Father", marriage: {data: "", place: ""} };
     }
     if (id === 9999) {
-      return { id, pic: "Add Mother.svg" };
+      return { id, pic: "Add Mother.svg", name: "Add Mother", marriage: {data: "", place: ""} };
     }
     return null;
   })
@@ -93,13 +93,57 @@ function handleImageClick(groupId, clickedMemberId) {
     props.groupVisibility.showGroupAndSpecificParents(groupId, clickedMemberId);
   } else {
     // Hide the parent groups when collapsing
-    const leftParentGroup = groupId * 2;
-    const rightParentGroup = groupId * 2 + 1;
+    const topParentGroup = groupId * 2;
+    const bottomParentGroup = groupId * 2 + 1;
 
-    props.groupVisibility.hideGroup(leftParentGroup);
-    props.groupVisibility.hideGroup(rightParentGroup);
+    props.groupVisibility.hideGroup(topParentGroup);
+    props.groupVisibility.hideGroup(bottomParentGroup);
   }
 }
+
+// Watch for visibility changes and sync isExpanded state accordingly
+watch(
+  () => props.groupVisibility?.isVisible(groupId),
+  (isVisible) => {
+    // If the group is no longer visible, set isExpanded to false
+    if (!isVisible) {
+      isExpanded.value = false;
+    }
+  },
+  { immediate: true }
+);
+
+// Watch for changes to child groups and update isExpanded accordingly
+watch(
+  () => {
+    // Check if either child group (2*groupId or 2*groupId+1) is visible
+    const leftChildId = groupId * 2;
+    const rightChildId = groupId * 2 + 1;
+
+    const leftChildVisible = props.groupVisibility?.isVisible(leftChildId);
+    const rightChildVisible = props.groupVisibility?.isVisible(rightChildId);
+
+    // Group is expanded if it's visible and at least one of its children is visible
+    return {
+      groupVisible: props.groupVisibility?.isVisible(groupId),
+      leftChildVisible,
+      rightChildVisible
+    };
+  },
+  ({ groupVisible, leftChildVisible, rightChildVisible }) => {
+    // If the group is visible but none of its children are visible,
+    // it means it's not expanded anymore
+    if (groupVisible && !leftChildVisible && !rightChildVisible) {
+      isExpanded.value = false;
+    }
+    // If the group is visible and at least one child is visible,
+    // it means it's expanded
+    else if (groupVisible && (leftChildVisible || rightChildVisible)) {
+      isExpanded.value = true;
+    }
+  },
+  { immediate: true }
+);
 
 // The groupVisibility is passed from the parent component, so we don't need to recreate it here
 // const levelMapRef = ref(null);
@@ -114,7 +158,7 @@ if (infoTable && infoTable.length > 0) {
 const level = computed(() => props.groupVisibility.levelMap[groupId] ?? 0);
 
 // if(groupId === 1) {
-console.log("groupId", groupId);
+console.log("groupId", groupId, "branchData", branchData);
 // }
 
 function openForm(memberId, memberIndex) {
@@ -123,15 +167,13 @@ function openForm(memberId, memberIndex) {
 </script>
 
 <template>
-  <div class="wideCouples" v-if="groupId < 12">
+  <div class="wideCouples" v-if="groupId < 1023">
     <!-- // topmgroup = Da'Boys -->
     <div v-if="groupId === 0" class="topmgroup">
       <div
         style="position: relative; "
-              :style="{
-
-        left: `${0}px`,
-
+        :style="{
+          left: `${0}px`,
         }"
         class="coupleNodeCss couplesInfo"
         v-for="(person, index) in branchData"
@@ -159,7 +201,7 @@ function openForm(memberId, memberIndex) {
         v-if="groupId > 1" :class="[groupId % 2 ? 'bottomTwig' : 'topTwig']">
       </div>
       <div class="couplesInfo">
-        <p>mgroup{{ groupId }}</p>
+        <!-- <p>mgroup{{ groupId }}</p> -->
         <div
           v-for="(person, index) in branchData"
           :style="{
@@ -170,7 +212,7 @@ function openForm(memberId, memberIndex) {
           :key="person.id"
         >
           <Person :person="person" />
-          <p class="marriage" v-if="index">
+          <p class="marriage" v-if="!index &&  branchData[0].marriage.date">
             Marriage: {{ branchData[0].marriage.date }},
             {{ branchData[0].marriage.place }}
           </p>
@@ -325,6 +367,7 @@ z-index: -1;
   height: 34px;
   border-radius: 50%;
   background-color: bisque;
+  background-color: white;
   position: absolute;
   left: 305px;
   top: -70px;
@@ -341,6 +384,7 @@ z-index: -1;
 .couplesInfo {
   width: 300px;
   background-color: beige;
+  background-color: white;
   border-radius: 6px;
 }
 
@@ -377,7 +421,7 @@ h3 {
 .marriage {
   font-size: x-small;
   position: absolute;
-  top: -20px;
+  top: 32px;
   width: 300px;
   height: 30px;
   /* background-color: #c6c6f0; */
@@ -397,6 +441,7 @@ button {
   flex-direction: row;
   /* border: 1px solid red; */
   background-color: bisque;
+  background-color: white;
 }
 .female {
   align-items: flex-end;
