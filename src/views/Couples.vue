@@ -62,10 +62,20 @@ const branchData = memberIds
       };
     }
     if (id === 9998) {
-      return { id, pic: "Add Father.svg", name: "Add Father", marriage: {data: "", place: ""} };
+      return {
+        id,
+        pic: "Add Father.svg",
+        name: "Add Father",
+        marriage: { data: "", place: "" },
+      };
     }
     if (id === 9999) {
-      return { id, pic: "Add Mother.svg", name: "Add Mother", marriage: {data: "", place: ""} };
+      return {
+        id,
+        pic: "Add Mother.svg",
+        name: "Add Mother",
+        marriage: { data: "", place: "" },
+      };
     }
     return null;
   })
@@ -127,7 +137,7 @@ watch(
     return {
       groupVisible: props.groupVisibility?.isVisible(groupId),
       leftChildVisible,
-      rightChildVisible
+      rightChildVisible,
     };
   },
   ({ groupVisible, leftChildVisible, rightChildVisible }) => {
@@ -168,10 +178,17 @@ function openForm(memberId, memberIndex) {
 
 <template>
   <div class="wideCouples" v-if="groupId < 1023">
+    <div class="marriage" v-if="branchData[0].marriage.date">
+      <p>Marriage: {{ branchData[0].marriage.date }},</p>
+      <p>
+        {{ branchData[0].marriage.place }}
+      </p>
+    </div>
+
     <!-- // topmgroup = Da'Boys -->
     <div v-if="groupId === 0" class="topmgroup">
       <div
-        style="position: relative; "
+        style="position: relative"
         :style="{
           left: `${0}px`,
         }"
@@ -195,27 +212,30 @@ function openForm(memberId, memberIndex) {
         visibility: props.groupVisibility?.isVisible(groupId)
           ? 'visible'
           : 'hidden',
-        }"
-      >
+      }"
+    >
       <div
-        v-if="groupId > 1" :class="[groupId % 2 ? 'bottomTwig' : 'topTwig']">
-      </div>
+        v-if="groupId > 1"
+        :class="[groupId % 2 ? 'bottomTwig' : 'topTwig']"
+      ></div>
       <div class="couplesInfo">
         <!-- <p>mgroup{{ groupId }}</p> -->
         <div
           v-for="(person, index) in branchData"
           :style="{
             top: -108 + index * 54 + 'px',
-          }"          
+          }"
           class="coupleNodeCss"
           :class="index % 2 ? 'female' : 'male'"
           :key="person.id"
         >
           <Person :person="person" />
-          <p class="marriage" v-if="!index &&  branchData[0].marriage.date">
-            Marriage: {{ branchData[0].marriage.date }},
-            {{ branchData[0].marriage.place }}
-          </p>
+          <!-- <div class="marriage" v-if="!index && branchData[0].marriage.date">
+            <p>Marriage: {{ branchData[0].marriage.date }},</p>
+            <p>
+              {{ branchData[0].marriage.place }}
+            </p>
+          </div> -->
         </div>
         <button class="children" @click="isOpen = !isOpen">
           Children
@@ -242,7 +262,7 @@ function openForm(memberId, memberIndex) {
           />
         </button>
       </div>
-    <!-- </div> -->
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -263,7 +283,7 @@ function openForm(memberId, memberIndex) {
   border-radius: 10px 0px 0px 0px;
   border-left: thin #006600 solid;
   border-top: thin #006600 solid;
-z-index: -1;
+  z-index: -1;
 }
 .bottomTwig {
   position: absolute;
@@ -281,95 +301,21 @@ z-index: -1;
   position: absolute;
 }
 
-.groups.group1 {
-  position: absolute;
-
-  left: 350px;
-}
-
-.groups.group2 {
-  position: absolute;
-  top: -25px;
-  left: -0px;
-  width: 325px;
-  height: 160px;
-}
-
-.groups.group3 {
-  position: absolute;
-  top: -25px;
-  left: -0px;
-  width: 325px;
-  height: 160px;
-}
-
-.groups.group4 {
-  position: absolute;
-  top: -25px;
-  left: -0px;
-  width: 325px;
-  height: 160px;
-}
-
-.groups.group5 {
-  position: absolute;
-  top: -25px;
-  left: -0px;
-  width: 325px;
-  height: 160px;
-}
-
-.groups.group6 {
-  position: absolute;
-  top: -25px;
-  left: -0px;
-  width: 325px;
-  height: 160px;
-}
-
-.groups.group7 {
-  position: absolute;
-  top: -25px;
-  left: -0px;
-  width: 325px;
-  height: 160px;
-}
-
-.groups.group8 {
-  position: absolute;
-  top: -25px;
-  left: -0px;
-  width: 325px;
-  height: 160px;
-}
-
-.groups.group9 {
-  position: absolute;
-  top: -25px;
-  left: -0px;
-  width: 325px;
-  height: 160px;
-}
-
-.groups.group10 {
-  position: absolute;
-}
-
 .topmgroup {
   position: relative;
   top: 75px;
   left: -350px;
-  width: 325px;
+  width: 300px;
   height: 270px;
 }
 .expandButton {
-  width: 40px;
+  width: 36px;
   height: 34px;
   border-radius: 50%;
   background-color: bisque;
   background-color: white;
   position: absolute;
-  left: 305px;
+  left: 260px;
   top: -70px;
 }
 
@@ -381,8 +327,18 @@ z-index: -1;
   width: 333px;
 }
 
+.coupleNodeCss {
+  position: absolute;
+  width: 250px;
+  height: 54px;
+  display: flex;
+  flex-direction: row;
+  /* border: 1px solid red; */
+  background-color: bisque;
+  background-color: white;
+}
 .couplesInfo {
-  width: 300px;
+  width: 250px;
   background-color: beige;
   background-color: white;
   border-radius: 6px;
@@ -404,7 +360,7 @@ a:hover {
 .children {
   position: relative;
   display: flex;
-  width: 296px;
+  width: 246px;
   text-align: left;
   font-size: x-small;
   border-top: 1px solid #ccc;
@@ -419,30 +375,27 @@ h3 {
 }
 
 .marriage {
-  font-size: x-small;
   position: absolute;
-  top: 32px;
-  width: 300px;
+  top: -65px;
+  /* width: 250px;
   height: 30px;
-  /* background-color: #c6c6f0; */
   align-self: center;
-  margin-top: 10px;
   padding-left: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; */
+  left:64px;
+  z-index: 99;
+}
+
+.marriage p{
+font-size: x-small;
+  height: 10px;
 }
 
 button {
 }
 
-.coupleNodeCss {
-  position: absolute;
-  width: 300px;
-  height: 54px;
-  display: flex;
-  flex-direction: row;
-  /* border: 1px solid red; */
-  background-color: bisque;
-  background-color: white;
-}
 .female {
   align-items: flex-end;
   border-left: 4px solid #ff5500;
