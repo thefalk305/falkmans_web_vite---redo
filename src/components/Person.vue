@@ -30,10 +30,14 @@ const isPerson = typeof props.person === "string" ? true : false;
 const isFound = memberInfo ? true : false;
 // console.log("props.person", props.person);
 
-console.log("personName", personName, "memberInfo", memberInfo )
+// console.log("personName", personName, "memberInfo", memberInfo )
+
 if (memberInfo?.born_died) {
-  const match = memberInfo.born_died.match(/\b\d{4}\b/g);
-  memberInfo.years = match ? `${match[0]} – ${match[1]}` : "";
+  const years = memberInfo.born_died.match(/\b\d{4}\b/g) || [];
+  memberInfo.years =
+    years.length === 2 ? `${years[0]} - ${years[1]}` :
+    years.length === 1 ? `${years[0]} - ?` :
+    "";
 }
 
 function familySearch(link) {
@@ -45,6 +49,10 @@ function familySearch(link) {
     .catch((err) => {
       console.error("Could not copy text: ", err);
     });
+}
+
+function openForm(memberId, memberIndex) {
+  emit("open-form", memberId, groupId, memberIndex);
 }
 
 </script>
@@ -68,10 +76,13 @@ function familySearch(link) {
     >
       <h3>{{ memberInfo.name }}</h3>
     </AppLink>
+    <div v-else @click="openForm(memberInfo.id, 0)">
+      <h3>{{ memberInfo.name }}</h3>
+      </div>  
     <div class="personInfo" style="font-size: smaller">
       <p style="font-size: smaller">{{ memberInfo.years }}</p>
       <!-- <p style="font-size: smaller">{{ memberInfo.id }}</p> -->
-      <p>---</p>
+      <p>&nbsp;&nbsp;</p>
       <button
         @click="familySearch(memberInfo.famSrchLink)"
         style="font-size: smaller"

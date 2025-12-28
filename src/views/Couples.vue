@@ -168,7 +168,7 @@ if (infoTable && infoTable.length > 0) {
 const level = computed(() => props.groupVisibility.levelMap[groupId] ?? 0);
 
 // if(groupId === 1) {
-console.log("groupId", groupId, "branchData", branchData);
+// console.log("groupId", groupId, "branchData", branchData);
 // }
 
 function openForm(memberId, memberIndex) {
