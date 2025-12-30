@@ -171,9 +171,28 @@ const level = computed(() => props.groupVisibility.levelMap[groupId] ?? 0);
 // console.log("groupId", groupId, "branchData", branchData);
 // }
 
-function openForm(memberId, memberIndex) {
-  emit("open-form", memberId, groupId, memberIndex);
-}
+//function openForm(memberId, memberIndex) {
+//  emit("open-form", memberId, groupId, memberIndex);
+//}
+
+const openFormHandler = async (memberId, groupId, memberIndex) => {
+  // Check if user is authenticated before opening the form
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (user) {
+    // User is authenticated, proceed with opening the form
+    window.open(
+      `/add-person?id=${memberId}&groupId=${groupId}&memberIndex=${memberIndex}`,
+      "_blank"
+    );
+  } else {
+    // User is not authenticated, alert them
+    alert("You must be logged in to add or edit family members.");
+  }
+};
+
+
 </script>
 
 <template>
@@ -229,7 +248,13 @@ function openForm(memberId, memberIndex) {
           :class="index % 2 ? 'female' : 'male'"
           :key="person.id"
         >
-          <Person :person="person" />
+          <Person :person="person" 
+          @open-form="openFormHandler"
+          :memberIndex="index"
+          :groupId="groupId"
+          :personId="person.id"
+
+         />
           <!-- <div class="marriage" v-if="!index && branchData[0].marriage.date">
             <p>Marriage: {{ branchData[0].marriage.date }},</p>
             <p>
@@ -391,9 +416,6 @@ h3 {
 .marriage p{
 font-size: x-small;
   height: 10px;
-}
-
-button {
 }
 
 .female {

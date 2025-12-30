@@ -11,9 +11,13 @@ const props = defineProps({
   person: {
     type: [String, Object],
   },
+  memberIndex: Number,
+  groupId: Number,
+  personId: Number,
   isOpen: Boolean,
 });
 
+const emit = defineEmits(["open-form"]);
 // Get the infoTable from global provide
 const infoTable = inject("infoTable", []);
 
@@ -52,7 +56,7 @@ function familySearch(link) {
 }
 
 function openForm(memberId, memberIndex) {
-  emit("open-form", memberId, groupId, memberIndex);
+  emit("open-form", memberId, props.groupId, props.memberIndex);
 }
 
 </script>
@@ -76,9 +80,9 @@ function openForm(memberId, memberIndex) {
     >
       <h3>{{ memberInfo.name }}</h3>
     </AppLink>
-    <div v-else @click="openForm(memberInfo.id, 0)">
-      <h3>{{ memberInfo.name }}</h3>
-      </div>  
+    <button v-else @click="openForm(memberInfo.id, groupId)">
+      {{ memberInfo.name }}
+      </button>  
     <div class="personInfo" style="font-size: smaller">
       <p style="font-size: smaller">{{ memberInfo.years }}</p>
       <!-- <p style="font-size: smaller">{{ memberInfo.id }}</p> -->
@@ -148,8 +152,6 @@ h3 {
   margin: 0 0 0 10px;
 }
 
-button {
-}
 .personInfo {
   font-family: "HeritageBody:Sans", HanaMinBFont, ui-sans-serif, system-ui,
     sans-serif, Tofu;
