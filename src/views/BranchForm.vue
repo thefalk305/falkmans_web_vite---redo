@@ -10,8 +10,6 @@ const router = useRouter();
 
 const formData = ref({
   id: null,
-  groupId: null,
-  memberIndex: null,
   name: '',
   born_died: '',
   father: '',
@@ -42,12 +40,12 @@ onBeforeMount(() => {
     authCheckComplete.value = true;
   });
 });
+ 
+const parent = route.query.memberIndex === '1' ? "Add Mother" : "Add Father";
 
 onMounted(() => {
   if (isAuthenticated.value) {
     formData.value.id = Number(route.query.id);
-    formData.value.groupId = Number(route.query.groupId);
-    formData.value.memberIndex = Number(route.query.memberIndex);
 
     // Set default picture based on the ID
     // ID 9998 is for adding father, ID 9999 is for adding mother
@@ -126,7 +124,7 @@ function cancel() {
       <p>Redirecting to login...</p>
     </div>
     <div v-else>
-      <h3>Add New Person</h3>
+      <h1 style="text-align: center;" >{{ parent }}</h1>
       <form @submit.prevent="submitForm">
         <div class="field">
           <label class="label">Name</label>

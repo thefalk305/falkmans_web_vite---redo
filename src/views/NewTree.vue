@@ -27,7 +27,7 @@ const openFormHandler = async (memberId, groupId, memberIndex) => {
   if (user) {
     // User is authenticated, proceed with opening the form
     window.open(
-      `/add-person?id=${memberId}&groupId=${groupId}&memberIndex=${memberIndex}`,
+      `/add-person?id=${memberId}`,
       "_blank"
     );
   } else {

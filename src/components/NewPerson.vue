@@ -14,18 +14,17 @@ const props = defineProps({
   memberIndex: Number,
   groupId: Number,
   personId: Number,
-  isOpen: Boolean,
 });
 
-// const emit = defineEmits(["open-form"]);
+const emit = defineEmits(["open-form"]);
 // Get the infoTable from global provide
 const infoTable = inject("infoTable", []);
-
 
 // person could either be a string or an object.
 // It will be an object when rendering a full person from infoTable
 // It will be a string (child's name =) if it's a child.
-const personName = typeof props.person === "string" ? props.person : props.person?.name;
+const personName =
+  typeof props.person === "string" ? props.person : props.person?.name;
 
 const memberInfo = infoTable.find((entry) => entry.name === personName);
 
@@ -39,9 +38,11 @@ const isFound = memberInfo ? true : false;
 if (memberInfo?.born_died) {
   const years = memberInfo.born_died.match(/\b\d{4}\b/g) || [];
   memberInfo.years =
-    years.length === 2 ? `${years[0]} - ${years[1]}` :
-    years.length === 1 ? `${years[0]} - ?` :
-    "";
+    years.length === 2
+      ? `${years[0]} - ${years[1]}`
+      : years.length === 1
+      ? `${years[0]} - ?`
+      : "";
 }
 
 function familySearch(link) {
@@ -55,58 +56,37 @@ function familySearch(link) {
     });
 }
 
-// function openForm(memberId, memberIndex) {
-//   emit("open-form", memberId, props.groupId, props.memberIndex);
-// }
-
+function openForm(memberId, memberIndex) {
+  emit("open-form", memberId, memberIndex);
+}
 </script>
 
-<template >
-  <div  v-if="memberInfo"
-  class="avatarCircleCss  " 
-  :class="isPerson ? 'child' : ''">
-    <img
-      class="imageCss"
-      :src="resolveImageUrl(memberInfo?.pic)"
-      :alt="'face2.png'"
-    />
-  </div>
-  <div class="coupleInfo" v-if="memberInfo">
-    
-    <AppLink
-      v-if="memberInfo?.id < 9998"
-      :to="{ name: 'InfoPage', params: { id: memberInfo.id } }"
-      target="_blank"
-    >
-      <h3>{{ memberInfo.name }}</h3>
-    </AppLink>
-    <!-- <button v-else @click="openForm(memberInfo.id)">
+<template>
+  <div id="newPerson" class="coupleInfo" v-if="memberInfo">
+    <button class="addPerson" @click="openForm(memberInfo.id, memberIndex)">
       {{ memberInfo.name }}
-      </button>   -->
+    </button>
     <div class="personInfo" style="font-size: smaller">
       <p style="font-size: smaller">{{ memberInfo.years }}</p>
-      <!-- <p style="font-size: smaller">{{ memberInfo.id }}</p> -->
       <p>&nbsp;&nbsp;</p>
-      <button
-        @click="familySearch(memberInfo.famSrchLink)"
-        style="font-size: smaller"
-      >
-        {{ memberInfo.famSrchLink }}
-      </button>
-  </div>
+    </div>
 
     <!-- snackbar -->
-  <div class="text-center">
-    <v-snackbar :timeout="timeout" v-model="snackbar" multi-line color="success"
-      >ID Copied to Clipboard!
-      <template v-slot:actions>
-        <v-btn color="red" variant="text" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <div class="text-center">
+      <v-snackbar
+        :timeout="timeout"
+        v-model="snackbar"
+        multi-line
+        color="success"
+        >ID Copied to Clipboard!
+        <template v-slot:actions>
+          <v-btn color="red" variant="text" @click="snackbar = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </div>
   </div>
-</div>
 </template>
 
 <style scoped>
@@ -115,6 +95,16 @@ function familySearch(link) {
   --presence-size: 16px;
   --presence-border-size: 2px;
 }
+
+.addPerson {
+  font-size: xx-large;
+  padding: 12px;
+  top: 8px;
+  position: relative;
+  background-color: beige;
+  border: black dotted 2px;
+}
+
 .groups {
   position: relative;
 }
@@ -141,12 +131,12 @@ h3 {
   font-family: "HeritageBody:Sans", HanaMinBFont, ui-sans-serif, system-ui,
     sans-serif, Tofu;
   font-size: smaller;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    word-break: break-word;
-      letter-spacing: 0.2em;
-    color: black;}
-
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
+  letter-spacing: 0.2em;
+  color: black;
+}
 
 .coupleInfo {
   margin: 0 0 0 10px;

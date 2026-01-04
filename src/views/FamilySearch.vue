@@ -22,7 +22,7 @@ const dynamicGroups = ref([]);
 const groupVisibilityRef = ref(null);
 const loading = ref(false); // No need to load since it's already loaded globally
 
-const openFormHandler = async (memberId, groupId, memberIndex) => {
+const openFormHandler = async (memberId) => {
   // Check if user is authenticated before opening the form
   const auth = getAuth();
   const user = auth.currentUser;
@@ -30,7 +30,7 @@ const openFormHandler = async (memberId, groupId, memberIndex) => {
   if (user) {
     // User is authenticated, proceed with opening the form
     window.open(
-      `/add-person?id=${memberId}&groupId=${groupId}&memberIndex=${memberIndex}`,
+      `/add-person?id=${memberId}`,
       "_blank"
     );
   } else {
@@ -129,13 +129,13 @@ console.log("branchData", branchData.value);
     </section> -->
 
     <div id="treewindow">
-      <img
+      <!-- <img
         class="background"
         src="../assets/graphics/treewindow.png"
         alt=""
         height="2000"
         style="left: 0px"
-      />
+      /> -->
 
       <div id="draggable-elem">
         <div v-if="loading" class="loading">Loading family tree data...</div>
@@ -238,15 +238,15 @@ console.log("branchData", branchData.value);
   position: relative;
   margin: auto;
   width: 98%;
-  height: 700px;
+  height: 4400px;
   display: block;
-  background-color: white;
+  /* background-color: white;
   background-image: url(/graphics/treewindow.png);
   background-size: 100%;
-  background-repeat: no-repeat;
+  background-repeat: no-repeat; */
   cursor: url(/graphics/openhand.cur), pointer;
-  overflow: visible;
-  z-index: 99;
+  overflow: hidden;
+  /* z-index: 99; */
 }
   h2 {
     font-size: 1.525em;

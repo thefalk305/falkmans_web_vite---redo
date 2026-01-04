@@ -1,24 +1,30 @@
 <script setup>
-import AppLink from "@/components/AppLink.vue";
 import { ref, onMounted, computed, inject, provide, watch } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Chevron from "@/components/Chevron.vue";
 import Person from "@/components/Person.vue";
-import { useHorizontalGroups } from "@/composables/useHorizontalGroups";
-import { useHorizontalGroupVisibility } from "@/composables/useHorizontalGroupVisibility";
+import NewPerson from "@/components/NewPerson.vue";
+
 const groupVisibilityRef = ref(null);
 const props = defineProps({
   group: Object,
   groupVisibility: Object,
 });
-const dynamicGroups = ref([]);
+
+const isOpen = ref(false);
+const isExpanded = ref(false);
+const memberIds = props.group.members;
+const top = props.group.top;
+const left = props.group.left;
+const groupId = props.group.id;
+const isAuthenticated = ref(false);
+
 // Get the infoTable from global provide
 const infoTable = inject("infoTable", []);
 
 const emit = defineEmits(["open-form"]);
 
 // Authentication state
-const isAuthenticated = ref(false);
 
 // Check authentication state on component mount
 onMounted(() => {
@@ -31,16 +37,6 @@ onMounted(() => {
     }
   });
 });
-
-const isOpen = ref(false);
-const isExpanded = ref(false);
-const memberIds = props.group.members;
-const top = props.group.top;
-const left = props.group.left;
-const groupId = props.group.id;
-// if(groupId === 1) {
-//   top = 325
-// }
 
 const branchData = memberIds
   .map((id) => {
@@ -94,7 +90,7 @@ const shouldDisplayGroup = () => {
   return hasRealMembers; // Only show if there are real members (not just placeholders)};
 };
 
-function handleImageClick(groupId, clickedMemberId) {
+function expandButtonClick(groupId, clickedMemberId) {
   // Toggle the expanded state
   isExpanded.value = !isExpanded.value;
 
@@ -103,11 +99,11 @@ function handleImageClick(groupId, clickedMemberId) {
     props.groupVisibility.showGroupAndSpecificParents(groupId, clickedMemberId);
   } else {
     // Hide the parent groups when collapsing
-    const topParentGroup = groupId * 2;
-    const bottomParentGroup = groupId * 2 + 1;
+    const fatherParentGroup = groupId * 2;
+    const motherParentGroup = groupId * 2 + 1;
 
-    props.groupVisibility.hideGroup(topParentGroup);
-    props.groupVisibility.hideGroup(bottomParentGroup);
+    props.groupVisibility.hideGroup(fatherParentGroup);
+    props.groupVisibility.hideGroup(motherParentGroup);
   }
 }
 
@@ -167,45 +163,35 @@ if (infoTable && infoTable.length > 0) {
 
 const level = computed(() => props.groupVisibility.levelMap[groupId] ?? 0);
 
-// if(groupId === 1) {
-// console.log("groupId", groupId, "branchData", branchData);
-// }
-
-//function openForm(memberId, memberIndex) {
-//  emit("open-form", memberId, groupId, memberIndex);
-//}
-
-const openFormHandler = async (memberId, groupId, memberIndex) => {
+const openFormHandler = async (memberId, memberIndex) => {
   // Check if user is authenticated before opening the form
   const auth = getAuth();
   const user = auth.currentUser;
 
   if (user) {
     // User is authenticated, proceed with opening the form
-    window.open(
-      `/add-person?id=${memberId}&groupId=${groupId}&memberIndex=${memberIndex}`,
-      "_blank"
-    );
+    window.open(`/add-person?id=${memberId}&memberIndex=${memberIndex}`, "_blank");
   } else {
     // User is not authenticated, alert them
     alert("You must be logged in to add or edit family members.");
   }
 };
-
-
 </script>
 
 <template>
   <div class="wideCouples" v-if="groupId < 1023">
+  <!-- show marriage data - one per group -->
     <div class="marriage" v-if="branchData[0].marriage.date">
       <p>Marriage: {{ branchData[0].marriage.date }},</p>
       <p>
         {{ branchData[0].marriage.place }}
       </p>
     </div>
-
     <!-- // topmgroup = Da'Boys -->
-    <div v-if="groupId === 0" class="topmgroup">
+    <div v-if="groupId === 0" class="topmgroup ">
+     <div class="ngroup  "></div>
+     <div class="  ogroup"></div>
+     <div class=" topline "></div>
       <div
         style="position: relative"
         :style="{
@@ -219,7 +205,6 @@ const openFormHandler = async (memberId, groupId, memberIndex) => {
       </div>
     </div>
     <!-- not topgroup -->
-    <!-- set x - y position -->
     <div
       v-else
       v-if="shouldDisplayGroup()"
@@ -233,10 +218,10 @@ const openFormHandler = async (memberId, groupId, memberIndex) => {
           : 'hidden',
       }"
     >
-      <div
-        v-if="groupId > 1"
-        :class="[groupId % 2 ? 'bottomTwig' : 'topTwig']"
-      ></div>
+    <!-- show top or bottom twig - one per group -->
+      <div v-if="groupId > 1" :class="[groupId % 2 ? 'motherTwig' : 'fatherTwig']">
+        <p style="position: absolute; top: 40px">group{{ groupId }}</p>
+      </div>
       <div class="couplesInfo">
         <!-- <p>mgroup{{ groupId }}</p> -->
         <div
@@ -248,19 +233,20 @@ const openFormHandler = async (memberId, groupId, memberIndex) => {
           :class="index % 2 ? 'female' : 'male'"
           :key="person.id"
         >
-          <Person :person="person" 
-          @open-form="openFormHandler"
-          :memberIndex="index"
-          :groupId="groupId"
-          :personId="person.id"
-
-         />
-          <!-- <div class="marriage" v-if="!index && branchData[0].marriage.date">
-            <p>Marriage: {{ branchData[0].marriage.date }},</p>
-            <p>
-              {{ branchData[0].marriage.place }}
-            </p>
-          </div> -->
+          <NewPerson
+            v-if="person.id > 9997"
+            :person="person"
+            @open-form="openFormHandler"
+            :memberIndex="index"
+            :personId="person.id"
+          />
+          <Person
+            v-else
+            :person="person"
+            :memberIndex="index"
+            :groupId="groupId"
+            :personId="person.id"
+          />
         </div>
         <button class="children" @click="isOpen = !isOpen">
           Children
@@ -275,9 +261,9 @@ const openFormHandler = async (memberId, groupId, memberIndex) => {
           <Person :person="person" />
         </div>
         <!-- </div> -->
-        <button
+        <button v-if="branchData[0].id < 9998"
           class="expandButton"
-          @click="handleImageClick(groupId, branchData[0].id)"
+          @click="expandButtonClick(groupId, branchData[0].id)"
           style="top: -87; left: 305"
         >
           <Chevron
@@ -299,7 +285,43 @@ const openFormHandler = async (memberId, groupId, memberIndex) => {
   --presence-border-size: 2px;
 }
 
-.topTwig {
+.ngroup {
+  position: absolute;
+  left: 210px;
+  top: 32px;
+  z-index: 0;
+  width: 70px;
+  height: 218px;
+  border-radius: 12px;
+  border-top: thin #006600 solid;
+  border-left: thin #006600 solid;
+  border-right: thin #006600 solid;
+border-bottom: thin #006600 solid;
+}
+.ogroup {
+  position: absolute;
+  left: 210px;
+  top: 86px;
+  z-index: 0;
+  width: 70px;
+  height: 109px;
+  border-radius: 12px;
+  border-top: thin #006600 solid;
+  border-left: thin #006600 solid;
+  border-right: thin #006600 solid;
+border-bottom: thin #006600 solid;
+}
+
+.topline {
+    position: absolute;
+    top: 142px;
+    left: 200px;
+    height: 1px;
+    width: 200px;
+    background-color: #006600;
+}
+
+.fatherTwig {
   position: absolute;
   top: -55px;
   left: -200px;
@@ -310,7 +332,7 @@ const openFormHandler = async (memberId, groupId, memberIndex) => {
   border-top: thin #006600 solid;
   z-index: -1;
 }
-.bottomTwig {
+.motherTwig {
   position: absolute;
   top: -150px;
   left: -200px;
@@ -402,30 +424,23 @@ h3 {
 .marriage {
   position: absolute;
   top: -65px;
-  /* width: 250px;
-  height: 30px;
-  align-self: center;
-  padding-left: 50px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; */
-  left:64px;
+  left: 64px;
   z-index: 99;
 }
 
-.marriage p{
-font-size: x-small;
+.marriage p {
+  font-size: x-small;
   height: 10px;
 }
 
 .female {
   align-items: flex-end;
-  border-left: 4px solid #ff5500;
+  border-left: 4px solid #eb8194;
 }
 
 .male {
   align-items: flex-start;
-  border-left: 4px solid #0eebcb;
+  border-left: 4px solid #41bb9d9e;
 }
 
 @import "./../assets/css/Couple.css";

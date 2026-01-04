@@ -176,7 +176,7 @@ function readText(fname) {
     transition: opacity 1.5s ease;
   }
   .modal-container {
-    height: 95%;
+    height: 100%;
     width: 600px;
     margin: auto;
     padding: 20px 30px;

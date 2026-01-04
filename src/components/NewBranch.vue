@@ -81,7 +81,7 @@ function openForm(memberId, memberIndex) {
 
 <template>
   <!-- // topmgroup = Da'Boys -->
-  <div v-if="groupId === 0" class="topmgroup">
+  <div v-if="groupId === 0" class="topmgroup ">
     <div
       v-for="(person, index) in branchData"
       :style="{
