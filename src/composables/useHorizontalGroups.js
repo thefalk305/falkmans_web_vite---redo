@@ -202,7 +202,8 @@ export function useHorizontalGroups(infoTable) {
     // Group 0 (special group with fixed members)
     groups[0] = {
       id: 0,
-      members: [4, 5, 6, 7, 8],
+      // members: [4, 5, 6, 7, 8],
+      members: [4, 25, 5, 53, 6, 123, 7, 124, 8, 52],
       // members: [[4, 25], [5, 53], [6, 123], [7, 124], [8, 52]],
       parents: [0, 1], // placeholder parents
       ...calculateHorizontalGroupPosition(0)
@@ -271,8 +272,8 @@ export function useHorizontalGroups(infoTable) {
     // Group 0 (special group - always visible)
     groups[0] = {
       id: 0,
-      members: [4, 5, 6, 7, 8],
-      // members: [[4, 25], [5, 53], [6, 123], [7, 124], [8, 52]],
+      // members: [4, 5, 6, 7, 8],
+      members: [4, 25, 5, 53, 6, 123, 7, 124, 8, 52],
       parents: [0, 1], // Following original pattern
       top: 0,
       left: -350  // Positioned 350px to the left of group 1
@@ -296,6 +297,9 @@ export function useHorizontalGroups(infoTable) {
       for (let posInLevel = 0; posInLevel < Math.pow(2, depth-1); posInLevel++) {
         const groupId = Math.pow(2, depth-1) + posInLevel;  // This gives 2^(d-1) to 2^d - 1
         const treeParentId = Math.floor(groupId / 2);
+
+        // Skip groups 0 and 1 since they're already initialized
+        if (groupId <= 1) continue;
 
         // Skip if no parent exists
         if (!groups[treeParentId]) continue;

@@ -200,6 +200,7 @@ const openFormHandler = async (memberId, memberIndex) => {
         class="coupleNodeCss couplesInfo"
         v-for="(person, index) in branchData"
         :key="person.id"
+        :class="index % 2 ? 'female' : 'male'"
       >
         <Person :person="person" />
       </div>
