@@ -190,8 +190,14 @@ const openFormHandler = async (memberId, memberIndex) => {
     <!-- // topmgroup = Da'Boys -->
     <div v-if="groupId === 0" class="topmgroup ">
      <div class="ngroup  "></div>
-     <div class="  ogroup"></div>
-     <div class=" topline "></div>
+      <div
+        v-for="(n, index) in 6"
+        :key="index"
+        class="ogroup"
+        :style="{ top: index * 55 + 80 + 'px' }"
+      >
+      </div>     
+      <div class=" topline "></div>
       <div
         style="position: relative"
         :style="{
@@ -290,34 +296,30 @@ const openFormHandler = async (memberId, memberIndex) => {
 .ngroup {
   position: absolute;
   left: 210px;
-  top: 32px;
+  top: 30px;
   z-index: 0;
   width: 70px;
-  height: 218px;
+  height: 490px;
   border-radius: 12px;
   border-top: thin #006600 solid;
-  border-left: thin #006600 solid;
   border-right: thin #006600 solid;
 border-bottom: thin #006600 solid;
 }
 .ogroup {
   position: absolute;
   left: 210px;
-  top: 86px;
+  top: 80px;
   z-index: 0;
   width: 70px;
-  height: 109px;
-  border-radius: 12px;
+  height: 111px;
   border-top: thin #006600 solid;
-  border-left: thin #006600 solid;
-  border-right: thin #006600 solid;
-border-bottom: thin #006600 solid;
+  border-bottom: thin #006600 solid;
 }
 
 .topline {
     position: absolute;
-    top: 142px;
-    left: 200px;
+    top: 275px;
+    left: 280px;
     height: 1px;
     width: 200px;
     background-color: #006600;
@@ -339,7 +341,7 @@ border-bottom: thin #006600 solid;
   top: -150px;
   left: -200px;
   height: 97px;
-  width: 200px;
+  width: 300px;
   border-radius: 0px 0px 0px 10px;
   border-bottom: thin #006600 solid;
   border-left: thin #006600 solid;
@@ -352,10 +354,10 @@ border-bottom: thin #006600 solid;
 
 .topmgroup {
   position: relative;
-  top: 75px;
+  top: 211px;
   left: -350px;
   width: 300px;
-  height: 270px;
+  height: 540px;
 }
 .expandButton {
   width: 36px;
@@ -379,18 +381,20 @@ border-bottom: thin #006600 solid;
 .coupleNodeCss {
   position: absolute;
   width: 250px;
-  height: 54px;
+  height: 55px;
   display: flex;
   flex-direction: row;
   /* border: 1px solid red; */
   background-color: bisque;
   background-color: white;
+  box-shadow: 1px 1px 2px rgba(0, 0, 255, 1);
 }
 .couplesInfo {
   width: 250px;
   background-color: beige;
   background-color: white;
   border-radius: 6px;
+  /* box-shadow: 1px 1px 2px rgba(0, 0, 255, 1); */
 }
 
 .showChildren {

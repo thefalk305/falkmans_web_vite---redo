@@ -192,7 +192,7 @@ console.log("branchData", branchData.value);
 	height:200px;
 	width:200px;
 	z-index:100;
-  left: 2000px; /* Adjusted for horizontal layout */
+  left: 2100px; /* Adjusted for horizontal layout */
 }
 
 /* #draggable-elem {
