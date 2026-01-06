@@ -2,7 +2,7 @@
 <script setup>
 import { ref, computed, inject, provide, defineAsyncComponent } from "vue";
 // Use dynamic imports to avoid duplicate module loading
-const Couples = defineAsyncComponent(() => import('./Couples.vue'));
+const Couples = defineAsyncComponent(() => import('../components/Couples.vue'));
 const LoginForm = defineAsyncComponent(() => import('./LoginForm.vue'));
 const Register = defineAsyncComponent(() => import('./Register.vue'));
 import Animation from "../components/Animation.vue";

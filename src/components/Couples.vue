@@ -205,6 +205,7 @@ const openFormHandler = async (memberId, memberIndex) => {
       </div>
     </div>
     <!-- not topgroup -->
+     
     <div
       v-else
       v-if="shouldDisplayGroup()"
