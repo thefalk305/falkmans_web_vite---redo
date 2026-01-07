@@ -197,7 +197,7 @@ const openFormHandler = async (memberId, memberIndex) => {
         :style="{
           left: `${0}px`,
         }"
-        class="coupleNodeCss couplesInfo"
+        class=" couplesInfo"
         v-for="(person, index) in branchData"
         :key="person.id"
         :class="index % 2 ? 'female' : 'male'"
@@ -224,14 +224,14 @@ const openFormHandler = async (memberId, memberIndex) => {
       <div v-if="groupId > 1" :class="[groupId % 2 ? 'motherTwig' : 'fatherTwig']">
         <p style="position: absolute; top: 40px">group{{ groupId }}</p>
       </div>
-      <div class="couplesInfo">
+      <div >
         <!-- <p>mgroup{{ groupId }}</p> -->
         <div
           v-for="(person, index) in branchData"
           :style="{
             top: -108 + index * 54 + 'px',
           }"
-          class="coupleNodeCss"
+          class="couplesInfo"
           :class="index % 2 ? 'female' : 'male'"
           :key="person.id"
         >
@@ -376,7 +376,7 @@ border-bottom: thin #006600 solid;
   width: 333px;
 }
 
-.coupleNodeCss {
+.couplesInfo {
   position: absolute;
   width: 250px;
   height: 54px;
@@ -385,12 +385,8 @@ border-bottom: thin #006600 solid;
   /* border: 1px solid red; */
   background-color: bisque;
   background-color: white;
-}
-.couplesInfo {
-  width: 250px;
-  background-color: beige;
-  background-color: white;
   border-radius: 6px;
+  font-size: small;
 }
 
 .showChildren {

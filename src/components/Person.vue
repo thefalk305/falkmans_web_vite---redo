@@ -84,7 +84,7 @@ function familySearch(link) {
       {{ memberInfo.name }}
       </button>   -->
     <div class="personInfo" style="font-size: smaller">
-      <p style="font-size: smaller">{{ memberInfo.years }}</p>
+      <p style="font-size: small">{{ memberInfo.years }}</p>
       <!-- <p style="font-size: smaller">{{ memberInfo.id }}</p> -->
       <p>&nbsp;&nbsp;</p>
       <button
@@ -150,7 +150,7 @@ h3 {
 
 .coupleInfo {
   margin: 0 0 0 10px;
-}
+font-size: small;}
 
 .personInfo {
   font-family: "HeritageBody:Sans", HanaMinBFont, ui-sans-serif, system-ui,
@@ -158,6 +158,7 @@ h3 {
   font-size: smaller;
   display: flex;
   flex-direction: row;
+  font-size: small;
 }
 
 .avatarCircleCss img {
