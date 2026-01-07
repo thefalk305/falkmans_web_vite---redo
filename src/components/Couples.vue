@@ -3,7 +3,7 @@ import { ref, onMounted, computed, inject, provide, watch } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Chevron from "@/components/Chevron.vue";
 import Person from "@/components/Person.vue";
-import NewPerson from "@/components/NewPerson.vue";
+import AddPerson from "@/components/AddPerson.vue";
 
 const groupVisibilityRef = ref(null);
 const props = defineProps({
@@ -199,7 +199,7 @@ const openFormHandler = async (memberId, memberIndex) => {
       </div>     
       <div class=" topline "></div>
       <div
-        style="position: relative"
+        style="position: relative; z-index: 1"
         :style="{
           left: `${0}px`,
         }"
@@ -231,7 +231,6 @@ const openFormHandler = async (memberId, memberIndex) => {
         <p style="position: absolute; top: 40px">group{{ groupId }}</p>
       </div>
       <div >
-        <!-- <p>mgroup{{ groupId }}</p> -->
         <div
           v-for="(person, index) in branchData"
           :style="{
@@ -241,7 +240,7 @@ const openFormHandler = async (memberId, memberIndex) => {
           :class="index % 2 ? 'female' : 'male'"
           :key="person.id"
         >
-          <NewPerson
+          <AddPerson
             v-if="person.id > 9997"
             :person="person"
             @open-form="openFormHandler"
@@ -392,6 +391,7 @@ border-bottom: thin #006600 solid;
   /* background-color: white; */
   box-shadow: 1px 1px 2px rgba(0, 0, 255, 0.1);
   background-color:rgba(220, 220, 255, 0.4);
+  z-index: 10;
 }
 
 .couplesInfo.female {
