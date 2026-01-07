@@ -121,7 +121,6 @@ function familySearch(link) {
 
 .groups.group1 {
   position: relative;
-
   left: 350px;
 }
 
@@ -131,7 +130,7 @@ a:hover {
 }
 
 .child {
-  margin-left: 20px;
+  margin-left: 10px;
   padding: 1px;
   font-size: smaller;
 }

@@ -191,10 +191,10 @@ const openFormHandler = async (memberId, memberIndex) => {
     <div v-if="groupId === 0" class="topmgroup ">
      <div class="ngroup  "></div>
       <div
-        v-for="(n, index) in 6"
+        v-for="(n, index) in 2"
         :key="index"
         class="ogroup"
-        :style="{ top: index * 55 + 80 + 'px' }"
+        :style="{ top: index * 110 + 135 + 'px' }"
       >
       </div>     
       <div class=" topline "></div>
@@ -203,7 +203,7 @@ const openFormHandler = async (memberId, memberIndex) => {
         :style="{
           left: `${0}px`,
         }"
-        class="coupleNodeCss couplesInfo"
+        class=" couplesInfo"
         v-for="(person, index) in branchData"
         :key="person.id"
         :class="index % 2 ? 'female' : 'male'"
@@ -230,14 +230,14 @@ const openFormHandler = async (memberId, memberIndex) => {
       <div v-if="groupId > 1" :class="[groupId % 2 ? 'motherTwig' : 'fatherTwig']">
         <p style="position: absolute; top: 40px">group{{ groupId }}</p>
       </div>
-      <div class="couplesInfo">
+      <div >
         <!-- <p>mgroup{{ groupId }}</p> -->
         <div
           v-for="(person, index) in branchData"
           :style="{
             top: -108 + index * 54 + 'px',
           }"
-          class="coupleNodeCss"
+          class="couplesInfo"
           :class="index % 2 ? 'female' : 'male'"
           :key="person.id"
         >
@@ -299,11 +299,12 @@ const openFormHandler = async (memberId, memberIndex) => {
   top: 30px;
   z-index: 0;
   width: 70px;
-  height: 490px;
+  height: 440px;
   border-radius: 12px;
   border-top: thin #006600 solid;
   border-right: thin #006600 solid;
 border-bottom: thin #006600 solid;
+    z-index: -1;
 }
 .ogroup {
   position: absolute;
@@ -314,15 +315,17 @@ border-bottom: thin #006600 solid;
   height: 111px;
   border-top: thin #006600 solid;
   border-bottom: thin #006600 solid;
+    z-index: -1;
 }
 
 .topline {
     position: absolute;
-    top: 275px;
-    left: 280px;
+    top: 245px;
+    left: 245px;
     height: 1px;
     width: 200px;
     background-color: #006600;
+    z-index: -1;
 }
 
 .fatherTwig {
@@ -354,7 +357,7 @@ border-bottom: thin #006600 solid;
 
 .topmgroup {
   position: relative;
-  top: 211px;
+  top: 241px;
   left: -350px;
   width: 300px;
   height: 540px;
@@ -378,23 +381,21 @@ border-bottom: thin #006600 solid;
   width: 333px;
 }
 
-.coupleNodeCss {
+.couplesInfo {
   position: absolute;
   width: 250px;
   height: 55px;
   display: flex;
   flex-direction: row;
-  /* border: 1px solid red; */
-  background-color: bisque;
-  background-color: white;
-  box-shadow: 1px 1px 2px rgba(0, 0, 255, 1);
-}
-.couplesInfo {
-  width: 250px;
-  background-color: beige;
-  background-color: white;
   border-radius: 6px;
-  /* box-shadow: 1px 1px 2px rgba(0, 0, 255, 1); */
+  /* border: 1px solid red; */
+  /* background-color: white; */
+  box-shadow: 1px 1px 2px rgba(0, 0, 255, 0.1);
+  background-color:rgba(220, 220, 255, 0.4);
+}
+
+.couplesInfo.female {
+  background-color:rgba(255, 220, 220, 0.4);
 }
 
 .showChildren {
@@ -421,6 +422,7 @@ a:hover {
   /* margin-left: 4px; */
   border-left: 4px solid #dddfdf;
   border-radius: 4px;
+  background-color: beige;
 }
 
 h3 {
