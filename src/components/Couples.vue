@@ -189,9 +189,15 @@ const openFormHandler = async (memberId, memberIndex) => {
     </div>
     <!-- // topmgroup = Da'Boys -->
     <div v-if="groupId === 0" class="topmgroup ">
-     <div class="ngroup  "></div>
-     <div class="  ogroup"></div>
-     <div class=" topline "></div>
+    <div class="ngroup  "></div>
+    <div
+      v-for="(n, index) in 2"
+      :key="index"
+      class="ogroup"
+      :style="{ top: (index ) * 108 + 131+'px' }"
+    >
+    </div>
+    <div class=" topline "></div>
       <div
         style="position: relative"
         :style="{
@@ -293,7 +299,7 @@ const openFormHandler = async (memberId, memberIndex) => {
   top: 32px;
   z-index: 0;
   width: 70px;
-  height: 218px;
+  height: 430px;
   border-radius: 12px;
   border-top: thin #006600 solid;
   border-left: thin #006600 solid;
@@ -307,16 +313,14 @@ border-bottom: thin #006600 solid;
   z-index: 0;
   width: 70px;
   height: 109px;
-  border-radius: 12px;
   border-top: thin #006600 solid;
-  border-left: thin #006600 solid;
   border-right: thin #006600 solid;
 border-bottom: thin #006600 solid;
 }
 
 .topline {
     position: absolute;
-    top: 142px;
+    top: 239px;
     left: 200px;
     height: 1px;
     width: 200px;
@@ -352,7 +356,7 @@ border-bottom: thin #006600 solid;
 
 .topmgroup {
   position: relative;
-  top: 75px;
+  top: -23px;
   left: -350px;
   width: 300px;
   height: 270px;
@@ -383,11 +387,15 @@ border-bottom: thin #006600 solid;
   display: flex;
   flex-direction: row;
   /* border: 1px solid red; */
-  background-color: bisque;
-  background-color: white;
   border-radius: 6px;
   font-size: small;
+  background-color: rgb(230, 230, 255);
 }
+
+.couplesInfo.female {  
+  background-color: rgb(255, 230, 230);
+}
+
 
 .showChildren {
   border-left: 4px solid #dddfdf;
@@ -413,6 +421,8 @@ a:hover {
   /* margin-left: 4px; */
   border-left: 4px solid #dddfdf;
   border-radius: 4px;
+    background-color: beige;
+
 }
 
 h3 {
