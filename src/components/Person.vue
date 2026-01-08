@@ -32,6 +32,7 @@ const memberInfo = infoTable.find((entry) => entry.name === personName);
 const isPerson = typeof props.person === "string" ? true : false;
 
 const isFound = memberInfo ? true : false;
+
 // console.log("props.person", props.person);
 
 // console.log("personName", personName, "memberInfo", memberInfo )
@@ -71,8 +72,8 @@ function familySearch(link) {
       :alt="'face2.png'"
     />
   </div>
-  <div class="coupleInfo" v-if="memberInfo">
-    
+  <div class="coupleInfo" 
+    v-if="memberInfo">
     <AppLink
       v-if="memberInfo?.id < 9998"
       :to="{ name: 'InfoPage', params: { id: memberInfo.id } }"
@@ -136,6 +137,13 @@ a:hover {
   font-size: smaller;
 }
 
+/* .child.male {
+  background-color: #888;
+
+} */
+
+
+
 h3 {
   margin: 5px 0 0 0;
   font-family: "HeritageBody:Sans", HanaMinBFont, ui-sans-serif, system-ui,
@@ -150,7 +158,8 @@ h3 {
 
 .coupleInfo {
   margin: 0 0 0 10px;
-font-size: small;}
+  font-size: small;
+}
 
 .personInfo {
   font-family: "HeritageBody:Sans", HanaMinBFont, ui-sans-serif, system-ui,

@@ -47,22 +47,10 @@ const branchData = memberIds
       const match = range?.match(/\b\d{4}\b/g);
       const years = match ? `${match[0]} – ${match[1]}` : null;
       const children = Array.from(
+        // build array of children
         { length: 6 },
         (_, i) => foundInfotableEntry[`child${i + 1}`]
-      )
-        .filter(Boolean)
-        .map((childName) => {
-          const childEntry = infoTable.find((entry) => entry.name === childName);
-          return {
-            name: childName,
-            gender: childEntry?.gender || null,
-          };
-        });
-      // const children = Array.from(
-      //   // build array of children
-      //   { length: 6 },
-      //   (_, i) => foundInfotableEntry[`child${i + 1}`]
-      // ).filter(Boolean);
+      ).filter(Boolean);
       return {
         ...foundInfotableEntry,
         years, // add born_died years and
@@ -192,7 +180,7 @@ const openFormHandler = async (memberId, memberIndex) => {
 
 <template>
   <div class="wideCouples" v-if="groupId < 1023">
-    <!-- show marriage data - one per group -->
+  <!-- show marriage data - one per group -->
     <div class="marriage" v-if="branchData[0].marriage.date">
       <p>Marriage: {{ branchData[0].marriage.date }},</p>
       <p>
@@ -201,53 +189,97 @@ const openFormHandler = async (memberId, memberIndex) => {
     </div>
     <!-- // topmgroup = Da'Boys -->
     <div v-if="groupId === 0" class="topmgroup ">
-      <div class="ngroup  "></div>
-      <div v-for="(n, index) in 2" :key="index" class="ogroup" :style="{ top: (index) * 108 + 131 + 'px' }">
-      </div>
-      <div class=" topline "></div>
-      <div style="position: relative" :style="{
-        left: `${0}px`,
-      }" class=" couplesInfo" v-for="(person, index) in branchData" :key="person.id"
-        :class="index % 2 ? 'female' : 'male'">
+    <div class="ngroup  "></div>
+    <div
+      v-for="(n, index) in 2"
+      :key="index"
+      class="ogroup"
+      :style="{ top: (index ) * 108 + 131+'px' }"
+    >
+    </div>
+    <div class=" topline "></div>
+      <div
+        style="position: relative"
+        :style="{
+          left: `${0}px`,
+        }"
+        class=" couplesInfo"
+        v-for="(person, index) in branchData"
+        :key="person.id"
+        :class="index % 2 ? 'female' : 'male'"
+      >
         <Person :person="person" />
       </div>
     </div>
     <!-- not topgroup -->
-
-    <div v-else v-if="shouldDisplayGroup()" class="groups" :class="`group${groupId}`" "
+     
+    <div
+      v-else
+      v-if="shouldDisplayGroup()"
+      class="groups"
+      :class="`group${groupId}`"
+"
       :style="{
-        top: `${top}px`, left: `${left}px`, visibility: props.groupVisibility?.isVisible(groupId) ? 'visible'
+        top: `${top}px`,
+        left: `${left}px`,
+        visibility: props.groupVisibility?.isVisible(groupId)
+          ? 'visible'
           : 'hidden',
-      }">
-      <!-- show top or bottom twig - one per group -->
+      }"
+    >
+    <!-- show top or bottom twig - one per group -->
       <div v-if="groupId > 1" :class="[groupId % 2 ? 'motherTwig' : 'fatherTwig']">
         <p style="position: absolute; top: 40px">group{{ groupId }}</p>
       </div>
-      <div>
+      <div >
         <!-- <p>mgroup{{ groupId }}</p> -->
-        <div v-for="(person, index) in branchData" :style="{
-          top: -108 + index * 54 + 'px',
-        }" class="couplesInfo" :class="index % 2 ? 'female' : 'male'" :key="person.id">
-          <NewPerson v-if="person.id > 9997" :person="person" @open-form="openFormHandler" :memberIndex="index"
-            :personId="person.id" />
-          <Person v-else :person="person" :memberIndex="index" :groupId="groupId" :personId="person.id" />
+        <div
+          v-for="(person, index) in branchData"
+          :style="{
+            top: -108 + index * 54 + 'px',
+          }"
+          class="couplesInfo"
+          :class="index % 2 ? 'female' : 'male'"
+          :key="person.id"
+        >
+          <NewPerson
+            v-if="person.id > 9997"
+            :person="person"
+            @open-form="openFormHandler"
+            :memberIndex="index"
+            :personId="person.id"
+          />
+          <Person
+            v-else
+            :person="person"
+            :memberIndex="index"
+            :groupId="groupId"
+            :personId="person.id"
+          />
         </div>
         <button class="children" @click="isOpen = !isOpen">
           Children
           <Chevron :class="isOpen ? '' : 'open'" />
         </button>
-        <div v-show="isOpen" 
-        class="showChildren children"
-        :class="person.gender"
-        v-for="person in branchData[0].children" 
-          :key="person">
-          <Person :person="person.name" />
+        <div
+          v-show="isOpen"
+          class="showChildren children"
+          v-for="person in branchData[0].children"
+          :key="person"
+        >
+          <Person :person="person" />
         </div>
         <!-- </div> -->
-        <button v-if="branchData[0].id < 9998" class="expandButton"
-          @click="expandButtonClick(groupId, branchData[0].id)" style="top: -87; left: 305">
-          <Chevron class="expandButton" :class="isExpanded ? 'expanded' : ''"
-            style="width: 20px; height: 20px; left: 9px; top: 7px" />
+        <button v-if="branchData[0].id < 9998"
+          class="expandButton"
+          @click="expandButtonClick(groupId, branchData[0].id)"
+          style="top: -87; left: 305"
+        >
+          <Chevron
+            class="expandButton"
+            :class="isExpanded ? 'expanded' : ''"
+            style="width: 20px; height: 20px; left: 9px; top: 7px"
+          />
         </button>
       </div>
       <!-- </div> -->
@@ -273,9 +305,8 @@ const openFormHandler = async (memberId, memberIndex) => {
   border-top: thin #006600 solid;
   border-left: thin #006600 solid;
   border-right: thin #006600 solid;
-  border-bottom: thin #006600 solid;
+border-bottom: thin #006600 solid;
 }
-
 .ogroup {
   position: absolute;
   left: 210px;
@@ -285,16 +316,16 @@ const openFormHandler = async (memberId, memberIndex) => {
   height: 109px;
   border-top: thin #006600 solid;
   border-right: thin #006600 solid;
-  border-bottom: thin #006600 solid;
+border-bottom: thin #006600 solid;
 }
 
 .topline {
-  position: absolute;
-  top: 239px;
-  left: 200px;
-  height: 1px;
-  width: 200px;
-  background-color: #006600;
+    position: absolute;
+    top: 239px;
+    left: 200px;
+    height: 1px;
+    width: 200px;
+    background-color: #006600;
 }
 
 .fatherTwig {
@@ -308,7 +339,6 @@ const openFormHandler = async (memberId, memberIndex) => {
   border-top: thin #006600 solid;
   z-index: -1;
 }
-
 .motherTwig {
   position: absolute;
   top: -150px;
@@ -332,7 +362,6 @@ const openFormHandler = async (memberId, memberIndex) => {
   width: 300px;
   height: 270px;
 }
-
 .expandButton {
   width: 36px;
   height: 34px;
@@ -364,7 +393,7 @@ const openFormHandler = async (memberId, memberIndex) => {
   background-color: rgb(230, 230, 255);
 }
 
-.couplesInfo.female {
+.couplesInfo.female {  
   background-color: rgb(255, 230, 230);
 }
 
@@ -372,12 +401,10 @@ const openFormHandler = async (memberId, memberIndex) => {
 .showChildren {
   border-left: 4px solid #dddfdf;
 }
-
 a:hover {
   background-color: #888;
   border-radius: 5px;
 }
-
 .child {
   margin-left: 20px;
   padding: 1px;
@@ -395,11 +422,7 @@ a:hover {
   /* margin-left: 4px; */
   border-left: 4px solid #dddfdf;
   border-radius: 4px;
-  background-color: rgb(255, 230, 230);
-}
-
-.children.male {
-  background-color: rgb(230, 230, 255);
+  background-color: beige;
 }
 
 h3 {
