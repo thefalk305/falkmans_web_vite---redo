@@ -232,7 +232,7 @@ const openFormHandler = async (memberId, memberIndex) => {
             :personId="person.id" />
           <Person v-else :person="person" :memberIndex="index" :groupId="groupId" :personId="person.id" />
         </div>
-        <button class="children" @click="isOpen = !isOpen">
+        <button class="childrenButton" @click="isOpen = !isOpen">
           Children
           <Chevron :class="isOpen ? '' : 'open'" />
         </button>
@@ -385,17 +385,21 @@ a:hover {
 }
 
 .children {
+  display: flex;
+  border-top: 1px solid #ccc;
+  background-color: rgb(255, 230, 230);
+}
+
+
+.childrenButton {
   position: relative;
   display: flex;
   width: 246px;
-  text-align: left;
   font-size: x-small;
   border-top: 1px solid #ccc;
   padding: 0 2px;
-  /* margin-left: 4px; */
-  border-left: 4px solid #dddfdf;
-  border-radius: 4px;
-  background-color: rgb(255, 230, 230);
+  border-left: 4px solid beige;
+  background-color: beige;
 }
 
 .children.male {
