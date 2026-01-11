@@ -1,6 +1,6 @@
 <!-- prettier-ignore-file -->
 <script setup>
-  import { reactive, ref } from "vue";
+  import { reactive, ref, computed } from "vue";
   // import Bio from "text-loader!./thefalk.txt";
   import axios from "axios";
 
@@ -8,23 +8,30 @@
     recordData: Object,
   });
   const infopageURL = `http://localhost/new_falkmansweb/infopages/infopage.php?id=${props.recordData.id}`;
-  const famSrchURL = `https://www.familysearch.org/tree/pedigree/landscape/${props.recordData.famSrchLink}`;
+  const famSrchURL = `https://www.familysearch.org/en/tree/person/details/${props.recordData.famSrchLink}`;
+
+//   const familySrchLink = computed(() =>
+//   record.value && record.value.famSrchLink
+//     ? `https://www.familysearch.org/en/tree/person/details/${record.value.famSrchLink}`
+//     : `https://www.familysearch.org/tree/person/details/LL4N-B4F`
+// );
+
 </script>
 
 <template>
   <div id="navbar">
-    <a data-dismiss="modal" target="_blank" data-toggle="modal" href="http://falkman.com"
-      >Falkman<br />Family</a
+    <a data-dismiss="modal" target="_blank" data-toggle="modal" href="http://falkmanfamily.com"
+      >Falkman Family</a
     >
-    <a :href="infopageURL" target="_blank" rel="noopener noreferrer">Info<br />Page</a>
-    <a :href="famSrchURL" target="_blank" rel="noopener noreferrer">Family<br />Search</a>
-    <div class="dropdown">
+    <!-- <a :href="infopageURL" target="_blank" rel="noopener noreferrer">Info<br />Page</a> -->
+    <a :href="famSrchURL" target="_blank" rel="noopener noreferrer">Family Search</a>
+    <!-- <div class="dropdown">
       <button class="dropbtn">
         Dropdown
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a href="http://falkman.com" target="_blank" rel="noopener noreferrer"
+        <a href="http://falkmanfamily.com" target="_blank" rel="noopener noreferrer"
           >Falkman<br />Family</a
         >
         <a href="#">Link 2</a>
@@ -46,7 +53,7 @@
         <a href="#">Link 4</a>
         <a href="#" style="border-radius: 0px 0px 20px 20px">Link 5</a>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <style scoped>
@@ -54,18 +61,18 @@
 
   #navbar {
     overflow: visible;
-    background-color: rgba(190, 216, 190, 0.979);
+    background-color: rgba(0, 102, 0, 0.2);
     margin: 0px 20px;
-    border: 2px solid green;
-    box-shadow: 0px 0px 10px 2px rgb(0 102 0 / 80%);
+    /* border: 2px solid green; */
+    box-shadow: 0px 0px 10px 2px rgb(0 102 0 / 40%);
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1.2em;
-    font-weight: bold;
-    color: #006600;
+    /* font-weight: bold;
+    color: #006600; */
     line-height: 100%;
     border: 1px solid green;
-    padding: 10px;
-    height: 50px;
+    /* padding: 10px; */
+    height: 48px;
   }
 
   #navbar a {

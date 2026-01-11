@@ -45,7 +45,7 @@
 
 <template>
   <Transition name="modal">
-    <div v-if="show" class="modal-mask" :style="{ top: fromDaBoys ? '450px' : modalTop + 'px' }">      
+    <div v-if="show" class="modal-mask" :style="{ top: fromDaBoys ? '20px' : 350 + 'px' }">      
       <div class="modal-container">
         <template v-if="isFormMode">
           <slot name="form"></slot>
@@ -81,17 +81,17 @@
   .modal-mask {
     position: absolute;
     z-index: 9998;
-    top: 440px;
-    left: 100px;
-    width: 750px;
-    height: 700px;
+    top: 350px;
+    left: 150px;
+    width: 600px;
+    height: 600px;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     transition: opacity 1.5s ease;
   }
   .modal-container {
-    width: 86%;
-    height: 86%;
+    width: 96%;
+    height: 96%;
     margin: auto;
     padding: 20px 30px;
     background-color: antiquewhite;

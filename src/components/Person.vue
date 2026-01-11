@@ -8,30 +8,21 @@ const snackbar = ref(false);
 const timeout = 1500;
 
 const props = defineProps({
-  person: {
-    type: [String, Object],
-  },
+  person: Object,
   memberIndex: Number,
   groupId: Number,
   personId: Number,
   isOpen: Boolean,
+  child: Boolean,
 });
 
 // const emit = defineEmits(["open-form"]);
 // Get the infoTable from global provide
 const infoTable = inject("infoTable", []);
 
-
-// person could either be a string or an object.
-// It will be an object when rendering a full person from infoTable
-// It will be a string (child's name =) if it's a child.
-const personName = typeof props.person === "string" ? props.person : props.person?.name;
+const personName =  props.person?.name;
 
 const memberInfo = infoTable.find((entry) => entry.name === personName);
-
-const isPerson = typeof props.person === "string" ? true : false;
-
-const isFound = memberInfo ? true : false;
 
 // console.log("props.person", props.person);
 
@@ -56,16 +47,12 @@ function familySearch(link) {
     });
 }
 
-// function openForm(memberId, memberIndex) {
-//   emit("open-form", memberId, props.groupId, props.memberIndex);
-// }
-
 </script>
 
 <template >
   <div  v-if="memberInfo"
   class="avatarCircleCss  " 
-  :class="isPerson ? 'child' : ''">
+  :class="child ? 'child' : ''">
     <img
       class="imageCss"
       :src="resolveImageUrl(memberInfo?.pic)"
@@ -81,12 +68,8 @@ function familySearch(link) {
     >
       <h3>{{ memberInfo.name }}</h3>
     </AppLink>
-    <!-- <button v-else @click="openForm(memberInfo.id)">
-      {{ memberInfo.name }}
-      </button>   -->
     <div class="personInfo" style="font-size: smaller">
       <p style="font-size: small">{{ memberInfo.years }}</p>
-      <!-- <p style="font-size: smaller">{{ memberInfo.id }}</p> -->
       <p>&nbsp;&nbsp;</p>
       <button
         @click="familySearch(memberInfo.famSrchLink)"

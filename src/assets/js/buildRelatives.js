@@ -38,7 +38,7 @@ const bldRels = (tblKeys, infoTable, rec) => {
   var tblArray = []
   var i = 0;
   for (i = 0; i < tblKeys.length; i++) {
-    if (tblKeys[i] == "spouse" && !(spouse === "")) {
+    if (tblKeys[i] == "spouse" && !(spouse === null || spouse === "")) {
       tblArray.push({ id: 0, name: "Spouse:" });
       tblArray.push({
         ...infoTable[findId(spouse) - 1],
@@ -47,7 +47,7 @@ const bldRels = (tblKeys, infoTable, rec) => {
       });
     }
 
-    if (tblKeys[i] == "father") {
+    if (tblKeys[i] == "father" && !( father === "" || father === null)) {
       tblArray.push({ id: 0, name: "Parents:" });
       tblArray.push({
         ...infoTable[findId(father) - 1],
@@ -60,7 +60,7 @@ const bldRels = (tblKeys, infoTable, rec) => {
         name: mother,
       });
     }
-    if (tblKeys[i] === "sib1" && !(sib1 === "")) {
+    if (tblKeys[i] === "sib1" && !( sib1 === "" || sib1 === null)) {
       tblArray.push({ id: 0, name: "Siblings:" });
       tblArray.push({
         ...infoTable[findId(sib1) - 1],
@@ -94,7 +94,7 @@ const bldRels = (tblKeys, infoTable, rec) => {
       });
     }
 
-    if (tblKeys[i] == "child1" && !(child1 === "")) {
+    if (tblKeys[i] == "child1" && !(child1 === "" || child1 === null)) {
       tblArray.push({ id: 0, name: "Children:" });
       tblArray.push({
         ...infoTable[findId(child1) - 1],
