@@ -156,9 +156,9 @@ const infoTable = inject('infoTable');
         </div>
         <div id="iline" style="height: 350px; top: 135px"></div>
         <div id="iupcurve" style="top: 431px; width: 40px"></div>
-        <div id="familysearch" style="right: 150px; bottom: 5px">
+        <!-- <div id="familysearch" style="right: 150px; bottom: 5px">
           <a target="_blank" class="green" title="Family Search" :href="familySrchLink">Family Search</a>
-        </div>
+        </div> -->
         <button class="modal-default-button" @click="$emit('close')">Close</button>
       </section>
     </div>

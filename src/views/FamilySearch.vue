@@ -44,7 +44,8 @@ const openFormHandler = async (memberId) => {
 const levelMapRef = ref();
 if (infoTable && infoTable.length > 0) {
   const { buildCompleteTree } = useHorizontalGroups(infoTable);
-  dynamicGroups.value = buildCompleteTree([2, 13], 10);
+  // dynamicGroups.value = buildCompleteTree([2, 13], 10);
+  dynamicGroups.value = buildCompleteTree([2, 13], 8);
 
   const gv = useHorizontalGroupVisibility(dynamicGroups.value, 1, infoTable);
 

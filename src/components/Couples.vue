@@ -191,72 +191,59 @@ const openFormHandler = async (memberId, memberIndex) => {
 </script>
 
 <template>
-  <div class="wideCouples" v-if="groupId < 1023">
-    <!-- show marriage data - one per group - use husbands info -->
+
+  <div v-if="groupId === 0" class="leftGroup "> <!-- leftGroup = Da'Boys (and their wives) -->
+    <!-- outerLine and innerLine are just lines connecting each of Da'Boys -->
+    <div class="outerLine  "></div>
+    <div v-for="(n, index) in 2" :key="index" class="innerLine" :style="{
+      top: index * 100 + 125 + 'px',
+      'border-bottom': index && 'thin #006600 solid'
+    }">
+    </div>
+    <div class=" parentLine "></div> <!-- connect Da'Bous to their parents -->
+    <div v-for="(person, index) in branchData" :key="person.id" :class="index % 2 ? 'female' : 'male'"
+      style="position: relative" :style="{
+        left: `${0}px`,
+      }">
+      <Person :person="person" />
+    </div>
+  </div>
+
+  <div v-else v-if="shouldDisplayGroup()" class="groups" :style="{
+    top: `${top}px`, left: `${left}px`, visibility: props.groupVisibility?.isVisible(groupId) ? 'visible'
+      : 'hidden',
+  }"><!-- !leftGroup - everyone else -->
+    <div :class="(groupId > 1 && [groupId % 2 ? 'motherTwig' : 'fatherTwig'])"></div>
+    <p style="position: absolute; left: -70px; top: -20px">group{{ groupId }}</p>
+    <div>
+      <div v-for="(person, index) in branchData" :class="index % 2 ? 'female' : 'male'" :key="person.id" :style="{
+        top: -100 + index * 50 + 'px',
+      }">
+        <NewPerson v-if="person.id > 9997" :person="person" @open-form="openFormHandler" :memberIndex="index"
+          :personId="person.id" />
+        <Person v-else :person="person" :memberIndex="index" :groupId="groupId" :personId="person.id" />
+      </div>
+      <button class="childrenButton" @click="isOpen = !isOpen">
+        Children
+        <Chevron :class="isOpen ? '' : 'open'" />
+      </button>
+      <div v-show="isOpen" class="showChildren children" :class="person.gender" v-for="person in branchData[0].children"
+        :key="person">
+        <Person :person="person" :child="true" />
+      </div>
+      <button v-if="branchData[0].id < 9998" class="expandButton" @click="expandButtonClick(groupId, branchData[0].id)"
+        style="top: -87; left: 305">
+        <Chevron class="expandButton" :class="isExpanded ? 'expanded' : ''"
+          style="width: 20px; height: 20px; left: 9px; top: 7px" />
+      </button>
+    </div>
     <div class="marriage" v-if="branchData[0].marriage.date">
       <p>Marriage: {{ branchData[0].marriage.date }},</p>
       <p>
         {{ branchData[0].marriage.place }}
       </p>
     </div>
-    <!-- leftGroup = Da'Boys (and their wives) -->
-    <div v-if="groupId === 0" class="leftGroup ">
-      <!-- outerLine and innerLine are just lines connecting each of Da'Boys -->
-      <div class="outerLine  "></div>
-      <div v-for="(n, index) in 2" :key="index" class="innerLine" :style="{
-        top: index * 108 + 131 + 'px',
-        'border-bottom': index && 'thin #006600 solid'
-      }">
-      </div>
-      <div class=" parentLine "></div> <!-- connect Da'Bous to their parents -->
-      <div class=" couplesInfo" v-for="(person, index) in branchData" 
-        :key="person.id"
-        :class="index % 2 ? 'female' : 'male'" 
-        style="position: relative" :style="{
-          left: `${0}px`,
-        }">
-        <Person :person="person" />
-      </div>
-    </div>
-    <!-- !leftGroup - everyone else -->
-    <div v-else v-if="shouldDisplayGroup()" 
-      class="groups" 
-      :class="`group${groupId}`"
-      :style="{
-        top: `${top}px`, left: `${left}px`, visibility: props.groupVisibility?.isVisible(groupId) ? 'visible'
-          : 'hidden',
-      }">
-      <!-- show top or bottom twig - one per group -->
-      <div v-if="groupId > 1" :class="[groupId % 2 ? 'motherTwig' : 'fatherTwig']">
-        <p style="position: absolute; top: 40px">group{{ groupId }}</p>
-      </div>
-      <div>
-        <div v-for="(person, index) in branchData"  
-          class="couplesInfo" 
-          :class="index % 2 ? 'female' : 'male'" 
-          :key="person.id" 
-          :style="{
-            top: -108 + index * 54 + 'px',
-          }">
-          <NewPerson v-if="person.id > 9997" :person="person" @open-form="openFormHandler" :memberIndex="index"
-            :personId="person.id" />
-          <Person v-else :person="person" :memberIndex="index" :groupId="groupId" :personId="person.id" />
-        </div>
-        <button class="childrenButton" @click="isOpen = !isOpen">
-          Children
-          <Chevron :class="isOpen ? '' : 'open'" />
-        </button>
-        <div v-show="isOpen" class="showChildren children" :class="person.gender"
-          v-for="person in branchData[0].children" :key="person">
-          <Person :person="person" :child="true"/>
-        </div>
-        <button v-if="branchData[0].id < 9998" class="expandButton"
-          @click="expandButtonClick(groupId, branchData[0].id)" style="top: -87; left: 305">
-          <Chevron class="expandButton" :class="isExpanded ? 'expanded' : ''"
-            style="width: 20px; height: 20px; left: 9px; top: 7px" />
-        </button>
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -270,10 +257,10 @@ const openFormHandler = async (memberId, memberIndex) => {
 .outerLine {
   position: absolute;
   left: 210px;
-  top: 32px;
+  top: 25px;
   z-index: 0;
   width: 70px;
-  height: 430px;
+  height: 400px;
   border-radius: 12px;
   border-top: thin #006600 solid;
   border-left: thin #006600 solid;
@@ -284,17 +271,17 @@ const openFormHandler = async (memberId, memberIndex) => {
 .innerLine {
   position: absolute;
   left: 210px;
-  top: 86px;
+  top: 125px;
   z-index: 0;
   width: 70px;
-  height: 109px;
+  height: 100px;
   border-top: thin #006600 solid;
   border-right: thin #006600 solid;
 }
 
 .parentLine {
   position: absolute;
-  top: 239px;
+  top: 225px;
   left: 280px;
   height: 1px;
   width: 200px;
@@ -303,9 +290,9 @@ const openFormHandler = async (memberId, memberIndex) => {
 
 .fatherTwig {
   position: absolute;
-  top: -55px;
-  left: -200px;
-  height: 97px;
+  top: -50px;
+  left: -50px;
+  height: 100px;
   width: 300px;
   border-radius: 10px 0px 0px 0px;
   border-left: thin #006600 solid;
@@ -316,8 +303,8 @@ const openFormHandler = async (memberId, memberIndex) => {
 .motherTwig {
   position: absolute;
   top: -150px;
-  left: -200px;
-  height: 97px;
+  left: -50px;
+  height: 100px;
   width: 200px;
   border-radius: 0px 0px 0px 10px;
   border-bottom: thin #006600 solid;
@@ -330,11 +317,11 @@ const openFormHandler = async (memberId, memberIndex) => {
 }
 
 .leftGroup {
-  position: relative;
-  top: -23px;
+  position: absolute;
+  top: -20px;
   left: -350px;
-  width: 300px;
-  height: 270px;
+  /* width: 300px;
+  height: 500px; */
 }
 
 .expandButton {
@@ -348,21 +335,20 @@ const openFormHandler = async (memberId, memberIndex) => {
   top: -70px;
 }
 
-.wideCouples {
-  position: relative;
+/* .wideCouples {
+  position: absolute;
   display: flex;
   top: 20px;
   left: 100px;
   width: 333px;
-}
+} */
 
-.couplesInfo {
+/* .couplesInfo {
   position: absolute;
   width: 250px;
-  height: 54px;
+  height: 50px;
   display: flex;
   flex-direction: row;
-  /* border: 1px solid red; */
   border-radius: 6px;
   font-size: small;
   background-color: rgb(230, 230, 255);
@@ -371,7 +357,7 @@ const openFormHandler = async (memberId, memberIndex) => {
 .couplesInfo.female {
   background-color: rgb(255, 230, 230);
 }
-
+ */
 
 .showChildren {
   border-left: 4px solid #dddfdf;
@@ -428,12 +414,47 @@ h3 {
   height: 10px;
 }
 
+.couplesInfo {
+  position: absolute;
+  width: 250px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  border-radius: 6px;
+  font-size: small;
+  background-color: rgb(230, 230, 255);
+}
+
+/* .couplesInfo.female {
+  background-color: rgb(255, 230, 230);
+} */
+
+
+
 .female {
+  position: absolute;
+  width: 250px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  border-radius: 6px;
+  font-size: small;
+  background-color: rgb(255, 230, 230);
+
   align-items: flex-end;
   border-left: 4px solid #eb8194;
 }
 
 .male {
+  position: absolute;
+  width: 250px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  border-radius: 6px;
+  font-size: small;
+  background-color: rgb(230, 230, 255);
+
   align-items: flex-start;
   border-left: 4px solid #41bb9d9e;
 }

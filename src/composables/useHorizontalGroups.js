@@ -167,26 +167,27 @@ export function useHorizontalGroups(infoTable) {
 
     if (groupId === 1) {
       // Group 1 (root group)
-      return { top: 0, left: 0 };
+      return { top: 250, left: 0 };
     }
 
     // Calculate level based on binary tree position
     const level = Math.floor(Math.log2(groupId));
-    const left = level * 350; // Each generation is 350px further to the right
+    const left = level * 200; // Each generation is 200px further to the right
 
     // Calculate position by tracing path from node to root, accumulating position changes
     let currentId = groupId;
-    let top = 0;
+    let top = 250;
 
     // Walk up the tree from the target node to the root, accumulating position changes
     while (currentId > 1) {
       const parentId = Math.floor(currentId / 2);
-      const isLeftChild = (currentId === parentId * 2);
+      const isTopChild = (currentId === parentId * 2);
+      
 
-      if (isLeftChild) {
-        top -= 150;  // Left child is 150px above parent
+      if (isTopChild) {
+        top -= 150;  // Top child is 150px above parent
       } else {
-        top += 150;  // Right child is 150px below parent
+        top += 150;  // Bottom child is 150px below parent
       }
 
       currentId = parentId;
@@ -233,7 +234,7 @@ export function useHorizontalGroups(infoTable) {
         if (allParentIds.size > 0) {
           const parentArray = Array.from(allParentIds);
 
-          // Create left navigation parent group (2*g) - contains actual parents of members in group g
+          // Create top navigation parent group (2*g) - contains actual parents of members in group g
           if (g * 2 < maxGroups) {
             const leftParents = parentArray.filter((_, idx) => idx % 2 === 0);
             if (leftParents.length > 0) {
@@ -308,19 +309,19 @@ export function useHorizontalGroups(infoTable) {
         const parentMembers = groups[treeParentId].members || [];
 
         // Find which specific member this group (groupId) should represent parents for
-        // In binary tree, left child (2*parent) represents first member, right child (2*parent+1) represents second member
-        const isLeftChild = (groupId === treeParentId * 2);
+        // In binary tree, top child (2*parent) represents first member, bottom child (2*parent+1) represents second member
+        const isTopChild = (groupId === treeParentId * 2);
         const isRightChild = (groupId === treeParentId * 2 + 1);
 
         let memberToProcess = null;
-        if (isLeftChild && parentMembers[0] !== undefined) {
-          // Left navigation parent (2*treeParentId) gets parents of first member in parent group
+        if (isTopChild && parentMembers[0] !== undefined) {
+          // top navigation parent (2*treeParentId) gets parents of first member in parent group
           memberToProcess = parentMembers[0];
         } else if (isRightChild && parentMembers[1] !== undefined) {
-          // Right navigation parent (2*treeParentId+1) gets parents of second member in parent group
+          // bottom navigation parent (2*treeParentId+1) gets parents of second member in parent group
           memberToProcess = parentMembers[1];
-        } else if (isLeftChild && parentMembers.length > 0) {
-          // If only one member in parent group, left navigation parent gets that member's parents
+        } else if (isTopChild && parentMembers.length > 0) {
+          // If only one member in parent group, top navigation parent gets that member's parents
           memberToProcess = parentMembers[0];
         }
 
