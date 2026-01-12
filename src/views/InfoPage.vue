@@ -10,7 +10,6 @@ import ShowModal from "../components/ShowModal.vue";
 import bldRels from "../assets/js/buildRelatives.js";
 import GoBack from "../components/GoBack.vue";
 
-
 const props = defineProps({
   show: Boolean,
   id: Number,
@@ -26,18 +25,15 @@ const props = defineProps({
 const resolveImageUrl = (filename) =>
   new URL(`../assets/img/${filename}`, import.meta.url).href;
 
-
-// var record = {};
-// var id = ref(3);
 var pics = [];
-var tblArray = [];
+// var tblArray = [];
 const { infoTable } = useInfoTableData();
+const bio = ref(''); // Declare at component level
 
 const record = computed(() => (infoTable.value && infoTable.value[props.id - 1]) || {});
-// const record = computed(() => (infoTable.value ) || {});
 var tblKeys = Object.keys(record.value);
 var tblValues = record.valueOf();
-tblArray = bldRels(tblKeys, infoTable.value, record.value);
+const tblArray = bldRels(tblKeys, infoTable.value, record.value);
 
 const familySrchLink = computed(() =>
   record.value && record.value.famSrchLink
@@ -45,18 +41,14 @@ const familySrchLink = computed(() =>
     : `https://www.familysearch.org/tree/person/details/LL4N-B4F`
 );
 
-const bio = ref(''); // Declare at component level
 
 pics.push(record.value.pic2);
 pics.push(record.value.pic3);
 pics.push(record.value.pic4);
 pics.push(record.value.pic5);
 pics.push(record.value.pic6);
-// console.log(pics, record.value.name);
-// var fname = "./bios/" + record.value.bio;
-var fname = record.value.bio;
-// readText("./bios/" +  record.value.bio);
 
+const fname = record.value.bio;
 
 if (fname) {
   readText("/bios/" + fname);
@@ -74,20 +66,17 @@ function readText(fname) {
         bio.value = '(No bio available)';
         return;
       }
-
       bio.value = response.data;
     })
     .catch((error) => {
       console.error('Error loading bio:', error);
     });
 }
-
 </script>
 
 <template>
   <Transition name="modal">
     <div class="modal-mask" :style="{ top: fromDaBoys ? '400px' : modalTop + 'px' }">
-
       <section class="modal-container infopic">
         <!-- <section class="infocontainer modal-container infopic"> -->
         <figure class="hdshot" style="top: -16px">
@@ -141,10 +130,7 @@ function readText(fname) {
         </div>
         <div id="iline" style="height: 350px; top: 120px"></div>
         <div id="iupcurve" style="top: 456px; width: 40px"></div>
-        <!-- <div id="familysearch" style="right: 150px; bottom: 5px">
-          <a class="green" title="Family Search" :href="familySrchLink" target="_blank">Family Search</a>
-        </div> -->
-        <button class="modal-default-button" @click="$emit('close')">Close</button>
+         <button class="modal-default-button" onclick="window.close()">Close</button>
       </section>
     </div>
   </Transition>
