@@ -201,24 +201,27 @@ const openFormHandler = async (memberId, memberIndex) => {
     }">
     </div>
     <div class=" parentLine "></div> <!-- connect Da'Bous to their parents -->
-    <div v-for="(person, index) in branchData" :key="person.id" :class="index % 2 ? 'female' : 'male'"
-      style="position: relative" :style="{
+    <div  v-for="(person, index) in branchData" :key="person.id"
+      :class="index % 2 ? 'female' : 'male'" style="position: relative" :style="{
         left: `${0}px`,
       }">
       <Person :person="person" />
     </div>
   </div>
 
-  <div v-else v-if="shouldDisplayGroup()" class="groups" :style="{
-    top: `${top}px`, left: `${left}px`, visibility: props.groupVisibility?.isVisible(groupId) ? 'visible'
-      : 'hidden',
-  }"><!-- !leftGroup - everyone else -->
-    <div :class="(groupId > 1 && [groupId % 2 ? 'motherTwig' : 'fatherTwig'])"></div>
+  <div v-else v-if="shouldDisplayGroup()" 
+    class="groups"
+    :style="{
+      top: `${top}px`, left: `${left}px`, visibility: props.groupVisibility?.isVisible(groupId) ? 'visible'
+        : 'hidden',
+    }"><!-- !leftGroup - everyone else -->
+    <div :class="(groupId > 1 && [groupId % 2 ? 'motherTwig' : 'fatherTwig'])" ></div>
     <p style="position: absolute; left: -70px; top: -20px">group{{ groupId }}</p>
     <div>
-      <div v-for="(person, index) in branchData" :class="index % 2 ? 'female' : 'male'" :key="person.id" :style="{
-        top: -100 + index * 50 + 'px',
-      }">
+      <div v-for="(person, index) in branchData" :class="index % 2 ? 'female' : 'male'"
+        :key="person.id" :style="{
+          top: -100 + index * 50 + 'px',
+        }">
         <NewPerson v-if="person.id > 9997" :person="person" @open-form="openFormHandler" :memberIndex="index"
           :personId="person.id" />
         <Person v-else :person="person" :memberIndex="index" :groupId="groupId" :personId="person.id" />
@@ -227,8 +230,9 @@ const openFormHandler = async (memberId, memberIndex) => {
         Children
         <Chevron :class="isOpen ? '' : 'open'" />
       </button>
-      <div v-show="isOpen" class="showChildren children" :class="person.gender" v-for="person in branchData[0].children"
-        :key="person">
+      <div v-show="isOpen" class="showChildren children" :class="person.gender" v-for="(person, index) in branchData[0].children"
+        :key="person"
+        :style="`top: ${15 + index * 50}px`">
         <Person :person="person" :child="true" />
       </div>
       <button v-if="branchData[0].id < 9998" class="expandButton" @click="expandButtonClick(groupId, branchData[0].id)"
@@ -404,7 +408,7 @@ h3 {
 
 .marriage {
   position: absolute;
-  top: -65px;
+  top: -63px;
   left: 64px;
   z-index: 99;
 }
@@ -432,7 +436,7 @@ h3 {
 
 
 .female {
-  position: absolute;
+    position: absolute;
   width: 250px;
   height: 50px;
   display: flex;
@@ -446,7 +450,7 @@ h3 {
 }
 
 .male {
-  position: absolute;
+    position: absolute;
   width: 250px;
   height: 50px;
   display: flex;
