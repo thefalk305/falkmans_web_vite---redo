@@ -188,6 +188,19 @@ const openFormHandler = async (memberId, memberIndex) => {
     alert("You must be logged in to add or edit family members.");
   }
 };
+
+function toggleGroupVisibility() {
+  const current = props.groupVisibility.isVisible(groupId);
+  props.groupVisibility.setVisible(groupId, !current);
+}64
+                                             // 8                      16                       24                      32                                              48                                           63                      71                       80
+    const visibility = [1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                //64                                                                                                96                                                                                          127
+                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
+                                             // 8                      16                       24                      32                                              48                                           63                      71                      79                      87                      95
+ const visibilityTop = [1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,   
+                        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1 ]
+//                      64                                           80                                                 96                                          108                                             127  
 </script>
 
 <template>
@@ -198,7 +211,8 @@ const openFormHandler = async (memberId, memberIndex) => {
     <div v-for="(n, index) in 2" :key="index" class="innerLine" :style="{
       top: index * 100 + 125 + 'px',
       'border-bottom': index && 'thin #006600 solid'
-    }">
+    }"
+>
     </div>
     <div class=" parentLine "></div> <!-- connect Da'Bous to their parents -->
     <div  v-for="(person, index) in branchData" :key="person.id"
@@ -209,12 +223,14 @@ const openFormHandler = async (memberId, memberIndex) => {
     </div>
   </div>
 
-  <div v-else v-if="shouldDisplayGroup()" 
+  <div v-else v-if="shouldDisplayGroup()" visible
     class="groups"
-    :style="{
-      top: `${top}px`, left: `${left}px`, visibility: props.groupVisibility?.isVisible(groupId) ? 'visible'
-        : 'hidden',
-    }"><!-- !leftGroup - everyone else -->
+    :class="`group${groupId}`"
+    :style="{ top: `${top}px`, left: `${left}px`, visibility: 1 ? (props.groupVisibility?.isVisible(groupId) ? 'visible'
+        : 'hidden') : !visibilityTop[groupId] ? 'visible' : 'hidden' }">
+    
+    <!-- !leftGroup - everyone else  , visibility: props.groupVisibility?.isVisible(groupId) ? 'visible'
+        : 'visible'   visible hidden  visibility: visibility[goupId] ? 'visible' : 'hidden'      --> 
     <div :class="(groupId > 1 && [groupId % 2 ? 'motherTwig' : 'fatherTwig'])" ></div>
     <p style="position: absolute; left: -70px; top: -20px">group{{ groupId }}</p>
     <div>
@@ -295,7 +311,7 @@ const openFormHandler = async (memberId, memberIndex) => {
 .fatherTwig {
   position: absolute;
   top: -50px;
-  left: -50px;
+  left: -150px;
   height: 100px;
   width: 300px;
   border-radius: 10px 0px 0px 0px;
@@ -307,7 +323,7 @@ const openFormHandler = async (memberId, memberIndex) => {
 .motherTwig {
   position: absolute;
   top: -150px;
-  left: -50px;
+  left: -150px;
   height: 100px;
   width: 200px;
   border-radius: 0px 0px 0px 10px;

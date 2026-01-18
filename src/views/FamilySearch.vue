@@ -188,12 +188,12 @@ console.log("branchData", branchData.value);
 #treepot {/*the treepot positions the tree in the center of the window. All mgroup inline positioning is based on the treepot position*/
 	position:absolute;
 	margin:0px auto;
-	top:420px;
+	top:500px;
 	padding:10px;
 	height:200px;
 	width:200px;
 	z-index:100;
-  left: 2000px; /* Adjusted for horizontal layout */
+  left: 2000px; /* Adjusted for horizontal layout -  was 2000 */ 
 }
 
 /* #draggable-elem {

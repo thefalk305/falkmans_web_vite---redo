@@ -157,6 +157,14 @@ export function useHorizontalGroups(infoTable) {
     return children;
   };
 
+  function inTop(n) {
+  if (n < 2) return false;
+  const pow = 1 << Math.floor(Math.log2(n));   // largest power of 2 <= n
+  const blockSize = pow >> 1;                  // half of that power
+  return n < pow + blockSize;
+}
+
+
   // Function to calculate group positions based on level and position - HORIZONTAL LAYOUT
   // Each generation is 350px further to the right, with parents displayed at ±150px top/bottom
   const calculateHorizontalGroupPosition = (groupId) => {
@@ -170,24 +178,71 @@ export function useHorizontalGroups(infoTable) {
       return { top: 250, left: 0 };
     }
 
+    // if (groupId === 2) {
+    //   // Group 1 (root group)
+    //   return { top: 100, left: 200 };
+    // }
+
+    // if (groupId === 3) {
+    //   // Group 1 (root group)
+    //   return { top: 400, left: 200 };
+    // }
+
     // Calculate level based on binary tree position
     const level = Math.floor(Math.log2(groupId));
-    const left = level * 200; // Each generation is 200px further to the right
+    // const left = level * 200; // Each generation is 200px further to the right
+    // const left = 250 * level - 50 + 25 * ((-1) ** (level )); // Each generation is 200px further to the right
+    var left = 325 * level - 175 + (level % 2) * 25 ; // Each generation is 200px further to the right
 
+    left = 325 * level;
     // Calculate position by tracing path from node to root, accumulating position changes
     let currentId = groupId;
     let top = 250;
+
+        const groupOffset = [0, 120, 
+                                    100, 400, 
+                                20, 180, 320, 480,
+      -60, 100, 100, 260, 260, 420, 420, 580, // 15
+      -140, 20, 20, 180, 20, 180, 180, 340, // 23
+      180, 340, 340, 500, 340, 500, 500, 660, // 31
+      -220, -60, -60, 100, -60, 100, 100, 260, // 39
+      -60, 100, 100, 260, 100, 260, 260, 420, // 47
+      100, 260, 260, 420, 260, 420, 420, 580, // 55
+      260, 420, 420, 580, 420, 580, 580, 740, //63
+      -300, -140, -140, 20, -140, 20, 20, 180, // 71
+      -140, 20, 20, 180, 20, 180, 180, 340, //79
+      -140, 20, 20, 180, 20, 180, 180, 340, // 87
+      20, 180, 180, 340, 180, 340, 340, 500, // 95
+      20, 180, 180, 340, 180, 180, 340, 500, // 103
+      180, 180, 340, 500, 340, 500, 500, 660, // 111
+      180, 340, 340, 500, 340, 500, 500, 660, // 119
+      340, 500, 500, 660, 500, 660, 660, 820, //127
+      -380, -220, -220, -60, -220, -60, -60, 100, //135
+      -220, -60, -60, 100, -300, -140, -140, 20, //143
+      -140, 20, 20, 180, 20, 180, 180, 340, //151 
+      180, 340, 340, 500, 340, 500, 500, 660 // 79
+    ]; // Predefined offsets for first few levels
+
+    // const topOffset = level % 2 ? 150 : 80; // Alternate starting offset based on level
+    var topOffset = groupOffset[groupId] ;
 
     // Walk up the tree from the target node to the root, accumulating position changes
     while (currentId > 1) {
       const parentId = Math.floor(currentId / 2);
       const isTopChild = (currentId === parentId * 2);
-      
+
+
+
+
+      topOffset = groupId < 4 ? 150 : 80;
+      var gOffset = inTop(groupId) ? 220 : -220;
+      gOffset = 0;
+
 
       if (isTopChild) {
-        top -= 150;  // Top child is 150px above parent
+        top -= 80;  // Top child is 150px above parent
       } else {
-        top += 150;  // Bottom child is 150px below parent
+        top += 80;  // Bottom child is 150px below parent
       }
 
       currentId = parentId;
