@@ -114,7 +114,7 @@ export function useDynamicGroups(infoTable) {
         // Always add the placeholder if it's missing (either field is empty or person not found)
         parentObjects.push({
           id: 9998,
-          pic: 'Add Father.svg',
+          pic: 'face2.png',
           name: 'Add Father',
           born_died: '',
           birthplace: ''
@@ -130,7 +130,7 @@ export function useDynamicGroups(infoTable) {
         // Always add the placeholder if it's missing (either field is empty or person not found)
         parentObjects.push({
           id: 9999,
-          pic: 'Add Mother.svg',
+          pic: 'face1.png',
           name: 'Add Mother',
           born_died: '',
           birthplace: ''

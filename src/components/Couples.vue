@@ -72,7 +72,7 @@ const branchData = memberIds
     if (id === 9998) {
       return {
         id,
-        pic: "Add Father.svg",
+        pic: "face2.png",
         name: "Add Father",
         marriage: { data: "", place: "" },
       };
@@ -80,7 +80,7 @@ const branchData = memberIds
     if (id === 9999) {
       return {
         id,
-        pic: "Add Mother.svg",
+        pic: "face1.png",
         name: "Add Mother",
         marriage: { data: "", place: "" },
       };
@@ -194,7 +194,7 @@ function toggleGroupVisibility() {
   props.groupVisibility.setVisible(groupId, !current);
 }64
                                              // 8                      16                       24                      32                                              48                                           63                      71                       80
-    const visibility = [1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  const visibility = [1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 //64                                                                                                96                                                                                          127
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
                                              // 8                      16                       24                      32                                              48                                           63                      71                      79                      87                      95
@@ -238,11 +238,12 @@ function toggleGroupVisibility() {
         :key="person.id" :style="{
           top: -100 + index * 50 + 'px',
         }">
-        <NewPerson v-if="person.id > 9997" :person="person" @open-form="openFormHandler" :memberIndex="index"
+        <!-- <NewPerson v-if="person.id >= 9998" :person="person" @open-form="openFormHandler" :memberIndex="index"
           :personId="person.id" />
-        <Person v-else :person="person" :memberIndex="index" :groupId="groupId" :personId="person.id" />
+        <Person v-else :person="person" :memberIndex="index" :groupId="groupId" :personId="person.id" /> -->
+        <Person :person="person" :memberIndex="index" :groupId="groupId" :personId="person.id" />
       </div>
-      <button class="childrenButton" @click="isOpen = !isOpen">
+      <button  class="childrenButton" @click="isOpen = !isOpen">
         Children
         <Chevron :class="isOpen ? '' : 'open'" />
       </button>

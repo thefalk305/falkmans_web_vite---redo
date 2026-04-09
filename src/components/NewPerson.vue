@@ -70,7 +70,7 @@ function openForm(memberId, memberIndex) {
       <p style="font-size: smaller">{{ memberInfo.years }}</p>
       <p>&nbsp;&nbsp;</p>
     </div>
-
+  </div>
     <!-- snackbar -->
     <div class="text-center">
       <v-snackbar
@@ -86,7 +86,6 @@ function openForm(memberId, memberIndex) {
         </template>
       </v-snackbar>
     </div>
-  </div>
 </template>
 
 <style scoped>

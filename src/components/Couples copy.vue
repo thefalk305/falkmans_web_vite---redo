@@ -60,7 +60,7 @@ const branchData = memberIds
     if (id === 9998) {
       return {
         id,
-        pic: "Add Father.svg",
+        pic: "face2.png",
         name: "Add Father",
         marriage: { data: "", place: "" },
       };
@@ -68,7 +68,7 @@ const branchData = memberIds
     if (id === 9999) {
       return {
         id,
-        pic: "Add Mother.svg",
+        pic: "face1.png",
         name: "Add Mother",
         marriage: { data: "", place: "" },
       };

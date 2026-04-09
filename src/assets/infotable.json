@@ -6136,7 +6136,7 @@
   },
   {
     "id": 9998,
-    "pic": "Add Father.svg",
+    "pic": "face2.png",
     "father": "",
     "gender": "male",
     "marriage": {
@@ -6146,7 +6146,7 @@
     },
     "famSrchLink": "MKBH-FXQ",
     "name": "Add Father",
-    "born_died": "",
+    "born_died": "1234 - 5678",
     "bio": "Mrs Hans.txt",
     "mother": "",
     "children": ""
@@ -6162,9 +6162,9 @@
     "bio": "Mrs Hans.txt",
     "name": "Add Mother",
     "children": "",
-    "born_died": "",
+    "born_died": "1234 - 5678",
     "mother": "",
-    "pic": "Add Mother.svg",
+    "pic": "face1.png",
     "famSrchLink": "MKBH-FXQ",
     "gender": "female"
   }

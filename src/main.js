@@ -55,9 +55,9 @@ async function initializeApp() {
       console.log(`Loaded ${infoTableData.length} records from local JSON`);
     }
 
-      // const localInfoTableData = (await import('@/assets/infotable.json')).default;
-      // infoTableData = localInfoTableData;
-      // console.log(`Loaded ${infoTableData.length} records from local JSON`);
+      const localInfoTableData = (await import('@/assets/infotable.json')).default;
+      infoTableData = localInfoTableData;
+      console.log(`Loaded ${infoTableData.length} records from local JSON`);
 
     // Create the app instance
     const app = createApp(App);

@@ -20,7 +20,7 @@ const props = defineProps({
 // Get the infoTable from global provide
 const infoTable = inject("infoTable", []);
 
-const personName =  props.person?.name;
+const personName = props.person?.name;
 
 const memberInfo = infoTable.find((entry) => entry.name === personName);
 
@@ -32,8 +32,8 @@ if (memberInfo?.born_died) {
   const years = memberInfo.born_died.match(/\b\d{4}\b/g) || [];
   memberInfo.years =
     years.length === 2 ? `${years[0]} - ${years[1]}` :
-    years.length === 1 ? `${years[0]} - ?` :
-    "";
+      years.length === 1 ? `${years[0]} - ?` :
+        "";
 }
 
 function familySearch(link) {
@@ -49,40 +49,35 @@ function familySearch(link) {
 
 </script>
 
-<template >
-  <div  v-if="memberInfo"
-  class="avatarCircleCss  " 
-  :class="child ? 'child' : ''">
-    <img
-      class="imageCss"
-      :src="resolveImageUrl(memberInfo?.pic)"
-      :alt="'face2.png'"
-    />
+<template>
+  <div v-if="memberInfo" class="avatarCircleCss  " :class="child ? 'child' : ''">
+    <img class="imageCss" :src="resolveImageUrl(memberInfo?.pic)" :alt="'face2.png'" />
   </div>
-  <div class="coupleInfo" 
-    v-if="memberInfo">
-    <AppLink
-      v-if="memberInfo?.id < 9998"
-      :to="{ name: 'InfoPage', params: { id: memberInfo.id } }"
-      target="_blank"
-    >
+  <div class="coupleInfo" v-if="memberInfo">
+    <AppLink v-if="memberInfo?.id < 9998" :to="{ name: 'InfoPage', params: { id: memberInfo.id } }" target="_blank">
       <h3>{{ memberInfo.name }}</h3>
     </AppLink>
     <div class="personInfo" style="font-size: smaller">
       <p style="font-size: small">{{ memberInfo.years }}</p>
       <p>&nbsp;&nbsp;</p>
-      <button
-        @click="familySearch(memberInfo.famSrchLink)"
-        style="font-size: smaller"
-      >
+      <button @click="familySearch(memberInfo.famSrchLink)" style="font-size: smaller">
         {{ memberInfo.famSrchLink }}
       </button>
-  </div>
+    </div>
 
+  </div>
+  <div v-else id="newPerson" class="coupleInfo" v-if="memberInfo">
+    <button class="addPerson" @click="openForm(memberInfo.id, memberIndex)">
+      {{ memberInfo.name }}
+    </button>
+    <div class="personInfo" style="font-size: smaller">
+      <p style="font-size: smaller">{{ memberInfo.years }}</p>
+      <p>&nbsp;&nbsp;</p>
+    </div>
+  </div>
     <!-- snackbar -->
   <div class="text-center">
-    <v-snackbar :timeout="timeout" v-model="snackbar" multi-line color="success"
-      >ID Copied to Clipboard!
+    <v-snackbar :timeout="timeout" v-model="snackbar" multi-line color="success">ID Copied to Clipboard!
       <template v-slot:actions>
         <v-btn color="red" variant="text" @click="snackbar = false">
           Close
@@ -90,7 +85,6 @@ function familySearch(link) {
       </template>
     </v-snackbar>
   </div>
-</div>
 </template>
 
 <style scoped>
@@ -99,6 +93,7 @@ function familySearch(link) {
   --presence-size: 16px;
   --presence-border-size: 2px;
 }
+
 .groups {
   position: relative;
 }
@@ -132,11 +127,12 @@ h3 {
   font-family: "HeritageBody:Sans", HanaMinBFont, ui-sans-serif, system-ui,
     sans-serif, Tofu;
   font-size: smaller;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    word-break: break-word;
-      letter-spacing: 0.2em;
-    color: black;}
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
+  letter-spacing: 0.2em;
+  color: black;
+}
 
 
 .coupleInfo {
